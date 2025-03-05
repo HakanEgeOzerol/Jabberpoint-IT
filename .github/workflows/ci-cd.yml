@@ -45,7 +45,7 @@ jobs:
     - name: Run OWASP dependency check
       continue-on-error: true
       run: |
-        mvn -e org.owasp:dependency-check-maven:check
+        mvn -x org.owasp:dependency-check-maven:check
         echo "Note: Dependency check completed. Review any warnings in the report."
         
     - name: Cache build artifacts
