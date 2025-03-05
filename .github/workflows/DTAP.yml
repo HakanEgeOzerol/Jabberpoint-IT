@@ -17,22 +17,24 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
-        cache: maven
+        cache: 'maven'
         
     - name: Build with Maven
       run: mvn -B package --file pom.xml
       
-    - name: Run tests and generate coverage
-      run: mvn verify
+    - name: Run tests
+      run: mvn test
       
     - name: Upload test results
-      uses: actions/upload-artifact@v4
       if: always()
+      uses: actions/upload-artifact@v4
       with:
         name: test-results
-        path: target/surefire-reports/
+        path: |
+          **/target/surefire-reports/
+          **/target/failsafe-reports/
         retention-days: 30
-        
+
     - name: Upload coverage reports
       uses: actions/upload-artifact@v4
       with:
@@ -53,102 +55,40 @@ jobs:
     needs: build-and-test
     if: github.ref == 'refs/heads/testing'
     runs-on: ubuntu-latest
-    environment: 
-      name: testing
-      url: ${{ steps.deploy.outputs.deployment-url }}
+    environment: testing
     steps:
-      - uses: actions/checkout@v3
-      
-      - name: Restore cached artifacts
-        uses: actions/cache@v3
+      - uses: actions/checkout@v4
+      - name: Set up JDK
+        uses: actions/setup-java@v4
         with:
-          path: target/
-          key: ${{ runner.os }}-build-${{ github.sha }}
+          java-version: '17'
+          distribution: 'temurin'
           
       - name: Run Integration Tests
         run: mvn verify -P integration-test
-        
-      - name: Deploy to Test Environment
-        id: deploy
-        run: |
-          echo "Deploying to TEST environment"
-          # Add your deployment commands here
-          echo "deployment-url=https://test.yourapp.com" >> $GITHUB_OUTPUT
 
   deploy-to-acceptance:
     needs: deploy-to-test
     if: github.ref == 'refs/heads/acceptance'
     runs-on: ubuntu-latest
-    environment:
-      name: acceptance
-      url: ${{ steps.deploy.outputs.deployment-url }}
+    environment: acceptance
     steps:
-      - uses: actions/checkout@v3
-      
-      - name: Restore cached artifacts
-        uses: actions/cache@v3
+      - uses: actions/checkout@v4
+      - name: Set up JDK
+        uses: actions/setup-java@v4
         with:
-          path: target/
-          key: ${{ runner.os }}-build-${{ github.sha }}
+          java-version: '17'
+          distribution: 'temurin'
           
       - name: Run Acceptance Tests
-        run: |
-          echo "Running acceptance tests..."
-          mvn verify -P acceptance-test
-          
-      - name: Deploy to Acceptance
-        id: deploy
-        run: |
-          echo "Deploying to ACCEPTANCE environment"
-          # Add your deployment commands here
-          echo "deployment-url=https://acceptance.yourapp.com" >> $GITHUB_OUTPUT
-          
-      - name: Smoke Test
-        run: |
-          echo "Running smoke tests on acceptance environment"
-          # Add smoke test commands here
+        run: mvn verify -P acceptance-test
 
   deploy-to-production:
     needs: deploy-to-acceptance
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    environment:
-      name: production
-      url: ${{ steps.deploy.outputs.deployment-url }}
+    environment: production
     steps:
-      - uses: actions/checkout@v3
-      
-      - name: Restore cached artifacts
-        uses: actions/cache@v3
-        with:
-          path: target/
-          key: ${{ runner.os }}-build-${{ github.sha }}
-          
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: v${{ github.run_number }}
-          release_name: Release v${{ github.run_number }}
-          draft: false
-          prerelease: false
-          
+      - uses: actions/checkout@v4
       - name: Deploy to Production
-        id: deploy
-        run: |
-          echo "Deploying to PRODUCTION environment"
-          # Add your deployment commands here
-          echo "deployment-url=https://prod.yourapp.com" >> $GITHUB_OUTPUT
-          
-      - name: Production Health Check
-        run: |
-          echo "Running health checks on production environment"
-          # Add health check commands here
-          
-      - name: Notify Deployment
-        if: always()
-        run: |
-          echo "Notifying team about deployment status"
-          # Add notification commands here (e.g., Slack, Email)
+        run: echo "Deploying to PRODUCTION environment"
