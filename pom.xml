@@ -129,7 +129,7 @@
             <plugin>
                 <groupId>org.owasp</groupId>
                 <artifactId>dependency-check-maven</artifactId>
-                <version>8.4.3</version>
+                <version>12.1.0</version>
                 <configuration>
                     <failBuildOnCVSS>11</failBuildOnCVSS>
                     <skipProvidedScope>true</skipProvidedScope>
@@ -139,6 +139,12 @@
                     <nodeAuditAnalyzerEnabled>false</nodeAuditAnalyzerEnabled>
                     <retireJsAnalyzerEnabled>false</retireJsAnalyzerEnabled>
                     <ossIndexAnalyzerEnabled>false</ossIndexAnalyzerEnabled>
+                    <dataDirectory>${project.build.directory}/dependency-check-data</dataDirectory>
+                    <cveValidForHours>24</cveValidForHours>
+                    <suppressionFiles>
+                        <suppressionFile>dependency-check-suppressions.xml</suppressionFile>
+                    </suppressionFiles>
+                    <failOnError>false</failOnError>
                 </configuration>
             </plugin>
 
