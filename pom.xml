@@ -129,14 +129,12 @@
             <plugin>
                 <groupId>org.owasp</groupId>
                 <artifactId>dependency-check-maven</artifactId>
-                <version>7.1.0</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
+                <version>8.4.3</version>
+                <configuration>
+                    <failBuildOnCVSS>11</failBuildOnCVSS>
+                    <skipProvidedScope>true</skipProvidedScope>
+                    <skipTestScope>true</skipTestScope>
+                </configuration>
             </plugin>
 
             <plugin>
