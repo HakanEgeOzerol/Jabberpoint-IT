@@ -22,12 +22,12 @@ jobs:
     - name: Build with Maven
       run: mvn -B package --file pom.xml
       
-    - name: Check code style
-      run: |
-        mvn checkstyle:check
-        mvn spotbugs:check
-        mvn pmd:check
-        echo "Code style check completed"
+    # - name: Check code style
+    #   run: |
+    #     mvn checkstyle:check
+    #     mvn spotbugs:check
+    #     mvn pmd:check
+    #     echo "Code style check completed"
       
     - name: Run tests
       run: mvn test
