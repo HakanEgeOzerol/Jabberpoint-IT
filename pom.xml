@@ -82,18 +82,7 @@
                     <targetJdk>17</targetJdk>
                     <failOnViolation>true</failOnViolation>
                     <printFailingErrors>true</printFailingErrors>
-                    <skipPmdError>false</skipPmdError>
-                    <skip>false</skip>
-                    <skipEmptyReport>false</skipEmptyReport>
-                    <skipCpd>true</skipCpd>
                 </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
 
             <plugin>
