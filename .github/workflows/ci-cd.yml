@@ -55,15 +55,6 @@ jobs:
         path: target/site/jacoco/
         retention-days: 30
         
-    - name: Notify Test Status
-      if: steps.run_tests.outcome != 'success'
-      run: |
-        echo "::warning::Unit tests failed but pipeline will continue. Review test results."
-        
-    - name: Check test status
-      if: steps.run_tests.outcome != 'success'
-      run: echo "Tests have failed but workflow will continue to provide feedback on other stages"
-
     # - name: Run OWASP dependency check
     #   continue-on-error: true
     #   run: |
@@ -121,12 +112,6 @@ jobs:
           git checkout testing
           git merge development
           git push origin testing
-          
-      - name: Notify Test Failure
-        if: steps.integration_tests.outcome != 'success'
-        run: |
-          echo "::warning::Integration tests failed but build process completed. Review test results before proceeding."
-          echo "Changes are kept in development branch but not promoted to testing."
 
   deploy-to-acceptance:
     needs: deploy-to-test
@@ -153,14 +138,3 @@ jobs:
       - uses: actions/checkout@v4
       - name: Deploy to Production
         run: echo "Deploying to PRODUCTION environment"
-
-  workflow-summary:
-    needs: [build-and-test]
-    if: always()
-    runs-on: ubuntu-latest
-    steps:
-      - name: Workflow Status
-        run: |
-          echo "CI/CD workflow completed"
-          echo "All artifacts have been uploaded and can be reviewed in the Actions tab"
-          echo "If tests have failed, please review the test results and make necessary changes"
