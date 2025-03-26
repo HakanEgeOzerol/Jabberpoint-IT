@@ -36,8 +36,15 @@ hs_err_pid*
 replay_pid*
 
 # IDE-specific files
+# IntelliJ IDEA
 .idea/
 *.iml
+*.iws
+*.ipr
+.idea_modules/
+out/
+
+# VS Code
 .vscode/
 .settings/
 .classpath
