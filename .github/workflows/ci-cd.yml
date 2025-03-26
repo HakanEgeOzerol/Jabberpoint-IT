@@ -7,6 +7,26 @@ on:
     branches: ["development", "feature/*"]
 
 jobs:
+  # 1) Always-run debug job to log context
+  debug-logging:
+    # A standalone job that doesn't need anything else
+    runs-on: ubuntu-latest
+    # no 'if' here, so it won't skip
+    steps:
+      - name: Print GitHub context
+        run: |
+          echo "=== DEBUG LOGGING ==="
+          echo "github.ref = ${{ github.ref }}"
+          echo "github.event_name = ${{ github.event_name }}"
+          echo "github.base_ref (for pushes) = ${{ github.base_ref }}"
+          echo "pull_request.base.ref (for PRs) = ${{ github.event.pull_request.base.ref || 'N/A' }}"
+          echo "github.head_ref (for PRs) = ${{ github.head_ref }}"
+          echo "github.sha = ${{ github.sha }}"
+          echo "actor = ${{ github.actor }}"
+          echo "repository = ${{ github.repository }}"
+          echo "====================="
+
+  # 2) Normal build-and-test job
   build-and-test:
     runs-on: ubuntu-latest
     steps:
