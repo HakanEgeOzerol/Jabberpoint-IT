@@ -138,13 +138,18 @@ jobs:
       (github.ref == 'refs/heads/development') ||
       (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'development')
     steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+          
       - name: Auto-merge development -> testing
         run: |
           git config --global user.name 'GitHub Actions'
           git config --global user.email 'actions@github.com'
           git fetch origin
           git checkout testing || git checkout -b testing
-          git merge development --no-edit
+          git merge origin/development --no-edit
           git push origin testing
 
   #######################################################################
@@ -157,13 +162,18 @@ jobs:
       (github.ref == 'refs/heads/development') ||
       (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'development')
     steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+          
       - name: Auto-merge testing -> acceptance
         run: |
           git config --global user.name 'GitHub Actions'
           git config --global user.email 'actions@github.com'
           git fetch origin
           git checkout acceptance || git checkout -b acceptance
-          git merge testing --no-edit
+          git merge origin/testing --no-edit
           git push origin acceptance
 
   #######################################################################
@@ -176,13 +186,18 @@ jobs:
       (github.ref == 'refs/heads/development') ||
       (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'development')
     steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+          
       - name: Auto-merge acceptance -> main
         run: |
           git config --global user.name 'GitHub Actions'
           git config --global user.email 'actions@github.com'
           git fetch origin
           git checkout main || git checkout -b main
-          git merge acceptance --no-edit
+          git merge origin/acceptance --no-edit
           git push origin main
 
   #######################################################################
