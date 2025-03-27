@@ -2,11 +2,33 @@ name: Java CI/CD Pipeline
 
 on:
   push:
-    branches: ["development", "testing", "acceptance", "main"]
+    branches: ["development", "feature/*"]
   pull_request:
-    branches: ["development", "testing", "acceptance", "main"]
+    branches: ["development", "feature/*"]
 
 jobs:
+  #######################################################################
+  # 1) Debug Logging – optional, always runs to show context values
+  #######################################################################
+  debug-logging:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print GitHub context
+        run: |
+          echo "=== DEBUG LOGGING ==="
+          echo "github.ref = ${{ github.ref }}"
+          echo "github.event_name = ${{ github.event_name }}"
+          echo "github.base_ref (for pushes) = ${{ github.base_ref }}"
+          echo "pull_request.base.ref (for PRs) = ${{ github.event.pull_request.base.ref || 'N/A' }}"
+          echo "github.head_ref (for PRs) = ${{ github.head_ref }}"
+          echo "github.sha = ${{ github.sha }}"
+          echo "actor = ${{ github.actor }}"
+          echo "repository = ${{ github.repository }}"
+          echo "====================="
+
+  #######################################################################
+  # 2) Build and Unit Tests – always runs (feature or dev)
+  #######################################################################
   build-and-test:
     runs-on: ubuntu-latest
     steps:
@@ -22,20 +44,11 @@ jobs:
       - name: Build with Maven
         run: mvn -B package --file pom.xml
 
-      # - name: Check code style
-      #   run: |
-      #     mvn checkstyle:check
-      #     mvn spotbugs:check
-      #     mvn pmd:check
-      #     echo "Code style check completed"
-
-      - name: Run tests
-        id: run_tests
-        continue-on-error: true
+      - name: Run unit tests
         run: |
           echo "Running unit tests..."
           mvn test
-          echo "Unit tests completed with status: $?"
+          echo "Unit tests completed"
 
       - name: Upload test results
         if: always()
@@ -55,49 +68,26 @@ jobs:
           path: target/site/jacoco/
           retention-days: 30
 
-      # - name: Run OWASP dependency check
-      #   continue-on-error: true
-      #   run: |
-      #     mvn org.owasp:dependency-check-maven:update-only
-      #     mvn org.owasp:dependency-check-maven:check
-      #     echo "Note: Dependency check completed. Review any warnings in the report."
-
-      - name: Cache build artifacts
-        uses: actions/cache@v3
-        with:
-          path: target/
-          key: ${{ runner.os }}-build-${{ github.sha }}
-
-  deploy-to-test:
+  #######################################################################
+  # 3) Integration Tests – always run, after build
+  #######################################################################
+  integration-tests:
     needs: build-and-test
-    # Accept either a direct push to development OR a PR whose base is development
-    if: >
-      (!cancelled() &&
-       ((github.ref == 'refs/heads/development') ||
-        (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'development')))
     runs-on: ubuntu-latest
-    environment: testing
-    permissions:
-      contents: write
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Set up JDK
+      - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: "17"
           distribution: "temurin"
 
       - name: Run Integration Tests
-        id: integration_tests
-        continue-on-error: true
         run: |
           echo "Running integration tests..."
           mvn verify -P integration-test
-          echo "Integration tests completed with status: $?"
+          echo "Integration tests completed"
 
       - name: Upload integration test results
         if: always()
@@ -108,47 +98,122 @@ jobs:
             **/target/failsafe-reports/
           retention-days: 30
 
-      - name: Auto-merge to Testing
-        if: steps.integration_tests.outcome == 'success'
-        run: |
-          git config --global user.name 'GitHub Actions'
-          git config --global user.email 'actions@github.com'
-          git checkout testing
-          git merge development
-          git push origin testing
-
-  deploy-to-acceptance:
-    needs: deploy-to-test
-    # Accept either a direct push to testing OR a PR whose base is testing
-    if: >
-      (!cancelled() &&
-       ((github.ref == 'refs/heads/testing') ||
-        (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'testing')))
+  #######################################################################
+  # 4) Acceptance Tests – always run, after integration
+  #######################################################################
+  acceptance-tests:
+    needs: integration-tests
     runs-on: ubuntu-latest
-    environment: acceptance
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up JDK
+      - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: "17"
           distribution: "temurin"
 
       - name: Run Acceptance Tests
-        run: mvn verify -P acceptance-test
+        run: |
+          echo "Running acceptance tests..."
+          mvn verify -P acceptance-test
+          echo "Acceptance tests completed"
 
-  deploy-to-production:
-    needs: deploy-to-acceptance
-    # Accept either a direct push to main OR a PR whose base is main
+      - name: Upload acceptance test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: acceptance-test-results
+          path: |
+            **/target/failsafe-reports/
+          retention-days: 30
+
+  #######################################################################
+  # 5) Auto-merge to Testing – runs only if dev, after acceptance tests
+  #######################################################################
+  merge-to-testing:
+    needs: acceptance-tests
+    runs-on: ubuntu-latest
     if: >
-      (!cancelled() &&
-       ((github.ref == 'refs/heads/main') ||
-        (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'main')))
+      (github.ref == 'refs/heads/development') ||
+      (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'development')
+    steps:
+      - name: Auto-merge development -> testing
+        run: |
+          git config --global user.name 'GitHub Actions'
+          git config --global user.email 'actions@github.com'
+          git fetch origin
+          git checkout testing || git checkout -b testing
+          git merge development --no-edit
+          git push origin testing
+
+  #######################################################################
+  # 6) Auto-merge to Acceptance – runs only if dev, after merge-to-testing
+  #######################################################################
+  merge-to-acceptance:
+    needs: merge-to-testing
+    runs-on: ubuntu-latest
+    if: >
+      (github.ref == 'refs/heads/development') ||
+      (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'development')
+    steps:
+      - name: Auto-merge testing -> acceptance
+        run: |
+          git config --global user.name 'GitHub Actions'
+          git config --global user.email 'actions@github.com'
+          git fetch origin
+          git checkout acceptance || git checkout -b acceptance
+          git merge testing --no-edit
+          git push origin acceptance
+
+  #######################################################################
+  # 7) Auto-merge to Main – runs only if dev, after merge-to-acceptance
+  #######################################################################
+  merge-to-main:
+    needs: merge-to-acceptance
+    runs-on: ubuntu-latest
+    if: >
+      (github.ref == 'refs/heads/development') ||
+      (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'development')
+    steps:
+      - name: Auto-merge acceptance -> main
+        run: |
+          git config --global user.name 'GitHub Actions'
+          git config --global user.email 'actions@github.com'
+          git fetch origin
+          git checkout main || git checkout -b main
+          git merge acceptance --no-edit
+          git push origin main
+
+  #######################################################################
+  # 8) Production Deploy & Summary – only if dev, after merge-to-main
+  #######################################################################
+  production-deploy:
+    needs: merge-to-main
     runs-on: ubuntu-latest
     environment: production
+    if: >
+      (github.ref == 'refs/heads/development') ||
+      (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'development')
     steps:
       - uses: actions/checkout@v4
 
+      - name: Download Coverage Artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: coverage-reports
+          path: ./coverage
+
       - name: Deploy to Production
         run: echo "Deploying to PRODUCTION environment"
+
+      - name: Generate Pipeline Summary
+        run: |
+          echo "## Pipeline Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- **Deployment Status:** Success" >> $GITHUB_STEP_SUMMARY
+          # Example: extract code coverage from the Jacoco XML file
+          COVERAGE=$(grep -oP 'line-rate="\K[0-9.]+' ./coverage/jacoco.xml | head -n 1 || echo "N/A")
+          echo "- **Code Coverage:** ${COVERAGE}" >> $GITHUB_STEP_SUMMARY
+          echo "### Detailed Results" >> $GITHUB_STEP_SUMMARY
+          echo "- Unit, integration, and acceptance tests ran on this branch." >> $GITHUB_STEP_SUMMARY
+          echo "- Automatic merges to testing, acceptance, and main branches were performed sequentially." >> $GITHUB_STEP_SUMMARY
