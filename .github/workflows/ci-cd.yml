@@ -142,7 +142,7 @@ jobs:
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
-          
+
       - name: Auto-merge development -> testing
         run: |
           git config --global user.name 'GitHub Actions'
@@ -166,7 +166,7 @@ jobs:
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
-          
+
       - name: Auto-merge testing -> acceptance
         run: |
           git config --global user.name 'GitHub Actions'
@@ -190,7 +190,7 @@ jobs:
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
-          
+
       - name: Auto-merge acceptance -> main
         run: |
           git config --global user.name 'GitHub Actions'
@@ -200,35 +200,15 @@ jobs:
           git merge origin/acceptance --no-edit
           git push origin main
 
-  #######################################################################
-  # 8) Production Deploy & Summary – only if dev, after merge-to-main
-  #######################################################################
-  production-deploy:
-    needs: merge-to-main
-    runs-on: ubuntu-latest
-    environment: production
-    if: >
-      (github.ref == 'refs/heads/development') ||
-      (github.event_name == 'pull_request' && github.event.pull_request.base.ref == 'development')
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Download Coverage Artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: coverage-reports
-          path: ./coverage
-
-      - name: Deploy to Production
-        run: echo "Deploying to PRODUCTION environment"
-
       - name: Generate Pipeline Summary
         run: |
           echo "## Pipeline Summary" >> $GITHUB_STEP_SUMMARY
-          echo "- **Deployment Status:** Success" >> $GITHUB_STEP_SUMMARY
-          # Example: extract code coverage from the Jacoco XML file
-          COVERAGE=$(grep -oP 'line-rate="\K[0-9.]+' ./coverage/jacoco.xml | head -n 1 || echo "N/A")
-          echo "- **Code Coverage:** ${COVERAGE}" >> $GITHUB_STEP_SUMMARY
-          echo "### Detailed Results" >> $GITHUB_STEP_SUMMARY
-          echo "- Unit, integration, and acceptance tests ran on this branch." >> $GITHUB_STEP_SUMMARY
-          echo "- Automatic merges to testing, acceptance, and main branches were performed sequentially." >> $GITHUB_STEP_SUMMARY
+          echo "### Automated Steps Completed" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Unit Tests" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Integration Tests" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Acceptance Tests" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Merged to testing" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Merged to acceptance" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Merged to main" >> $GITHUB_STEP_SUMMARY
+          echo "### Manual Steps Required" >> $GITHUB_STEP_SUMMARY
+          echo "⚠️ **Production Deployment requires manual approval and execution**" >> $GITHUB_STEP_SUMMARY
