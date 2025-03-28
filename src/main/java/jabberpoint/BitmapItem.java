@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.io.File;
+import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 
@@ -34,10 +35,15 @@ public class BitmapItem extends SlideItem {
 		super(level);
 		imageName = name;
 		try {
-			bufferedImage = ImageIO.read(new File(imageName));
+			// Load image from resources directory
+			InputStream imageStream = getClass().getResourceAsStream("/images/" + imageName);
+			if (imageStream == null) {
+				throw new IOException(FILE + imageName + NOTFOUND);
+			}
+			bufferedImage = ImageIO.read(imageStream);
 		}
 		catch (IOException e) {
-			System.err.println(FILE + imageName + NOTFOUND) ;
+			System.err.println(FILE + imageName + NOTFOUND);
 		}
 	}
 
