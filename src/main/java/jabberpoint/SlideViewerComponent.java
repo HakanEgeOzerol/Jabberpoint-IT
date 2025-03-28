@@ -17,9 +17,10 @@ import javax.swing.JFrame;
  * @version 1.4 2007/07/16 Sylvia Stuurman
  * @version 1.5 2010/03/03 Sylvia Stuurman
  * @version 1.6 2014/05/16 Sylvia Stuurman
+ * @version 1.7 2023/03/28 Updated to implement Subscriber interface
  */
 
-public class SlideViewerComponent extends JComponent {
+public class SlideViewerComponent extends JComponent implements Subscriber {
 		
 	private Slide slide; // current slide
 	private Font labelFont = null; // font for labels
@@ -36,17 +37,36 @@ public class SlideViewerComponent extends JComponent {
 	private static final int XPOS = 1100;
 	private static final int YPOS = 20;
 
+	/**
+	 * Constructor for the viewer component
+	 * @param pres The presentation to display
+	 * @param frame The frame in which the component is shown
+	 */
 	public SlideViewerComponent(Presentation pres, JFrame frame) {
 		setBackground(BGCOLOR); 
 		presentation = pres;
 		labelFont = new Font(FONTNAME, FONTSTYLE, FONTHEIGHT);
 		this.frame = frame;
+		
+		// Register as a subscriber
+		if (presentation != null) {
+			presentation.addSubscriber(this);
+		}
 	}
 
+	/**
+	 * Get the preferred size of the component
+	 * @return The preferred dimension
+	 */
 	public Dimension getPreferredSize() {
 		return new Dimension(Slide.WIDTH, Slide.HEIGHT);
 	}
 
+	/**
+	 * Legacy update method for backward compatibility
+	 * @param presentation The presentation
+	 * @param data The slide data
+	 */
 	public void update(Presentation presentation, Slide data) {
 		if (data == null) {
 			repaint();
@@ -57,8 +77,35 @@ public class SlideViewerComponent extends JComponent {
 		repaint();
 		frame.setTitle(presentation.getTitle());
 	}
+	
+	/**
+	 * Implementation of the Subscriber interface update method
+	 * @param event The event that occurred
+	 * @param data The data associated with the event (typically a Slide)
+	 * @param publisher The publisher that sent the notification
+	 */
+	@Override
+	public void update(Event event, Object data, Publisher publisher) {
+		if (publisher instanceof Presentation) {
+			this.presentation = (Presentation) publisher;
+			
+			if (event == Event.SLIDE_CHANGED && data instanceof Slide) {
+				this.slide = (Slide) data;
+				repaint();
+				frame.setTitle(presentation.getTitle());
+			} else if (event == Event.PRESENTATION_CLEARED) {
+				this.slide = null;
+				repaint();
+				frame.setTitle(presentation.getTitle());
+			}
+		}
+	}
 
-// draw the slide
+	/**
+	 * Draw the slide
+	 * @param g The Graphics object to draw on
+	 */
+	@Override
 	public void paintComponent(Graphics g) {
 		g.setColor(BGCOLOR);
 		g.fillRect(0, 0, getSize().width, getSize().height);

@@ -1,6 +1,8 @@
 package jabberpoint;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -13,21 +15,24 @@ import java.util.ArrayList;
  * @version 1.4 2007/07/16 Sylvia Stuurman
  * @version 1.5 2010/03/03 Sylvia Stuurman
  * @version 1.6 2014/05/16 Sylvia Stuurman
+ * @version 1.7 2023/03/28 Updated to implement Publisher interface
  */
 
-public class Presentation {
+public class Presentation implements Publisher {
 	private String showTitle; // title of the presentation
 	private ArrayList<Slide> showList = null; // an ArrayList with Slides
 	private int currentSlideNumber = 0; // the slidenummer of the current Slide
 	private SlideViewerComponent slideViewComponent = null; // the viewcomponent of the Slides
+	private Map<Subscriber, Boolean> subscribers; // Subscribers to this presentation
 
 	public Presentation() {
-		slideViewComponent = null;
+		subscribers = new HashMap<>();
 		clear();
 	}
 
 	public Presentation(SlideViewerComponent slideViewerComponent) {
 		this.slideViewComponent = slideViewerComponent;
+		subscribers = new HashMap<>();
 		clear();
 	}
 
@@ -52,22 +57,27 @@ public class Presentation {
 		return currentSlideNumber;
 	}
 
-	// change the current slide number and signal it to the window
+	// change the current slide number and notify subscribers
 	public void setSlideNumber(int number) {
-		currentSlideNumber = number;
-		if (slideViewComponent != null) {
-			slideViewComponent.update(this, getCurrentSlide());
+		if (number < getSize() && number >= 0) {
+			currentSlideNumber = number;
+			// Legacy update for backward compatibility
+			if (slideViewComponent != null) {
+				slideViewComponent.update(this, getCurrentSlide());
+			}
+			// Notify subscribers using the Observer pattern
+			notifySubscribers(Event.SLIDE_CHANGED, getCurrentSlide());
 		}
 	}
 
-	// go to the previous slide unless your at the beginning of the presentation
+	// go to the previous slide unless at the beginning of the presentation
 	public void prevSlide() {
 		if (currentSlideNumber > 0) {
 			setSlideNumber(currentSlideNumber - 1);
 	    }
 	}
 
-	// go to the next slide unless your at the end of the presentation.
+	// go to the next slide unless at the end of the presentation.
 	public void nextSlide() {
 		if (currentSlideNumber < (showList.size()-1)) {
 			setSlideNumber(currentSlideNumber + 1);
@@ -78,6 +88,7 @@ public class Presentation {
 	public void clear() {
 		showList = new ArrayList<Slide>();
 		setSlideNumber(-1);
+		notifySubscribers(Event.PRESENTATION_CLEARED, null);
 	}
 
 	// Add a slide to the presentation
@@ -90,7 +101,7 @@ public class Presentation {
 		if (number < 0 || number >= getSize()){
 			return null;
 	    }
-			return (Slide)showList.get(number);
+		return showList.get(number);
 	}
 
 	// Give the current slide
@@ -100,5 +111,27 @@ public class Presentation {
 
 	public void exit(int n) {
 		System.exit(n);
+	}
+	
+	// Publisher interface methods
+	
+	@Override
+	public void addSubscriber(Subscriber subscriber) {
+		subscribers.put(subscriber, true);
+	}
+	
+	@Override
+	public Subscriber removeSubscriber(Subscriber subscriber) {
+		if (subscribers.remove(subscriber) != null) {
+			return subscriber;
+		}
+		return null;
+	}
+	
+	@Override
+	public void notifySubscribers(Event event, Object data) {
+		for (Subscriber subscriber : subscribers.keySet()) {
+			subscriber.update(event, data, this);
+		}
 	}
 }
