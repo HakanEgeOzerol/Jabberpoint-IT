@@ -21,7 +21,7 @@ import java.util.Map;
 public class Presentation implements Publisher {
 	private String showTitle; // title of the presentation
 	private ArrayList<Slide> showList = null; // an ArrayList with Slides
-	private int currentSlideNumber = 0; // the slidenummer of the current Slide
+	private int currentSlideNumber = -1; // the slidenummer of the current Slide
 	private SlideViewerComponent slideViewComponent = null; // the viewcomponent of the Slides
 	private Map<Subscriber, Boolean> subscribers; // Subscribers to this presentation
 
