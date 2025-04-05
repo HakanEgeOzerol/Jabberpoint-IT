@@ -69,7 +69,7 @@ public class Presentation extends Publisher {
 	// Delete the presentation to be ready for the next one.
 	public void clear() {
 		showList = new ArrayList<Slide>();
-		setSlideNumber(-1);
+		currentSlideNumber = -1;
 		notifySubscribers(Event.PRESENTATION_CLEARED, null);
 	}
 
