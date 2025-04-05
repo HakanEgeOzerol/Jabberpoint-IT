@@ -92,6 +92,7 @@
                 <configuration>
                     <testFailureIgnore>true</testFailureIgnore>
                     <reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
+                    <argLine>-Djava.awt.headless=true</argLine>
                 </configuration>
             </plugin>
 

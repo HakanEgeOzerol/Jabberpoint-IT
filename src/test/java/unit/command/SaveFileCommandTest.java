@@ -4,8 +4,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.*;
 import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -20,6 +22,7 @@ import jabberpoint.accessor.XMLAccessor;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({JOptionPane.class, XMLAccessor.class})
+@PowerMockIgnore({"javax.management.*", "javax.swing.*", "java.awt.*"})
 public class SaveFileCommandTest {
     private SlideViewerFrame mockFrame;
     private Presentation mockPresentation;

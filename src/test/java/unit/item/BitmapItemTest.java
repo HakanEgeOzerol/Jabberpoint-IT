@@ -135,9 +135,9 @@ public class BitmapItemTest {
         BufferedImage testImage = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
         setBufferedImage(item, testImage);
         
-        // Mock the image dimensions
-        when(testImage.getWidth(any())).thenReturn(100);
-        when(testImage.getHeight(any())).thenReturn(100);
+        // Set image dimensions directly instead of using matchers
+        when(testImage.getWidth(mockObserver)).thenReturn(100);
+        when(testImage.getHeight(mockObserver)).thenReturn(100);
         
         // Test with different scale factors
         Rectangle bounds1 = item.getBoundingBox(mockGraphics, mockObserver, 1.0f, mockStyle);
@@ -163,9 +163,9 @@ public class BitmapItemTest {
         BufferedImage testImage = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
         setBufferedImage(item, testImage);
         
-        // Mock the image dimensions
-        when(testImage.getWidth(any())).thenReturn(100);
-        when(testImage.getHeight(any())).thenReturn(100);
+        // Set image dimensions directly instead of using matchers
+        when(testImage.getWidth(mockObserver)).thenReturn(100);
+        when(testImage.getHeight(mockObserver)).thenReturn(100);
         
         float scale = 2.0f;
         Rectangle bounds = item.getBoundingBox(mockGraphics, mockObserver, scale, mockStyle);
@@ -231,11 +231,28 @@ public class BitmapItemTest {
         
         // Test drawing with different scale factors
         item.draw(20, 30, 1.0f, mockGraphics, mockStyle, mockObserver);
-        verify(mockGraphics).drawImage(eq(testImage), anyInt(), anyInt(), anyInt(), anyInt(), eq(mockObserver));
+        
+        // Use verify with separate matchers
+        verify(mockGraphics).drawImage(
+            eq(testImage), 
+            anyInt(), 
+            anyInt(), 
+            anyInt(), 
+            anyInt(), 
+            eq(mockObserver)
+        );
         
         // Test with larger scale
         item.draw(20, 30, 2.0f, mockGraphics, mockStyle, mockObserver);
-        verify(mockGraphics, times(2)).drawImage(eq(testImage), anyInt(), anyInt(), anyInt(), anyInt(), eq(mockObserver));
+        
+        verify(mockGraphics, times(2)).drawImage(
+            eq(testImage), 
+            anyInt(), 
+            anyInt(), 
+            anyInt(), 
+            anyInt(), 
+            eq(mockObserver)
+        );
     }
 
     // Helper method to set the buffered image directly for testing

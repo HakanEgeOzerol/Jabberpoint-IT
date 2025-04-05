@@ -2,14 +2,19 @@ package unit.controller;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.awt.event.KeyEvent;
 
 import jabberpoint.command.Command;
 import jabberpoint.controller.KeyController;
 
+@RunWith(PowerMockRunner.class)
+@PowerMockIgnore({"javax.management.*", "javax.swing.*", "java.awt.*"})
 public class KeyControllerTest {
     private KeyController keyController;
     private Command mockCommand;
