@@ -35,7 +35,7 @@ public class SlideViewerFrame extends JFrame {
 	public SlideViewerFrame(String title, Presentation presentation) {
 		super(title);
 		SlideViewerComponent slideViewerComponent = new SlideViewerComponent(presentation, this);
-		presentation.setShowView(slideViewerComponent);
+		presentation.addSubscriber(slideViewerComponent);
 		setupWindow(slideViewerComponent, presentation);
 	}
 

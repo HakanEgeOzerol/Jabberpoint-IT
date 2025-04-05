@@ -22,16 +22,9 @@ public class Presentation implements Publisher {
 	private String showTitle; // title of the presentation
 	private ArrayList<Slide> showList = null; // an ArrayList with Slides
 	private int currentSlideNumber = -1; // the slidenummer of the current Slide
-	private SlideViewerComponent slideViewComponent = null; // the viewcomponent of the Slides
 	private Map<Subscriber, Boolean> subscribers; // Subscribers to this presentation
 
 	public Presentation() {
-		subscribers = new HashMap<>();
-		clear();
-	}
-
-	public Presentation(SlideViewerComponent slideViewerComponent) {
-		this.slideViewComponent = slideViewerComponent;
 		subscribers = new HashMap<>();
 		clear();
 	}
@@ -48,10 +41,6 @@ public class Presentation implements Publisher {
 		showTitle = nt;
 	}
 
-	public void setShowView(SlideViewerComponent slideViewerComponent) {
-		this.slideViewComponent = slideViewerComponent;
-	}
-
 	// give the number of the current slide
 	public int getSlideNumber() {
 		return currentSlideNumber;
@@ -61,10 +50,6 @@ public class Presentation implements Publisher {
 	public void setSlideNumber(int number) {
 		if (number < getSize() && number >= 0) {
 			currentSlideNumber = number;
-			// Legacy update for backward compatibility
-			if (slideViewComponent != null) {
-				slideViewComponent.update(this, getCurrentSlide());
-			}
 			// Notify subscribers using the Observer pattern
 			notifySubscribers(Event.SLIDE_CHANGED, getCurrentSlide());
 		}
