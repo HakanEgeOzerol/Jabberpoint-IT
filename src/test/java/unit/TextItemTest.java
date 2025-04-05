@@ -81,7 +81,7 @@ public class TextItemTest {
         assertNotNull(bounds);
         assertTrue(bounds.width > 0);
         assertTrue(bounds.height > 0);
-        assertEquals((int)(style.indent * scale), bounds.x);
+        assertEquals((int)(style.getIndent() * scale), bounds.x);
         assertEquals(0, bounds.y);
     }
     

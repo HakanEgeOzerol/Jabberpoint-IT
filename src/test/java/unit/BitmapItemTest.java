@@ -84,7 +84,7 @@ public class BitmapItemTest {
         Rectangle bounds = bitmapItem.getBoundingBox(graphics, observer, scale, style);
         
         assertNotNull(bounds);
-        assertEquals((int)(style.indent * scale), bounds.x);
+        assertEquals((int)(style.getIndent() * scale), bounds.x);
         assertEquals(0, bounds.y);
         assertTrue(bounds.width >= 0);
         assertTrue(bounds.height >= 0);

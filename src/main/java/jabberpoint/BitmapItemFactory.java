@@ -6,6 +6,9 @@ public class BitmapItemFactory implements SlideItemFactory {
         if (type == null || !type.equals("image")) {
             throw new IllegalArgumentException("Invalid type for BitmapItemFactory: " + type);
         }
+        if (content == null || content.trim().isEmpty()) {
+            throw new IllegalArgumentException("Image path cannot be empty");
+        }
         return new BitmapItem(level, content);
     }
 

@@ -22,12 +22,12 @@ class StyleTest {
     void testStyleCreation() {
         Style style = new Style(10, Color.RED, 12, 5);
         
-        assertEquals(10, style.indent);
-        assertEquals(Color.RED, style.color);
-        assertEquals(12, style.fontSize);
-        assertEquals(5, style.leading);
-        assertEquals("Helvetica", style.font.getFamily());
-        assertEquals(Font.BOLD, style.font.getStyle());
+        assertEquals(10, style.getIndent());
+        assertEquals(Color.RED, style.getColor());
+        assertEquals(12, style.getFontSize());
+        assertEquals(5, style.getLeading());
+        assertEquals("Helvetica", style.getFont().getFamily());
+        assertEquals(Font.BOLD, style.getFont().getStyle());
     }
     
     @Test
@@ -40,26 +40,26 @@ class StyleTest {
         Style style4 = Style.getStyle(4);
         
         // Test style 0 (title style)
-        assertEquals(0, style0.indent);
-        assertEquals(Color.red, style0.color);
-        assertEquals(48, style0.fontSize);
-        assertEquals(20, style0.leading);
+        assertEquals(0, style0.getIndent());
+        assertEquals(Color.red, style0.getColor());
+        assertEquals(48, style0.getFontSize());
+        assertEquals(20, style0.getLeading());
         
         // Test style 1
-        assertEquals(20, style1.indent);
-        assertEquals(Color.blue, style1.color);
-        assertEquals(40, style1.fontSize);
-        assertEquals(10, style1.leading);
+        assertEquals(20, style1.getIndent());
+        assertEquals(Color.blue, style1.getColor());
+        assertEquals(40, style1.getFontSize());
+        assertEquals(10, style1.getLeading());
         
         // Test style 2
-        assertEquals(50, style2.indent);
-        assertEquals(Color.black, style2.color);
-        assertEquals(36, style2.fontSize);
-        assertEquals(10, style2.leading);
+        assertEquals(50, style2.getIndent());
+        assertEquals(Color.black, style2.getColor());
+        assertEquals(36, style2.getFontSize());
+        assertEquals(10, style2.getLeading());
         
         // Test remaining styles have expected values
-        assertEquals(70, style3.indent);
-        assertEquals(90, style4.indent);
+        assertEquals(70, style3.getIndent());
+        assertEquals(90, style4.getIndent());
     }
     
     @Test
