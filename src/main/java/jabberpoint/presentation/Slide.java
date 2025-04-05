@@ -6,7 +6,6 @@ import java.awt.image.ImageObserver;
 import java.util.Vector;
 
 import jabberpoint.constants.Constants;
-import jabberpoint.constants.Constants.UI;
 import jabberpoint.slideitem.SlideItem;
 import jabberpoint.slideitem.TextItem;
 

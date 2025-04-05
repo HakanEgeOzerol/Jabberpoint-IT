@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Font;
 
 import jabberpoint.constants.Constants;
-import jabberpoint.constants.Constants.UI;
 
 /** <p>Style is for Indent, Color, Font and Leading.</p>
  * <p>Direct relation between style-number and item-level:

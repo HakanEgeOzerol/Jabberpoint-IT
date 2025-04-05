@@ -6,7 +6,6 @@ import java.io.PrintWriter;
 import java.util.Vector;
 
 import jabberpoint.constants.Constants;
-import jabberpoint.constants.Constants.XML;
 import jabberpoint.presentation.Presentation;
 import jabberpoint.presentation.Slide;
 import jabberpoint.slideitem.BitmapItem;

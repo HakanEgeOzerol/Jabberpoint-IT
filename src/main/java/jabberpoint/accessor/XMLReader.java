@@ -14,8 +14,6 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 import jabberpoint.constants.Constants;
-import jabberpoint.constants.Constants.ErrorMessages;
-import jabberpoint.constants.Constants.XML;
 import jabberpoint.presentation.Presentation;
 import jabberpoint.presentation.Slide;
 import jabberpoint.slideitem.BitmapItemFactory;

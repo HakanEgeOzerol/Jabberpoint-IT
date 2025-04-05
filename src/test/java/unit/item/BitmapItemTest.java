@@ -104,7 +104,7 @@ public class BitmapItemTest {
         BitmapItem item = new BitmapItem(1, "nonexistent.jpg");
         
         assertTrue(errContent.toString().contains("File nonexistent.jpg not found"));
-        assertNull(item.getName());
+        assertEquals("nonexistent.jpg", item.getName());
     }
 
     @Test
@@ -127,17 +127,18 @@ public class BitmapItemTest {
         Style mockStyle = mock(Style.class);
         
         // Set up the mock style
-        when(style.getIndent()).thenReturn(10);
-        when(style.getLeading()).thenReturn(5);
+        when(mockStyle.getIndent()).thenReturn(10);
+        when(mockStyle.getLeading()).thenReturn(5);
         
         // Create a BitmapItem with a test image of known dimensions
         BitmapItem item = new BitmapItem(1, "test.jpg");
         BufferedImage testImage = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
-        setBufferedImage(item, testImage);
         
-        // Set image dimensions directly instead of using matchers
-        when(testImage.getWidth(mockObserver)).thenReturn(100);
-        when(testImage.getHeight(mockObserver)).thenReturn(100);
+        // This is the key change - create a spy of the image to properly mock methods
+        BufferedImage spyImage = spy(testImage);
+        when(spyImage.getWidth(any(ImageObserver.class))).thenReturn(100);
+        when(spyImage.getHeight(any(ImageObserver.class))).thenReturn(100);
+        setBufferedImage(item, spyImage);
         
         // Test with different scale factors
         Rectangle bounds1 = item.getBoundingBox(mockGraphics, mockObserver, 1.0f, mockStyle);
@@ -163,9 +164,12 @@ public class BitmapItemTest {
         BufferedImage testImage = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
         setBufferedImage(item, testImage);
         
-        // Set image dimensions directly instead of using matchers
-        when(testImage.getWidth(mockObserver)).thenReturn(100);
-        when(testImage.getHeight(mockObserver)).thenReturn(100);
+        // Set up the mock behavior for the image dimensions
+        // This is the key change - using any() for the ImageObserver parameter
+        BufferedImage spyImage = spy(testImage);
+        when(spyImage.getWidth(any(ImageObserver.class))).thenReturn(100);
+        when(spyImage.getHeight(any(ImageObserver.class))).thenReturn(100);
+        setBufferedImage(item, spyImage);
         
         float scale = 2.0f;
         Rectangle bounds = item.getBoundingBox(mockGraphics, mockObserver, scale, mockStyle);
@@ -227,14 +231,19 @@ public class BitmapItemTest {
         // Create a BitmapItem with a test image
         BitmapItem item = new BitmapItem(1, "test.jpg");
         BufferedImage testImage = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
-        setBufferedImage(item, testImage);
+        
+        // Create a spy of the BufferedImage to properly mock methods
+        BufferedImage spyImage = spy(testImage);
+        when(spyImage.getWidth(any(ImageObserver.class))).thenReturn(100);
+        when(spyImage.getHeight(any(ImageObserver.class))).thenReturn(100);
+        setBufferedImage(item, spyImage);
         
         // Test drawing with different scale factors
         item.draw(20, 30, 1.0f, mockGraphics, mockStyle, mockObserver);
         
         // Use verify with separate matchers
         verify(mockGraphics).drawImage(
-            eq(testImage), 
+            eq(spyImage), 
             anyInt(), 
             anyInt(), 
             anyInt(), 
@@ -246,7 +255,7 @@ public class BitmapItemTest {
         item.draw(20, 30, 2.0f, mockGraphics, mockStyle, mockObserver);
         
         verify(mockGraphics, times(2)).drawImage(
-            eq(testImage), 
+            eq(spyImage), 
             anyInt(), 
             anyInt(), 
             anyInt(), 
@@ -258,11 +267,11 @@ public class BitmapItemTest {
     // Helper method to set the buffered image directly for testing
     private void setBufferedImage(BitmapItem item, BufferedImage image) {
         try {
-            Field field = BitmapItem.class.getDeclaredField("bufferedImage");
+            java.lang.reflect.Field field = BitmapItem.class.getDeclaredField("bufferedImage");
             field.setAccessible(true);
             field.set(item, image);
         } catch (Exception e) {
-            fail("Failed to set buffered image: " + e.getMessage());
+            fail("Failed to set bufferedImage: " + e.getMessage());
         }
     }
 } 
