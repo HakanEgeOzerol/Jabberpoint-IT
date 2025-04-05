@@ -5,10 +5,10 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import jabberpoint.Event;
-import jabberpoint.Presentation;
-import jabberpoint.Slide;
-import jabberpoint.Subscriber;
+import jabberpoint.observer.Event;
+import jabberpoint.observer.Subscriber;
+import jabberpoint.presentation.Presentation;
+import jabberpoint.presentation.Slide;
 
 public class PresentationTest {
     private Presentation presentation;

@@ -10,8 +10,8 @@ import java.awt.image.ImageObserver;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
-import jabberpoint.BitmapItem;
-import jabberpoint.Style;
+import jabberpoint.presentation.Style;
+import jabberpoint.slideitem.BitmapItem;
 
 public class BitmapItemTest {
     private BitmapItem bitmapItem;

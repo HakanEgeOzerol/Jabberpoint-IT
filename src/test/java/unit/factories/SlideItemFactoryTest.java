@@ -2,9 +2,9 @@ package unit.factories;
 
 import org.junit.jupiter.api.Test;
 
-import jabberpoint.BitmapItemFactory;
-import jabberpoint.SlideItemFactory;
-import jabberpoint.TextItemFactory;
+import jabberpoint.slideitem.BitmapItemFactory;
+import jabberpoint.slideitem.SlideItemFactory;
+import jabberpoint.slideitem.TextItemFactory;
 import unit.*;
 
 import static org.junit.jupiter.api.Assertions.*;

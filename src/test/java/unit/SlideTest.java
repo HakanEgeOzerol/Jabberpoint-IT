@@ -9,11 +9,11 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.util.Vector;
 
-import jabberpoint.Slide;
-import jabberpoint.SlideItem;
-import jabberpoint.TextItem;
-import jabberpoint.Style;
-import jabberpoint.Constants;
+import jabberpoint.constants.Constants;
+import jabberpoint.presentation.Slide;
+import jabberpoint.presentation.Style;
+import jabberpoint.slideitem.SlideItem;
+import jabberpoint.slideitem.TextItem;
 
 public class SlideTest {
     private Slide slide;

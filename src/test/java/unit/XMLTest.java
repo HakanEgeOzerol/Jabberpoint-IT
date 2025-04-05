@@ -4,16 +4,16 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.io.TempDir;
 
-import jabberpoint.BitmapItem;
-import jabberpoint.BitmapItemFactory;
-import jabberpoint.Presentation;
-import jabberpoint.Slide;
-import jabberpoint.SlideItem;
-import jabberpoint.TextItem;
-import jabberpoint.TextItemFactory;
-import jabberpoint.XMLAccessor;
-import jabberpoint.XMLReader;
-import jabberpoint.XMLWriter;
+import jabberpoint.accessor.XMLAccessor;
+import jabberpoint.accessor.XMLReader;
+import jabberpoint.accessor.XMLWriter;
+import jabberpoint.presentation.Presentation;
+import jabberpoint.presentation.Slide;
+import jabberpoint.slideitem.BitmapItem;
+import jabberpoint.slideitem.BitmapItemFactory;
+import jabberpoint.slideitem.SlideItem;
+import jabberpoint.slideitem.TextItem;
+import jabberpoint.slideitem.TextItemFactory;
 
 import static org.junit.jupiter.api.Assertions.*;
 

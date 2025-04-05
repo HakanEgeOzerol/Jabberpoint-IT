@@ -1,8 +1,9 @@
 package acceptance;
 
-import jabberpoint.Presentation;
-import jabberpoint.DemoPresentation;
-import jabberpoint.Slide;
+import jabberpoint.accessor.DemoPresentation;
+import jabberpoint.presentation.Presentation;
+import jabberpoint.presentation.Slide;
+
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 

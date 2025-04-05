@@ -3,7 +3,7 @@ package unit;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import jabberpoint.Style;
+import jabberpoint.presentation.Style;
 
 import static org.junit.jupiter.api.Assertions.*;
 

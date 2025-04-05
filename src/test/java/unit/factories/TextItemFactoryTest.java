@@ -3,9 +3,9 @@ package unit.factories;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import jabberpoint.SlideItem;
-import jabberpoint.TextItem;
-import jabberpoint.TextItemFactory;
+import jabberpoint.slideitem.SlideItem;
+import jabberpoint.slideitem.TextItem;
+import jabberpoint.slideitem.TextItemFactory;
 import unit.*;
 
 import static org.junit.jupiter.api.Assertions.*;

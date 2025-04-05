@@ -2,6 +2,13 @@ package jabberpoint;
 
 import javax.swing.JOptionPane;
 
+import jabberpoint.command.Command;
+import jabberpoint.command.OpenFileCommand;
+import jabberpoint.constants.Constants;
+import jabberpoint.presentation.Presentation;
+import jabberpoint.presentation.Style;
+import jabberpoint.ui.SlideViewerFrame;
+
 import java.io.IOException;
 
 /** JabberPoint Main Program
@@ -48,7 +55,7 @@ public class JabberPoint {
 			}
 			// Set starting slide
 			presentation.setSlideNumber(0);
-			
+
 		} catch (Exception ex) {
 			JOptionPane.showMessageDialog(null,
 					Constants.ErrorMessages.IOERR + ex, Constants.ErrorMessages.JABERR,

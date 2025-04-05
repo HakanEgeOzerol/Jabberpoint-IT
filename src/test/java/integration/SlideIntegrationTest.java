@@ -1,8 +1,9 @@
 package integration;
 
-import jabberpoint.Slide;
-import jabberpoint.TextItem;
-import jabberpoint.BitmapItem;
+import jabberpoint.presentation.Slide;
+import jabberpoint.slideitem.BitmapItem;
+import jabberpoint.slideitem.TextItem;
+
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 

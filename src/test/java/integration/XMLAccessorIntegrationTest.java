@@ -1,8 +1,9 @@
 package integration;
 
-import jabberpoint.Presentation;
-import jabberpoint.Slide;
-import jabberpoint.XMLAccessor;
+import jabberpoint.accessor.XMLAccessor;
+import jabberpoint.presentation.Presentation;
+import jabberpoint.presentation.Slide;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import java.nio.file.Path;
