@@ -24,8 +24,9 @@ public class BitmapItem extends SlideItem {
 	private BufferedImage bufferedImage;
 	private String imageName;
 	
-	protected static final String FILE = "File ";
-	protected static final String NOTFOUND = " not found";
+	// Using constants from Constants.ErrorMessages
+	// protected static final String FILE = "File ";
+	// protected static final String NOTFOUND = " not found";
 
 	/**
 	 * Creates a BitmapItem with given level and image name
@@ -63,11 +64,11 @@ public class BitmapItem extends SlideItem {
 		try {
 			InputStream imageStream = getClass().getResourceAsStream("/images/" + name);
 			if (imageStream == null) {
-				throw new IOException(FILE + name + NOTFOUND);
+				throw new IOException(Constants.ErrorMessages.FILE + name + Constants.ErrorMessages.NOTFOUND);
 			}
 			return ImageIO.read(imageStream);
 		} catch (IOException e) {
-			System.err.println(FILE + name + NOTFOUND);
+			System.err.println(Constants.ErrorMessages.FILE + name + Constants.ErrorMessages.NOTFOUND);
 			return null;
 		}
 	}

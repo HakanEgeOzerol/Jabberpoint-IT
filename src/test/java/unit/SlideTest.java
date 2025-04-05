@@ -13,6 +13,7 @@ import jabberpoint.Slide;
 import jabberpoint.SlideItem;
 import jabberpoint.TextItem;
 import jabberpoint.Style;
+import jabberpoint.Constants;
 
 public class SlideTest {
     private Slide slide;
@@ -37,7 +38,7 @@ public class SlideTest {
         };
         
         // Create a test area
-        area = new Rectangle(0, 0, Slide.WIDTH, Slide.HEIGHT);
+        area = new Rectangle(0, 0, Constants.UI.WIDTH, Constants.UI.HEIGHT);
         
         // Initialize styles
         Style.createStyles();
@@ -132,9 +133,9 @@ public class SlideTest {
         slide.append(new TextItem(1, "Test Item"));
         
         // Test with different area sizes
-        Rectangle smallArea = new Rectangle(0, 0, Slide.WIDTH / 2, Slide.HEIGHT / 2);
-        Rectangle wideArea = new Rectangle(0, 0, Slide.WIDTH * 2, Slide.HEIGHT);
-        Rectangle tallArea = new Rectangle(0, 0, Slide.WIDTH, Slide.HEIGHT * 2);
+        Rectangle smallArea = new Rectangle(0, 0, Constants.UI.WIDTH / 2, Constants.UI.HEIGHT / 2);
+        Rectangle wideArea = new Rectangle(0, 0, Constants.UI.WIDTH * 2, Constants.UI.HEIGHT);
+        Rectangle tallArea = new Rectangle(0, 0, Constants.UI.WIDTH, Constants.UI.HEIGHT * 2);
         
         assertDoesNotThrow(() -> {
             slide.draw(graphics, smallArea, observer);

@@ -20,9 +20,10 @@ import java.io.IOException;
  */
 
 public class JabberPoint {
-	protected static final String IOERR = "IO Error: ";
-	protected static final String JABERR = "Jabberpoint Error ";
-	protected static final String JABVERSION = "Jabberpoint 1.7 - Updated Architecture";
+	// Using constants from Constants.ErrorMessages and Constants.Info
+	// protected static final String IOERR = "IO Error: ";
+	// protected static final String JABERR = "Jabberpoint Error ";
+	// protected static final String JABVERSION = "Jabberpoint 1.7 - Updated Architecture";
 
 	/** The Main Program */
 	public static void main(String argv[]) {
@@ -34,7 +35,7 @@ public class JabberPoint {
 		Presentation presentation = new Presentation();
 		
 		// Create the main window and connect it to the presentation
-		SlideViewerFrame viewerFrame = new SlideViewerFrame(JABVERSION, presentation);
+		SlideViewerFrame viewerFrame = new SlideViewerFrame(Constants.Info.JABVERSION, presentation);
 		
 		// Load presentation data
 		try {
@@ -50,7 +51,7 @@ public class JabberPoint {
 			gotoCommand.execute();
 		} catch (Exception ex) {
 			JOptionPane.showMessageDialog(null,
-					IOERR + ex, JABERR,
+					Constants.ErrorMessages.IOERR + ex, Constants.ErrorMessages.JABERR,
 					JOptionPane.ERROR_MESSAGE);
 		}
 	}

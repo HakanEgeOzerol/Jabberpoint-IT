@@ -31,21 +31,22 @@ public class SlideViewerComponent extends JComponent implements Subscriber {
 	
 	private static final long serialVersionUID = 227L;
 	
-	private static final Color BGCOLOR = Color.white;
-	private static final Color COLOR = Color.black;
-	private static final String FONTNAME = "Dialog";
-	private static final int FONTSTYLE = Font.BOLD;
-	private static final int FONTHEIGHT = 10;
-	private static final int XPOS = 1100;
-	private static final int YPOS = 20;
+	// Using constants from Constants.UI
+	// private static final Color BGCOLOR = Color.white;
+	// private static final Color COLOR = Color.black;
+	// private static final String FONTNAME = "Dialog";
+	// private static final int FONTSTYLE = Font.BOLD;
+	// private static final int FONTHEIGHT = 10;
+	// private static final int XPOS = 1100;
+	// private static final int YPOS = 20;
 
 	/**
 	 * Constructor for the viewer component
 	 * @param frame The frame in which the component is shown
 	 */
 	public SlideViewerComponent(JFrame frame) {
-		setBackground(BGCOLOR); 
-		labelFont = new Font(FONTNAME, FONTSTYLE, FONTHEIGHT);
+		setBackground(Constants.UI.BGCOLOR); 
+		labelFont = new Font(Constants.UI.FONTNAME, Constants.UI.FONTSTYLE, Constants.UI.FONTHEIGHT);
 		this.frame = frame;
 	}
 
@@ -54,7 +55,7 @@ public class SlideViewerComponent extends JComponent implements Subscriber {
 	 * @return The preferred dimension
 	 */
 	public Dimension getPreferredSize() {
-		return new Dimension(Slide.WIDTH, Slide.HEIGHT);
+		return new Dimension(Constants.UI.WIDTH, Constants.UI.HEIGHT);
 	}
 	
 	/**
@@ -87,16 +88,16 @@ public class SlideViewerComponent extends JComponent implements Subscriber {
 	 */
 	@Override
 	public void paintComponent(Graphics g) {
-		g.setColor(BGCOLOR);
+		g.setColor(Constants.UI.BGCOLOR);
 		g.fillRect(0, 0, getSize().width, getSize().height);
 		if (this.slideNumber < 0 || slide == null) {
 			return;
 		}
 		g.setFont(labelFont);
-		g.setColor(COLOR);
+		g.setColor(Constants.UI.COLOR);
 		g.drawString("Slide " + (1 + this.slideNumber) + " of " +
-                 this.maxSlides, XPOS, YPOS);
-		Rectangle area = new Rectangle(0, YPOS, getWidth(), (getHeight() - YPOS));
+                 this.maxSlides, Constants.UI.XPOS, Constants.UI.YPOS);
+		Rectangle area = new Rectangle(0, Constants.UI.YPOS, getWidth(), (getHeight() - Constants.UI.YPOS));
 		slide.draw(g, area, this);
 	}
 }

@@ -23,20 +23,20 @@ import org.xml.sax.SAXException;
  */
 public class XMLReader {
 
-    // Common XML tag/attribute names (same as in XMLAccessor)
-    protected static final String SHOWTITLE   = "showtitle";
-    protected static final String SLIDETITLE  = "title";
-    protected static final String SLIDE       = "slide";
-    protected static final String ITEM        = "item";
-    protected static final String LEVEL       = "level";
-    protected static final String KIND        = "kind";
-    protected static final String TEXT        = "text";
-    protected static final String IMAGE       = "image";
+    // Using constants from Constants.XML
+    // protected static final String SHOWTITLE   = "showtitle";
+    // protected static final String SLIDETITLE  = "title";
+    // protected static final String SLIDE       = "slide";
+    // protected static final String ITEM        = "item";
+    // protected static final String LEVEL       = "level";
+    // protected static final String KIND        = "kind";
+    // protected static final String TEXT        = "text";
+    // protected static final String IMAGE       = "image";
 
-    // Some message strings (for error reporting, same as XMLAccessor)
-    protected static final String PCE         = "Parser Configuration Exception";
-    protected static final String UNKNOWNTYPE = "Unknown Element type";
-    protected static final String NFE         = "Number Format Exception";
+    // Using constants from Constants.ErrorMessages
+    // protected static final String PCE         = "Parser Configuration Exception";
+    // protected static final String UNKNOWNTYPE = "Unknown Element type";
+    // protected static final String NFE         = "Number Format Exception";
 
     private final TextItemFactory textItemFactory;
     private final BitmapItemFactory bitmapItemFactory;
@@ -60,18 +60,18 @@ public class XMLReader {
 
             Element doc = document.getDocumentElement();
             // Set the presentation title
-            presentation.setTitle(getTitle(doc, SHOWTITLE));
+            presentation.setTitle(getTitle(doc, Constants.XML.SHOWTITLE));
 
             // Process each <slide> element
-            NodeList slides = doc.getElementsByTagName(SLIDE);
+            NodeList slides = doc.getElementsByTagName(Constants.XML.SLIDE);
             for (int i = 0; i < slides.getLength(); i++) {
                 Element xmlSlide = (Element) slides.item(i);
                 Slide slide = new Slide();
-                slide.setTitle(getTitle(xmlSlide, SLIDETITLE));
+                slide.setTitle(getTitle(xmlSlide, Constants.XML.SLIDETITLE));
                 presentation.append(slide);
 
                 // Process <item> elements within each slide
-                NodeList slideItems = xmlSlide.getElementsByTagName(ITEM);
+                NodeList slideItems = xmlSlide.getElementsByTagName(Constants.XML.ITEM);
                 for (int j = 0; j < slideItems.getLength(); j++) {
                     Element item = (Element) slideItems.item(j);
                     loadSlideItem(slide, item);
@@ -84,7 +84,7 @@ public class XMLReader {
         } catch (SAXException sax) {
             System.err.println("SAXException while reading " + filename + ": " + sax.getMessage());
         } catch (ParserConfigurationException pcx) {
-            System.err.println(PCE + ": " + pcx.getMessage());
+            System.err.println(Constants.ErrorMessages.PCE + ": " + pcx.getMessage());
         }
     }
 
@@ -104,24 +104,24 @@ public class XMLReader {
      */
     private void loadSlideItem(Slide slide, Element item) {
         NamedNodeMap attributes = item.getAttributes();
-        String levelText = attributes.getNamedItem(LEVEL).getTextContent();
-        String type = attributes.getNamedItem(KIND).getTextContent();
+        String levelText = attributes.getNamedItem(Constants.XML.LEVEL).getTextContent();
+        String type = attributes.getNamedItem(Constants.XML.KIND).getTextContent();
         String content = item.getTextContent();
 
         try {
             int level = Integer.parseInt(levelText);
             SlideItem slideItem;
-            if (TEXT.equals(type)) {
+            if (Constants.XML.TEXT.equals(type)) {
                 slideItem = textItemFactory.createSlideItem(type, level, content);
-            } else if (IMAGE.equals(type)) {
+            } else if (Constants.XML.IMAGE.equals(type)) {
                 slideItem = bitmapItemFactory.createSlideItem(type, level, content);
             } else {
-                System.err.println(UNKNOWNTYPE + ": " + type);
+                System.err.println(Constants.ErrorMessages.UNKNOWNTYPE + ": " + type);
                 return;
             }
             slide.append(slideItem);
         } catch (NumberFormatException x) {
-            System.err.println(NFE);
+            System.err.println(Constants.ErrorMessages.NFE);
         }
     }
 }

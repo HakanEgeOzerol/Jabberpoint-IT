@@ -15,15 +15,15 @@ import java.util.Vector;
  */
 public class XMLWriter {
 
-    // Common XML tag/attribute names
-    protected static final String SHOWTITLE  = "showtitle";
-    protected static final String SLIDETITLE = "title";
-    protected static final String SLIDE      = "slide";
-    protected static final String ITEM       = "item";
-    protected static final String LEVEL      = "level";
-    protected static final String KIND       = "kind";
-    protected static final String TEXT       = "text";
-    protected static final String IMAGE      = "image";
+    // Using constants from Constants.XML
+    // protected static final String SHOWTITLE  = "showtitle";
+    // protected static final String SLIDETITLE = "title";
+    // protected static final String SLIDE      = "slide";
+    // protected static final String ITEM       = "item";
+    // protected static final String LEVEL      = "level";
+    // protected static final String KIND       = "kind";
+    // protected static final String TEXT       = "text";
+    // protected static final String IMAGE      = "image";
 
     public XMLWriter() {}  // Add constructor to match diagram
 
@@ -45,9 +45,9 @@ public class XMLWriter {
             out.println("<presentation>");
 
             // Show title
-            out.print("  <" + SHOWTITLE + ">");
+            out.print("  <" + Constants.XML.SHOWTITLE + ">");
             out.print(presentation.getTitle());
-            out.println("</" + SHOWTITLE + ">");
+            out.println("</" + Constants.XML.SHOWTITLE + ">");
 
             // For each slide
             int slideCount = presentation.getSize();
@@ -62,39 +62,39 @@ public class XMLWriter {
     }
 
     private void convertSlide(Slide slide, PrintWriter out) {
-        out.println("  <" + SLIDE + ">");
-        out.println("    <" + SLIDETITLE + ">" + slide.getTitle() + "</" + SLIDETITLE + ">");
+        out.println("  <" + Constants.XML.SLIDE + ">");
+        out.println("    <" + Constants.XML.SLIDETITLE + ">" + slide.getTitle() + "</" + Constants.XML.SLIDETITLE + ">");
         
         Vector<SlideItem> items = slide.getSlideItems();
         for (SlideItem item : items) {
             convertSlideItem(item, out);
         }
         
-        out.println("  </" + SLIDE + ">");
+        out.println("  </" + Constants.XML.SLIDE + ">");
     }
 
     private void convertSlideItem(SlideItem slideItem, PrintWriter out) {
-        out.print("    <" + ITEM + " " + KIND + "=\"");
+        out.print("    <" + Constants.XML.ITEM + " " + Constants.XML.KIND + "=\"");
         
         if (slideItem instanceof TextItem) {
             TextItem textItem = (TextItem) slideItem;
-            out.print(TEXT + "\" " + LEVEL + "=\"" + textItem.getLevel() + "\">");
+            out.print(Constants.XML.TEXT + "\" " + Constants.XML.LEVEL + "=\"" + textItem.getLevel() + "\">");
             out.print(((TextItem) slideItem).getText());
         } 
         else if (slideItem instanceof BitmapItem) {
             BitmapItem bitmapItem = (BitmapItem) slideItem;
-            out.print(IMAGE + "\" " + LEVEL + "=\"" + bitmapItem.getLevel() + "\">");
+            out.print(Constants.XML.IMAGE + "\" " + Constants.XML.LEVEL + "=\"" + bitmapItem.getLevel() + "\">");
             out.print(((BitmapItem) slideItem).getName());
         }
         
-        out.println("</" + ITEM + ">");
+        out.println("</" + Constants.XML.ITEM + ">");
     }
 
     public void saveFile(Presentation p, String fn) throws IOException {
         try (PrintWriter out = new PrintWriter(new FileWriter(fn))) {
             out.println("<?xml version=\"1.0\"?>");
             out.println("<presentation>");
-            out.println("  <" + SHOWTITLE + ">" + p.getTitle() + "</" + SHOWTITLE + ">");
+            out.println("  <" + Constants.XML.SHOWTITLE + ">" + p.getTitle() + "</" + Constants.XML.SHOWTITLE + ">");
             
             for (int slideNumber = 0; slideNumber < p.getSize(); slideNumber++) {
                 Slide slide = p.getSlide(slideNumber);

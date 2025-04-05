@@ -18,22 +18,25 @@ import org.w3c.dom.NodeList;
 public class XMLAccessor extends Accessor {
 	
     /** Default API to use. */
-    protected static final String DEFAULT_API_TO_USE = "dom";
+    // Using constant from Constants.XML
+    // protected static final String DEFAULT_API_TO_USE = "dom";
     
     /** namen van xml tags of attributen */
-    protected static final String SHOWTITLE = "showtitle";
-    protected static final String SLIDETITLE = "title";
-    protected static final String SLIDE = "slide";
-    protected static final String ITEM = "item";
-    protected static final String LEVEL = "level";
-    protected static final String KIND = "kind";
-    protected static final String TEXT = "text";
-    protected static final String IMAGE = "image";
+    // Using constants from Constants.XML
+    // protected static final String SHOWTITLE = "showtitle";
+    // protected static final String SLIDETITLE = "title";
+    // protected static final String SLIDE = "slide";
+    // protected static final String ITEM = "item";
+    // protected static final String LEVEL = "level";
+    // protected static final String KIND = "kind";
+    // protected static final String TEXT = "text";
+    // protected static final String IMAGE = "image";
     
     /** tekst van messages */
-    protected static final String PCE = "Parser Configuration Exception";
-    protected static final String UNKNOWNTYPE = "Unknown Element type";
-    protected static final String NFE = "Number Format Exception";
+    // Using constants from Constants.ErrorMessages
+    // protected static final String PCE = "Parser Configuration Exception";
+    // protected static final String UNKNOWNTYPE = "Unknown Element type";
+    // protected static final String NFE = "Number Format Exception";
     
     private XMLWriter writer;
     private XMLReader reader;

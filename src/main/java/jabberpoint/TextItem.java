@@ -29,7 +29,8 @@ import java.util.ArrayList;
 public class TextItem extends SlideItem {
 	private String text;
 	
-	private static final String EMPTYTEXT = "No Text Given";
+	// Using constant from Constants.TextItems
+	// private static final String EMPTYTEXT = "No Text Given";
 
 // a textitem of level level, with the text string
 	public TextItem(int level, String string) {
@@ -39,7 +40,7 @@ public class TextItem extends SlideItem {
 
 // an empty textitem
 	public TextItem() {
-		this(0, EMPTYTEXT);
+		this(0, Constants.TextItems.EMPTYTEXT);
 	}
 
 // give the text
@@ -99,7 +100,7 @@ public class TextItem extends SlideItem {
     	Graphics2D g2d = (Graphics2D) g;
     	FontRenderContext frc = g2d.getFontRenderContext();
     	LineBreakMeasurer measurer = new LineBreakMeasurer(attrStr.getIterator(), frc);
-    	float wrappingWidth = (Slide.WIDTH - s.getIndent()) * scale;
+    	float wrappingWidth = (Constants.UI.WIDTH - s.getIndent()) * scale;
     	while (measurer.getPosition() < getText().length()) {
     		TextLayout layout = measurer.nextLayout(wrappingWidth);
     		layouts.add(layout);

@@ -28,21 +28,22 @@ public class MenuController extends MenuBar {
 	
 	private static final long serialVersionUID = 227L;
 	
-	protected static final String ABOUT = "About";
-	protected static final String FILE = "File";
-	protected static final String EXIT = "Exit";
-	protected static final String GOTO = "Go to";
-	protected static final String HELP = "Help";
-	protected static final String NEW = "New";
-	protected static final String NEXT = "Next";
-	protected static final String OPEN = "Open";
-	protected static final String PAGENR = "Page number?";
-	protected static final String PREV = "Prev";
-	protected static final String SAVE = "Save";
-	protected static final String VIEW = "View";
+	// Using constants from Constants.Commands
+	// protected static final String ABOUT = "About";
+	// protected static final String FILE = "File";
+	// protected static final String EXIT = "Exit";
+	// protected static final String GOTO = "Go to";
+	// protected static final String HELP = "Help";
+	// protected static final String NEW = "New";
+	// protected static final String NEXT = "Next";
+	// protected static final String OPEN = "Open";
+	// protected static final String PAGENR = "Page number?";
+	// protected static final String PREV = "Prev";
+	// protected static final String SAVE = "Save";
+	// protected static final String VIEW = "View";
 	
-	protected static final String TESTFILE = "test.xml";
-	protected static final String SAVEFILE = "dump.xml";
+	// protected static final String TESTFILE = "test.xml";
+	// protected static final String SAVEFILE = "dump.xml";
 	
 	public MenuController(SlideViewerFrame frame, Presentation pres) {
 		parent = frame;
@@ -53,19 +54,19 @@ public class MenuController extends MenuBar {
 		Command nextSlideCommand = new NextSlideCommand(presentation);
 		Command prevSlideCommand = new PreviousSlideCommand(presentation);
 		Command exitCommand = new ExitCommand(presentation);
-		Command openCommand = new OpenFileCommand(parent, presentation, TESTFILE);
-		Command saveCommand = new SaveFileCommand(parent, presentation, SAVEFILE);
+		Command openCommand = new OpenFileCommand(parent, presentation, Constants.Commands.TESTFILE);
+		Command saveCommand = new SaveFileCommand(parent, presentation, Constants.Commands.SAVEFILE);
 		Command newCommand = new NewPresentationCommand(parent, presentation);
 		Command aboutCommand = new AboutBoxCommand(parent, presentation);
 		
 		// Register commands in the map
-		menuItems.put(NEXT, nextSlideCommand);
-		menuItems.put(PREV, prevSlideCommand);
-		menuItems.put(EXIT, exitCommand);
-		menuItems.put(OPEN, openCommand);
-		menuItems.put(SAVE, saveCommand);
-		menuItems.put(NEW, newCommand);
-		menuItems.put(ABOUT, aboutCommand);
+		menuItems.put(Constants.Commands.NEXT, nextSlideCommand);
+		menuItems.put(Constants.Commands.PREV, prevSlideCommand);
+		menuItems.put(Constants.Commands.EXIT, exitCommand);
+		menuItems.put(Constants.Commands.OPEN, openCommand);
+		menuItems.put(Constants.Commands.SAVE, saveCommand);
+		menuItems.put(Constants.Commands.NEW, newCommand);
+		menuItems.put(Constants.Commands.ABOUT, aboutCommand);
 		
 		createMenus();
 	}
@@ -74,22 +75,22 @@ public class MenuController extends MenuBar {
 	 * Creates the menus and menu items
 	 */
 	private void createMenus() {
-		Menu fileMenu = new Menu(FILE);
-		fileMenu.add(mkMenuItem(OPEN));
-		fileMenu.add(mkMenuItem(NEW));
-		fileMenu.add(mkMenuItem(SAVE));
+		Menu fileMenu = new Menu(Constants.Commands.FILE);
+		fileMenu.add(mkMenuItem(Constants.Commands.OPEN));
+		fileMenu.add(mkMenuItem(Constants.Commands.NEW));
+		fileMenu.add(mkMenuItem(Constants.Commands.SAVE));
 		fileMenu.addSeparator();
-		fileMenu.add(mkMenuItem(EXIT));
+		fileMenu.add(mkMenuItem(Constants.Commands.EXIT));
 		add(fileMenu);
 		
-		Menu viewMenu = new Menu(VIEW);
-		viewMenu.add(mkMenuItem(NEXT));
-		viewMenu.add(mkMenuItem(PREV));
-		viewMenu.add(mkMenuItem(GOTO));
+		Menu viewMenu = new Menu(Constants.Commands.VIEW);
+		viewMenu.add(mkMenuItem(Constants.Commands.NEXT));
+		viewMenu.add(mkMenuItem(Constants.Commands.PREV));
+		viewMenu.add(mkMenuItem(Constants.Commands.GOTO));
 		add(viewMenu);
 		
-		Menu helpMenu = new Menu(HELP);
-		helpMenu.add(mkMenuItem(ABOUT));
+		Menu helpMenu = new Menu(Constants.Commands.HELP);
+		helpMenu.add(mkMenuItem(Constants.Commands.ABOUT));
 		setHelpMenu(helpMenu);		// needed for portability (Motif, etc.).
 	}
 
@@ -105,7 +106,7 @@ public class MenuController extends MenuBar {
 		Command command = menuItems.get(name);
 		if (command != null) {
 			menuItem.addActionListener(createActionListener(command));
-		} else if (GOTO.equals(name)) {
+		} else if (Constants.Commands.GOTO.equals(name)) {
 			// Special case for Go to which needs input
 			menuItem.addActionListener(createGoToActionListener());
 		}
@@ -133,7 +134,7 @@ public class MenuController extends MenuBar {
 	private ActionListener createGoToActionListener() {
 		return new ActionListener() {
 			public void actionPerformed(ActionEvent actionEvent) {
-				String pageNumberStr = javax.swing.JOptionPane.showInputDialog(PAGENR);
+				String pageNumberStr = javax.swing.JOptionPane.showInputDialog(Constants.Commands.PAGENR);
 				try {
 					int pageNumber = Integer.parseInt(pageNumberStr);
 					// Go to page

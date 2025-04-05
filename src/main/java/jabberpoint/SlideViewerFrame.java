@@ -20,7 +20,8 @@ import javax.swing.JFrame;
 public class SlideViewerFrame extends JFrame {
 	private static final long serialVersionUID = 3227L;
 	
-	private static final String JABTITLE = "Jabberpoint 1.6 - OU";
+	// Using constant from Constants.UI
+	// private static final String JABTITLE = "Jabberpoint 1.6 - OU";
 	
 	private KeyController keyController;
 	private MenuController menuController;
@@ -43,7 +44,7 @@ public class SlideViewerFrame extends JFrame {
 	 * @param presentation The presentation to display
 	 */
 	public void setupWindow(SlideViewerComponent slideViewerComponent, Presentation presentation) {
-		setTitle(JABTITLE);
+		setTitle(Constants.UI.JABTITLE);
 		addWindowListener(new WindowAdapter() {
 				public void windowClosing(WindowEvent e) {
 					System.exit(0);

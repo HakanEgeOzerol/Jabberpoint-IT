@@ -16,8 +16,9 @@ import java.util.Vector;
  */
 
 public class Slide {
-	public final static int WIDTH = 1200;
-	public final static int HEIGHT = 800;
+	// Using WIDTH and HEIGHT from Constants.UI
+	// public final static int WIDTH = 1200;
+	// public final static int HEIGHT = 800;
 	protected String title; // title is saved separately
 	protected Vector<SlideItem> items; // slide items are saved in a Vector
 
@@ -79,6 +80,6 @@ public class Slide {
 
 	// Give the scale for drawing
 	private float getScale(Rectangle area) {
-		return Math.min(((float)area.width) / ((float)WIDTH), ((float)area.height) / ((float)HEIGHT));
+		return Math.min(((float)area.width) / ((float)Constants.UI.WIDTH), ((float)area.height) / ((float)Constants.UI.HEIGHT));
 	}
 }
