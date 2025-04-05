@@ -1,7 +1,12 @@
-package jabberpoint.factories;
+package unit.factories;
 
-import jabberpoint.*;
 import org.junit.jupiter.api.Test;
+
+import jabberpoint.BitmapItemFactory;
+import jabberpoint.SlideItemFactory;
+import jabberpoint.TextItemFactory;
+import unit.*;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class SlideItemFactoryTest {

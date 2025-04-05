@@ -1,8 +1,20 @@
-package jabberpoint;
+package unit;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.io.TempDir;
+
+import jabberpoint.BitmapItem;
+import jabberpoint.BitmapItemFactory;
+import jabberpoint.Presentation;
+import jabberpoint.Slide;
+import jabberpoint.SlideItem;
+import jabberpoint.TextItem;
+import jabberpoint.TextItemFactory;
+import jabberpoint.XMLAccessor;
+import jabberpoint.XMLReader;
+import jabberpoint.XMLWriter;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;

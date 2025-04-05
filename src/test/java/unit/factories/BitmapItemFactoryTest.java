@@ -1,8 +1,13 @@
-package jabberpoint.factories;
+package unit.factories;
 
-import jabberpoint.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import jabberpoint.BitmapItem;
+import jabberpoint.BitmapItemFactory;
+import jabberpoint.SlideItem;
+import unit.*;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class BitmapItemFactoryTest {
