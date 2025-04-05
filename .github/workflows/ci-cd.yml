@@ -267,23 +267,23 @@ jobs:
 
       - name: Generate Pipeline Summary
         run: |
-            echo "## Pipeline Summary" >> $GITHUB_STEP_SUMMARY
-            
-            echo "### Test Coverage" >> $GITHUB_STEP_SUMMARY
-            echo "📊 **Line Coverage**: ${{ needs.build-and-test.outputs.line_coverage }}%" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            
-            echo "### Automated Steps Completed" >> $GITHUB_STEP_SUMMARY
-            echo "- ✅ **Unit Tests**" >> $GITHUB_STEP_SUMMARY
-            echo "- ✅ **Integration Tests**" >> $GITHUB_STEP_SUMMARY
-            echo "- ✅ **Acceptance Tests**" >> $GITHUB_STEP_SUMMARY
-            echo "- ✅ **Merged to testing**" >> $GITHUB_STEP_SUMMARY
-            echo "- ✅ **Merged to acceptance**" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            
-            echo "### Manual Steps Required" >> $GITHUB_STEP_SUMMARY
-            echo "⚠️ **Production Release Steps:**" >> $GITHUB_STEP_SUMMARY
-            echo "1. Create a pull request from 'acceptance' to 'main'" >> $GITHUB_STEP_SUMMARY
-            echo "2. Get required approvals" >> $GITHUB_STEP_SUMMARY
-            echo "3. Merge to 'main'" >> $GITHUB_STEP_SUMMARY
-            echo "4. Deploy to production" >> $GITHUB_STEP_SUMMARY
+          echo "## Pipeline Summary" >> $GITHUB_STEP_SUMMARY
+          
+          echo "### Test Coverage" >> $GITHUB_STEP_SUMMARY
+          echo "📊 **Line Coverage**: ${LINE_COVERAGE}%" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          echo "### Automated Steps Completed" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ **Unit Tests**" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ **Integration Tests**" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ **Acceptance Tests**" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ **Merged to testing**" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ **Merged to acceptance**" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          echo "### Manual Steps Required" >> $GITHUB_STEP_SUMMARY
+          echo "⚠️ **Production Release Steps:**" >> $GITHUB_STEP_SUMMARY
+          echo "1. Create a pull request from 'acceptance' to 'main'" >> $GITHUB_STEP_SUMMARY
+          echo "2. Get required approvals" >> $GITHUB_STEP_SUMMARY
+          echo "3. Merge to 'main'" >> $GITHUB_STEP_SUMMARY
+          echo "4. Deploy to production" >> $GITHUB_STEP_SUMMARY
