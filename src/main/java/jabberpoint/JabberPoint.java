@@ -47,8 +47,8 @@ public class JabberPoint {
 				openCommand.execute();
 			}
 			// Set starting slide
-			Command gotoCommand = new GoToSlideCommand(presentation, 0);
-			gotoCommand.execute();
+			presentation.setSlideNumber(0);
+			
 		} catch (Exception ex) {
 			JOptionPane.showMessageDialog(null,
 					Constants.ErrorMessages.IOERR + ex, Constants.ErrorMessages.JABERR,
