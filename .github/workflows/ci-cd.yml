@@ -8,7 +8,7 @@ on:
 
 jobs:
   #######################################################################
-  # 1) Debug Logging – optional, always runs to show context values
+  # 1) Debug Logging – always runs to show context values
   #######################################################################
   debug-logging:
     runs-on: ubuntu-latest
@@ -31,6 +31,9 @@ jobs:
   #######################################################################
   build-and-test:
     runs-on: ubuntu-latest
+    outputs:
+      unit_pass_percent: ${{ steps.unit-tests.outputs.unit_pass_percent }}
+      line_coverage: ${{ steps.coverage-check.outputs.line_coverage }}
     steps:
       - uses: actions/checkout@v4
 
@@ -45,36 +48,40 @@ jobs:
         run: mvn -B package --file pom.xml
 
       - name: Run unit tests
+        id: unit-tests
         run: |
           echo "Running unit tests..."
-          # Run tests and store the exit code
           mvn test jacoco:report
           MVN_EXIT_CODE=$?
-          
-          # Display test results summary
-          echo "=== Unit Test Results ==="
-          find . -type f -name "TEST-*.xml" -path "*/surefire-reports/*" -exec grep -h "<testcase" {} \; | wc -l | xargs -I {} echo "Total Tests: {}"
+
+          # Calculate test statistics from surefire reports
+          TOTAL_TESTS=$(find . -type f -name "TEST-*.xml" -path "*/surefire-reports/*" -exec grep -h "<testcase" {} \; | wc -l)
           FAILED=$(find . -type f -name "TEST-*.xml" -path "*/surefire-reports/*" -exec grep -h "<failure" {} \; | wc -l)
           ERRORS=$(find . -type f -name "TEST-*.xml" -path "*/surefire-reports/*" -exec grep -h "<error" {} \; | wc -l)
-          echo "Failed Tests: $FAILED"
-          echo "Error Tests: $ERRORS"
-          
-          # If Maven failed or there are test failures, fail the build
+          PASSED=$(( TOTAL_TESTS - FAILED - ERRORS ))
+
+          if [ $TOTAL_TESTS -gt 0 ]; then
+            PASS_PERCENT=$(( 100 * PASSED / TOTAL_TESTS ))
+          else
+            PASS_PERCENT=0
+          fi
+
+          # Append unit test summary to the GitHub step summary file
+          echo "### Unit Tests Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- Total Tests: $TOTAL_TESTS" >> $GITHUB_STEP_SUMMARY
+          echo "- Passed: $PASSED ($PASS_PERCENT%)" >> $GITHUB_STEP_SUMMARY
+
+          # Fail the job if tests failed or Maven returned an error
           if [ $MVN_EXIT_CODE -ne 0 ] || [ $FAILED -gt 0 ] || [ $ERRORS -gt 0 ]; then
-            echo "❌ Tests failed! Check the logs for details."
-            echo "Maven exit code: $MVN_EXIT_CODE"
-            echo "Failed tests: $FAILED"
-            echo "Test errors: $ERRORS"
-            
-            # Display failed test details
-            echo -e "\n=== Failed Test Details ==="
-            find . -type f -name "TEST-*.xml" -path "*/surefire-reports/*" -exec grep -A 5 -B 1 "<failure\|<error" {} \;
+            echo "❌ Unit tests failed."
             exit 1
           fi
-          
-          echo "✅ All unit tests passed!"
+
+          # Export the percentage as an output for later jobs
+          echo "unit_pass_percent=$PASS_PERCENT" >> $GITHUB_OUTPUT
 
       - name: Check code coverage
+        id: coverage-check
         run: |
           echo "Checking code coverage..."
           # Extract coverage metrics
@@ -88,17 +95,16 @@ jobs:
             if [ "$LINE_COVERAGE" -lt "$MIN_COVERAGE" ]; then
               echo "⚠️ Warning: Code coverage is below minimum required coverage of ${MIN_COVERAGE}%"
               echo "Current coverage: ${LINE_COVERAGE}%"
-              # Store coverage for later steps
-              echo "line_coverage=${LINE_COVERAGE}" >> $GITHUB_ENV
             else
               echo "✅ Code coverage is above minimum required coverage of ${MIN_COVERAGE}%"
               echo "Current coverage: ${LINE_COVERAGE}%"
-              # Store coverage for later steps
-              echo "line_coverage=${LINE_COVERAGE}" >> $GITHUB_ENV
             fi
+            
+            # Export the coverage for later jobs
+            echo "line_coverage=$LINE_COVERAGE" >> $GITHUB_OUTPUT
           else
             echo "⚠️ Warning: No coverage report found"
-            echo "line_coverage=N/A" >> $GITHUB_ENV
+            echo "line_coverage=0" >> $GITHUB_OUTPUT
           fi
 
       - name: Upload test results
@@ -125,6 +131,8 @@ jobs:
   integration-tests:
     needs: build-and-test
     runs-on: ubuntu-latest
+    outputs:
+      integration_pass_percent: ${{ steps.integration-tests-run.outputs.integration_pass_percent }}
     steps:
       - uses: actions/checkout@v4
 
@@ -135,10 +143,28 @@ jobs:
           distribution: "temurin"
 
       - name: Run Integration Tests
+        id: integration-tests-run
         run: |
           echo "Running integration tests..."
           mvn verify -P integration-test
-          echo "Integration tests completed"
+
+          # Parse integration test results from failsafe reports
+          TOTAL_TESTS=$(find . -type f -name "TEST-*.xml" -path "*/failsafe-reports/*" -exec grep -h "<testcase" {} \; | wc -l)
+          FAILED=$(find . -type f -name "TEST-*.xml" -path "*/failsafe-reports/*" -exec grep -h "<failure" {} \; | wc -l)
+          ERRORS=$(find . -type f -name "TEST-*.xml" -path "*/failsafe-reports/*" -exec grep -h "<error" {} \; | wc -l)
+          PASSED=$(( TOTAL_TESTS - FAILED - ERRORS ))
+
+          if [ $TOTAL_TESTS -gt 0 ]; then
+            PASS_PERCENT=$(( 100 * PASSED / TOTAL_TESTS ))
+          else
+            PASS_PERCENT=0
+          fi
+
+          echo "### Integration Tests Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- Total Tests: $TOTAL_TESTS" >> $GITHUB_STEP_SUMMARY
+          echo "- Passed: $PASSED ($PASS_PERCENT%)" >> $GITHUB_STEP_SUMMARY
+
+          echo "integration_pass_percent=$PASS_PERCENT" >> $GITHUB_OUTPUT
 
       - name: Upload integration test results
         if: always()
@@ -155,6 +181,8 @@ jobs:
   acceptance-tests:
     needs: integration-tests
     runs-on: ubuntu-latest
+    outputs:
+      acceptance_pass_percent: ${{ steps.acceptance-tests-run.outputs.acceptance_pass_percent }}
     steps:
       - uses: actions/checkout@v4
 
@@ -165,10 +193,28 @@ jobs:
           distribution: "temurin"
 
       - name: Run Acceptance Tests
+        id: acceptance-tests-run
         run: |
           echo "Running acceptance tests..."
           mvn verify -P acceptance-test
-          echo "Acceptance tests completed"
+
+          # Parse acceptance test results from failsafe reports
+          TOTAL_TESTS=$(find . -type f -name "TEST-*.xml" -path "*/failsafe-reports/*" -exec grep -h "<testcase" {} \; | wc -l)
+          FAILED=$(find . -type f -name "TEST-*.xml" -path "*/failsafe-reports/*" -exec grep -h "<failure" {} \; | wc -l)
+          ERRORS=$(find . -type f -name "TEST-*.xml" -path "*/failsafe-reports/*" -exec grep -h "<error" {} \; | wc -l)
+          PASSED=$(( TOTAL_TESTS - FAILED - ERRORS ))
+
+          if [ $TOTAL_TESTS -gt 0 ]; then
+            PASS_PERCENT=$(( 100 * PASSED / TOTAL_TESTS ))
+          else
+            PASS_PERCENT=0
+          fi
+
+          echo "### Acceptance Tests Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- Total Tests: $TOTAL_TESTS" >> $GITHUB_STEP_SUMMARY
+          echo "- Passed: $PASSED ($PASS_PERCENT%)" >> $GITHUB_STEP_SUMMARY
+
+          echo "acceptance_pass_percent=$PASS_PERCENT" >> $GITHUB_OUTPUT
 
       - name: Upload acceptance test results
         if: always()
@@ -180,7 +226,7 @@ jobs:
           retention-days: 30
 
   #######################################################################
-  # 5) Auto-merge to Testing – runs only if dev, after acceptance tests
+  # 5) Auto-merge to Testing – runs only if on development branch
   #######################################################################
   merge-to-testing:
     needs: acceptance-tests
@@ -204,10 +250,12 @@ jobs:
           git push origin testing
 
   #######################################################################
-  # 6) Auto-merge to Acceptance – runs only if dev, after merge-to-testing
+  # 6) Auto-merge to Acceptance – runs only if on development branch,
+  #    and generates an overall pipeline summary.
   #######################################################################
   merge-to-acceptance:
-    needs: [merge-to-testing, build-and-test]
+    needs:
+      [merge-to-testing, build-and-test, integration-tests, acceptance-tests]
     runs-on: ubuntu-latest
     if: >
       (github.ref == 'refs/heads/development') ||
@@ -235,27 +283,23 @@ jobs:
 
       - name: Generate Pipeline Summary
         run: |
-          # Extract code coverage from JaCoCo report
-          COVERAGE_FILE="target/site/jacoco/index.html"
-          if [ -f "$COVERAGE_FILE" ]; then
-            LINE_COVERAGE=$(grep -o 'Total[^%]*%' "$COVERAGE_FILE" | grep -o '[0-9]\+%' | head -1)
-          else
-            LINE_COVERAGE="N/A"
-          fi
-          
-          echo "## Pipeline Summary" >> $GITHUB_STEP_SUMMARY
-          echo "### Test Coverage" >> $GITHUB_STEP_SUMMARY
-          echo "📊 Line Coverage: $LINE_COVERAGE" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Automated Steps Completed" >> $GITHUB_STEP_SUMMARY
-          echo "- ✅ Unit Tests" >> $GITHUB_STEP_SUMMARY
-          echo "- ✅ Integration Tests" >> $GITHUB_STEP_SUMMARY
-          echo "- ✅ Acceptance Tests" >> $GITHUB_STEP_SUMMARY
-          echo "- ✅ Merged to testing" >> $GITHUB_STEP_SUMMARY
-          echo "- ✅ Merged to acceptance" >> $GITHUB_STEP_SUMMARY
-          echo "### Manual Steps Required" >> $GITHUB_STEP_SUMMARY
-          echo "⚠️ **Production Release Steps:**" >> $GITHUB_STEP_SUMMARY
-          echo "1. Create a pull request from 'acceptance' to 'main'" >> $GITHUB_STEP_SUMMARY
-          echo "2. Get required approvals" >> $GITHUB_STEP_SUMMARY
-          echo "3. Merge to main" >> $GITHUB_STEP_SUMMARY
-          echo "4. Deploy to production" >> $GITHUB_STEP_SUMMARY
+            echo "## Pipeline Summary" >> $GITHUB_STEP_SUMMARY
+            
+            echo "### Test Coverage" >> $GITHUB_STEP_SUMMARY
+            echo "📊 **Line Coverage**: ${{ needs.build-and-test.outputs.line_coverage }}%" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            
+            echo "### Automated Steps Completed" >> $GITHUB_STEP_SUMMARY
+            echo "- ✅ **Unit Tests**" >> $GITHUB_STEP_SUMMARY
+            echo "- ✅ **Integration Tests**" >> $GITHUB_STEP_SUMMARY
+            echo "- ✅ **Acceptance Tests**" >> $GITHUB_STEP_SUMMARY
+            echo "- ✅ **Merged to testing**" >> $GITHUB_STEP_SUMMARY
+            echo "- ✅ **Merged to acceptance**" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            
+            echo "### Manual Steps Required" >> $GITHUB_STEP_SUMMARY
+            echo "⚠️ **Production Release Steps:**" >> $GITHUB_STEP_SUMMARY
+            echo "1. Create a pull request from 'acceptance' to 'main'" >> $GITHUB_STEP_SUMMARY
+            echo "2. Get required approvals" >> $GITHUB_STEP_SUMMARY
+            echo "3. Merge to 'main'" >> $GITHUB_STEP_SUMMARY
+            echo "4. Deploy to production" >> $GITHUB_STEP_SUMMARY
