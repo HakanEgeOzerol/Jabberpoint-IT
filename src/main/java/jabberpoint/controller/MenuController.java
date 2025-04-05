@@ -1,7 +1,6 @@
 package jabberpoint.controller;
 
 import java.awt.MenuBar;
-import java.awt.Frame;
 import java.awt.Menu;
 import java.awt.MenuItem;
 import java.awt.MenuShortcut;
@@ -12,7 +11,6 @@ import java.util.Map;
 
 import jabberpoint.command.Command;
 import jabberpoint.constants.Constants;
-import jabberpoint.constants.Constants.Commands;
 
 /** <p>The controller for the menu</p>
  * @author Ian F. Darwin, ian@darwinsys.com, Gert Florijn, Sylvia Stuurman
@@ -57,6 +55,13 @@ public class MenuController extends MenuBar {
 	 * Creates the menus and menu items
 	 */
 	public void createMenus() {
+		createFileMenu();
+		createViewMenu();
+		createHelpMenu();
+	}
+
+	private void createFileMenu()
+	{
 		Menu fileMenu = new Menu(Constants.Commands.FILE);
 		fileMenu.add(mkMenuItem(Constants.Commands.OPEN));
 		fileMenu.add(mkMenuItem(Constants.Commands.NEW));
@@ -64,16 +69,22 @@ public class MenuController extends MenuBar {
 		fileMenu.addSeparator();
 		fileMenu.add(mkMenuItem(Constants.Commands.EXIT));
 		add(fileMenu);
-		
+	}
+
+	private void createViewMenu()
+	{
 		Menu viewMenu = new Menu(Constants.Commands.VIEW);
 		viewMenu.add(mkMenuItem(Constants.Commands.NEXT));
 		viewMenu.add(mkMenuItem(Constants.Commands.PREV));
 		viewMenu.add(mkMenuItem(Constants.Commands.GOTO));
 		add(viewMenu);
-		
+	}
+
+	private void createHelpMenu()
+	{
 		Menu helpMenu = new Menu(Constants.Commands.HELP);
 		helpMenu.add(mkMenuItem(Constants.Commands.ABOUT));
-		setHelpMenu(helpMenu);		// needed for portability (Motif, etc.).
+		setHelpMenu(helpMenu);		
 	}
 
 	/**
