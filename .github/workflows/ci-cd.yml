@@ -88,14 +88,17 @@ jobs:
             if [ "$LINE_COVERAGE" -lt "$MIN_COVERAGE" ]; then
               echo "⚠️ Warning: Code coverage is below minimum required coverage of ${MIN_COVERAGE}%"
               echo "Current coverage: ${LINE_COVERAGE}%"
-              # Don't exit with error - just warn
+              # Store coverage for later steps
+              echo "line_coverage=${LINE_COVERAGE}" >> $GITHUB_ENV
             else
               echo "✅ Code coverage is above minimum required coverage of ${MIN_COVERAGE}%"
               echo "Current coverage: ${LINE_COVERAGE}%"
+              # Store coverage for later steps
+              echo "line_coverage=${LINE_COVERAGE}" >> $GITHUB_ENV
             fi
           else
             echo "⚠️ Warning: No coverage report found"
-            # Don't exit with error - just warn
+            echo "line_coverage=N/A" >> $GITHUB_ENV
           fi
 
       - name: Upload test results
@@ -204,7 +207,7 @@ jobs:
   # 6) Auto-merge to Acceptance – runs only if dev, after merge-to-testing
   #######################################################################
   merge-to-acceptance:
-    needs: merge-to-testing
+    needs: [merge-to-testing, build-and-test]
     runs-on: ubuntu-latest
     if: >
       (github.ref == 'refs/heads/development') ||
@@ -214,6 +217,12 @@ jobs:
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Download coverage reports
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-reports
+          path: target/site/jacoco/
 
       - name: Auto-merge testing -> acceptance
         run: |
@@ -230,11 +239,8 @@ jobs:
           COVERAGE_FILE="target/site/jacoco/index.html"
           if [ -f "$COVERAGE_FILE" ]; then
             LINE_COVERAGE=$(grep -o 'Total[^%]*%' "$COVERAGE_FILE" | grep -o '[0-9]\+%' | head -1)
-            echo "Line Coverage: $LINE_COVERAGE"
-            echo "LINE_COVERAGE=$LINE_COVERAGE" >> $GITHUB_ENV
           else
-            echo "No coverage report found"
-            echo "LINE_COVERAGE=N/A" >> $GITHUB_ENV
+            LINE_COVERAGE="N/A"
           fi
           
           echo "## Pipeline Summary" >> $GITHUB_STEP_SUMMARY
