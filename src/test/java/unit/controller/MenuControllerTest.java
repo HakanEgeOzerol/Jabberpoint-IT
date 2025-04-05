@@ -1,4 +1,4 @@
-package unit;
+package unit.controller;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,9 +9,9 @@ import java.awt.Menu;
 import java.awt.MenuItem;
 import java.awt.event.ActionEvent;
 
-import jabberpoint.Command;
-import jabberpoint.Constants;
-import jabberpoint.MenuController;
+import jabberpoint.command.Command;
+import jabberpoint.constants.Constants;
+import jabberpoint.controller.MenuController;
 
 public class MenuControllerTest {
     private MenuController menuController;

@@ -1,4 +1,4 @@
-package unit;
+package unit.command;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,10 +12,10 @@ import org.junit.runner.RunWith;
 
 import javax.swing.JOptionPane;
 
-import jabberpoint.Constants;
-import jabberpoint.GoToSlideCommand;
-import jabberpoint.Presentation;
-import jabberpoint.SlideViewerFrame;
+import jabberpoint.constants.Constants;
+import jabberpoint.command.GoToSlideCommand;
+import jabberpoint.presentation.Presentation;
+import jabberpoint.ui.SlideViewerFrame;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(JOptionPane.class)

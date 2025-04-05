@@ -1,12 +1,12 @@
-package unit;
+package unit.command;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import jabberpoint.ExitCommand;
-import jabberpoint.Presentation;
+import jabberpoint.command.ExitCommand;
+import jabberpoint.presentation.Presentation;
 
 public class ExitCommandTest {
     private Presentation mockPresentation;

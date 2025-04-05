@@ -1,4 +1,4 @@
-package unit;
+package unit.accessor;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;

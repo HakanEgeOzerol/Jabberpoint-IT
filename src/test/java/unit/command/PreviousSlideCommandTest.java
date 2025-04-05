@@ -1,16 +1,16 @@
-package unit;
+package unit.command;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import jabberpoint.NextSlideCommand;
-import jabberpoint.Presentation;
+import jabberpoint.command.PreviousSlideCommand;
+import jabberpoint.presentation.Presentation;
 
-public class NextSlideCommandTest {
+public class PreviousSlideCommandTest {
     private Presentation mockPresentation;
-    private NextSlideCommand nextSlideCommand;
+    private PreviousSlideCommand previousSlideCommand;
 
     @BeforeEach
     public void setUp() {
@@ -18,21 +18,21 @@ public class NextSlideCommandTest {
         mockPresentation = mock(Presentation.class);
         
         // Create the command with the mock presentation
-        nextSlideCommand = new NextSlideCommand(mockPresentation);
+        previousSlideCommand = new PreviousSlideCommand(mockPresentation);
     }
 
     @Test
     public void testConstructor() {
         // Test that the constructor properly sets the presentation
-        assertNotNull(nextSlideCommand);
+        assertNotNull(previousSlideCommand);
     }
 
     @Test
     public void testExecute() {
         // Execute the command
-        nextSlideCommand.execute();
+        previousSlideCommand.execute();
         
-        // Verify that nextSlide was called exactly once on the presentation
-        verify(mockPresentation, times(1)).nextSlide();
+        // Verify that prevSlide was called exactly once on the presentation
+        verify(mockPresentation, times(1)).prevSlide();
     }
 } 

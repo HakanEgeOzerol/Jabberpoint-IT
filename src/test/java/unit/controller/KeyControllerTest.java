@@ -1,4 +1,4 @@
-package unit;
+package unit.controller;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -7,8 +7,8 @@ import static org.mockito.Mockito.*;
 
 import java.awt.event.KeyEvent;
 
-import jabberpoint.Command;
-import jabberpoint.KeyController;
+import jabberpoint.command.Command;
+import jabberpoint.controller.KeyController;
 
 public class KeyControllerTest {
     private KeyController keyController;

@@ -1,4 +1,4 @@
-package unit;
+package unit.command;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,11 +12,11 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.io.IOException;
 import javax.swing.JOptionPane;
 
-import jabberpoint.Accessor;
-import jabberpoint.Presentation;
-import jabberpoint.SaveFileCommand;
-import jabberpoint.SlideViewerFrame;
-import jabberpoint.XMLAccessor;
+import jabberpoint.accessor.Accessor;
+import jabberpoint.presentation.Presentation;
+import jabberpoint.command.SaveFileCommand;
+import jabberpoint.ui.SlideViewerFrame;
+import jabberpoint.accessor.XMLAccessor;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({JOptionPane.class, XMLAccessor.class})

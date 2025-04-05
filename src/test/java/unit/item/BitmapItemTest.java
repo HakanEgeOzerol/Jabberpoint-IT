@@ -1,4 +1,4 @@
-package unit;
+package unit.item;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,9 +13,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.lang.reflect.Field;
 
-import jabberpoint.BitmapItem;
-import jabberpoint.Style;
-import jabberpoint.Constants;
+import jabberpoint.slideitem.BitmapItem;
+import jabberpoint.presentation.Style;
+import jabberpoint.constants.Constants;
 
 public class BitmapItemTest {
     private BitmapItem bitmapItem;
