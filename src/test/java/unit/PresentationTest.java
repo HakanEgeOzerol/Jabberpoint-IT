@@ -130,6 +130,10 @@ public class PresentationTest {
         assertEquals(0, presentation.getSize());
         assertEquals(-1, presentation.getSlideNumber());
         assertNull(presentation.getCurrentSlide());
+        
+        presentation.append(slide1);
+        assertEquals(1, presentation.getSize());
+        assertEquals(-1, presentation.getSlideNumber());
     }
 
     @Test
