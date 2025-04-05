@@ -1,4 +1,4 @@
-package unit.factories;
+package unit.slideitem.factories;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import jabberpoint.slideitem.BitmapItem;
 import jabberpoint.slideitem.BitmapItemFactory;
 import jabberpoint.slideitem.SlideItem;
-import unit.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
