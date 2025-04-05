@@ -31,6 +31,8 @@ jobs:
   #######################################################################
   build-and-test:
     runs-on: ubuntu-latest
+    outputs:
+      line_coverage: ${{ steps.coverage-step.outputs.line_coverage }}
     steps:
       - uses: actions/checkout@v4
 
@@ -45,6 +47,7 @@ jobs:
         run: mvn -B package --file pom.xml
 
       - name: Run unit tests & collect coverage
+        id: coverage-step
         run: |
           echo "Running unit tests..."
           mvn test jacoco:report
@@ -74,6 +77,9 @@ jobs:
           else
             LINE_COVERAGE="N/A"
           fi
+
+          # Export coverage for other jobs
+          echo "line_coverage=$LINE_COVERAGE" >> $GITHUB_OUTPUT
 
           # -------------------------------------------------------------------
           # 3) Output Summary to GitHub Step Summary
@@ -270,7 +276,7 @@ jobs:
           echo "## Pipeline Summary" >> $GITHUB_STEP_SUMMARY
           
           echo "### Test Coverage" >> $GITHUB_STEP_SUMMARY
-          echo "📊 **Line Coverage**: ${LINE_COVERAGE}%" >> $GITHUB_STEP_SUMMARY
+          echo "📊 **Line Coverage**: ${{ needs.build-and-test.outputs.line_coverage }}%" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           
           echo "### Automated Steps Completed" >> $GITHUB_STEP_SUMMARY
