@@ -178,7 +178,21 @@ jobs:
 
       - name: Generate Pipeline Summary
         run: |
+          # Extract code coverage from JaCoCo report
+          COVERAGE_FILE="target/site/jacoco/index.html"
+          if [ -f "$COVERAGE_FILE" ]; then
+            LINE_COVERAGE=$(grep -o 'Total[^%]*%' "$COVERAGE_FILE" | grep -o '[0-9]\+%' | head -1)
+            echo "Line Coverage: $LINE_COVERAGE"
+            echo "LINE_COVERAGE=$LINE_COVERAGE" >> $GITHUB_ENV
+          else
+            echo "No coverage report found"
+            echo "LINE_COVERAGE=N/A" >> $GITHUB_ENV
+          fi
+          
           echo "## Pipeline Summary" >> $GITHUB_STEP_SUMMARY
+          echo "### Test Coverage" >> $GITHUB_STEP_SUMMARY
+          echo "📊 Line Coverage: $LINE_COVERAGE" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Automated Steps Completed" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ Unit Tests" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ Integration Tests" >> $GITHUB_STEP_SUMMARY
