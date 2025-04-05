@@ -31,25 +31,55 @@ public class SaveFileCommand extends UICommand {
     @Override
     public void execute() {
         if (presentation == null || presentation.getSize() == 0) {
-            JOptionPane.showMessageDialog(frame, 
-                    "No presentation to save", 
-                    "Save Error", 
-                    JOptionPane.WARNING_MESSAGE);
+            showNoContentWarning();
             return;
         }
         
         try {
-            Accessor xmlAccessor = new XMLAccessor();
-            xmlAccessor.saveFile(presentation, filename);
-            JOptionPane.showMessageDialog(frame, 
-                    "Presentation saved to " + filename, 
-                    "Save Successful", 
-                    JOptionPane.INFORMATION_MESSAGE);
+            savePresentation();
+            showSaveSuccessMessage();
         } catch (IOException exc) {
-            JOptionPane.showMessageDialog(frame, 
-                    "IO Exception: " + exc, 
-                    "Save Error", 
-                    JOptionPane.ERROR_MESSAGE);
+            showErrorMessage(exc);
         }
+    }
+    
+    /**
+     * Save the presentation to a file
+     * @throws IOException if there's an error saving the file
+     */
+    public void savePresentation() throws IOException {
+        Accessor xmlAccessor = new XMLAccessor();
+        xmlAccessor.saveFile(presentation, filename);
+    }
+    
+    /**
+     * Show a warning when there's no content to save
+     */
+    public void showNoContentWarning() {
+        JOptionPane.showMessageDialog(frame, 
+                "No presentation to save", 
+                "Save Error", 
+                JOptionPane.WARNING_MESSAGE);
+    }
+    
+    /**
+     * Show a success message after saving
+     */
+    public void showSaveSuccessMessage() {
+        JOptionPane.showMessageDialog(frame, 
+                "Presentation saved to " + filename, 
+                "Save Successful", 
+                JOptionPane.INFORMATION_MESSAGE);
+    }
+    
+    /**
+     * Show an error message if saving fails
+     * @param exc The exception that occurred
+     */
+    public void showErrorMessage(IOException exc) {
+        JOptionPane.showMessageDialog(frame, 
+                "IO Exception: " + exc, 
+                "Save Error", 
+                JOptionPane.ERROR_MESSAGE);
     }
 } 

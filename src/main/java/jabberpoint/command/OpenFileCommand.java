@@ -33,26 +33,42 @@ public class OpenFileCommand extends UICommand {
         presentation.clear();
         
         try {
-            if (filename == null || filename.isEmpty()) {
-                // Load demo presentation if no filename provided
-                Accessor.getDemoAccessor().loadFile(presentation, "");
-            } else {
-                // Load specified XML file
-                Accessor xmlAccessor = new XMLAccessor();
-                xmlAccessor.loadFile(presentation, filename);
-            }
+            loadFile();
             
             // Set initial slide if presentation is not empty
             if (presentation.getSize() > 0) {
                 presentation.setSlideNumber(0);
             }
         } catch (IOException exc) {
-            JOptionPane.showMessageDialog(frame, 
-                    "IO Exception: " + exc, 
-                    "Load Error", 
-                    JOptionPane.ERROR_MESSAGE);
+            showErrorMessage(exc);
         }
         
         frame.repaint();
+    }
+    
+    /**
+     * Load a file into the presentation
+     * @throws IOException if there's an error loading the file
+     */
+    public void loadFile() throws IOException {
+        if (filename == null || filename.isEmpty()) {
+            // Load demo presentation if no filename provided
+            Accessor.getDemoAccessor().loadFile(presentation, "");
+        } else {
+            // Load specified XML file
+            Accessor xmlAccessor = new XMLAccessor();
+            xmlAccessor.loadFile(presentation, filename);
+        }
+    }
+    
+    /**
+     * Show an error message if loading fails
+     * @param exc The exception that occurred
+     */
+    public void showErrorMessage(IOException exc) {
+        JOptionPane.showMessageDialog(frame, 
+                "IO Exception: " + exc, 
+                "Load Error", 
+                JOptionPane.ERROR_MESSAGE);
     }
 } 

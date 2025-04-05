@@ -23,14 +23,29 @@ public class GoToSlideCommand extends UICommand {
      */
     @Override
     public void execute() {
-        String pageNumberStr = javax.swing.JOptionPane.showInputDialog(Constants.Commands.PAGENR);
-		try {
-			int pageNumber = Integer.parseInt(pageNumberStr);
-			// Presentation methods expect 0-based slide numbers
+        String pageNumberStr = getPageNumberInput();
+        goToSlide(pageNumberStr);
+    }
+    
+    /**
+     * Shows the input dialog to get the page number from user
+     * @return The page number as a string, or null if canceled
+     */
+    public String getPageNumberInput() {
+        return javax.swing.JOptionPane.showInputDialog(Constants.Commands.PAGENR);
+    }
+    
+    /**
+     * Process the page number input and navigate to the slide if valid
+     * @param pageNumberStr The page number as a string
+     */
+    public void goToSlide(String pageNumberStr) {
+        try {
+            int pageNumber = Integer.parseInt(pageNumberStr);
+            // Presentation methods expect 0-based slide numbers
             presentation.setSlideNumber(pageNumber - 1);
-		} catch (NumberFormatException ex) {
-			// Ignore if not a valid number
-		}
-        
+        } catch (NumberFormatException ex) {
+            // Ignore if not a valid number
+        }
     }
 } 
