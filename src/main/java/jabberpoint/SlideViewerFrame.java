@@ -21,8 +21,6 @@ public class SlideViewerFrame extends JFrame {
 	private static final long serialVersionUID = 3227L;
 	
 	private static final String JABTITLE = "Jabberpoint 1.6 - OU";
-	public final static int WIDTH = 1200;
-	public final static int HEIGHT = 800;
 	
 	private KeyController keyController;
 	private MenuController menuController;
@@ -53,7 +51,7 @@ public class SlideViewerFrame extends JFrame {
 			});
 		getContentPane().add(slideViewerComponent);
 		setupControllers(presentation);
-		setSize(new Dimension(WIDTH, HEIGHT)); // Same sizes as Slide has.
+		setSize(new Dimension(Constants.UI.WIDTH, Constants.UI.HEIGHT)); // Same sizes as Slide has.
 		setVisible(true);
 	}
 	
@@ -62,6 +60,8 @@ public class SlideViewerFrame extends JFrame {
 	 * @param presentation The presentation to control
 	 */
 	private void setupControllers(Presentation presentation) {
+		// create commands to set
+
 		// Create and set the key controller
 		keyController = new KeyController(presentation);
 		addKeyListener(keyController);
