@@ -2,6 +2,7 @@ package jabberpoint;
 
 import java.awt.Dimension;
 import java.awt.event.WindowEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import javax.swing.JFrame;
 
@@ -62,13 +63,46 @@ public class SlideViewerFrame extends JFrame {
 	 */
 	private void setupControllers(Presentation presentation) {
 		// create commands to set
+		Command nextSlideCommand = new NextSlideCommand(presentation);
+		Command prevSlideCommand = new PreviousSlideCommand(presentation);
+		Command exitCommand = new ExitCommand(presentation);
+
+		Command openCommand = new OpenFileCommand(this, presentation, Constants.Commands.TESTFILE);
+		Command saveCommand = new SaveFileCommand(this, presentation, Constants.Commands.SAVEFILE);
+		Command goToCommand = new GoToSlideCommand(this, presentation);
+		Command newCommand = new NewPresentationCommand(this, presentation);
+		Command aboutCommand = new AboutBoxCommand(this, presentation);
 
 		// Create and set the key controller
-		keyController = new KeyController(presentation);
+		keyController = new KeyController();
+
+		keyController.addBind(KeyEvent.VK_PAGE_DOWN, nextSlideCommand);
+		keyController.addBind(KeyEvent.VK_DOWN, nextSlideCommand);
+		keyController.addBind(KeyEvent.VK_ENTER, nextSlideCommand);
+		keyController.addBind((int) '+', nextSlideCommand);
+
+		keyController.addBind(KeyEvent.VK_PAGE_UP, prevSlideCommand);
+		keyController.addBind(KeyEvent.VK_UP, prevSlideCommand);
+		keyController.addBind((int) '-', prevSlideCommand);
+
+		keyController.addBind((int) 'q', exitCommand);
+		keyController.addBind((int) 'Q', exitCommand);
+
 		addKeyListener(keyController);
 		
 		// Create and set the menu controller
-		menuController = new MenuController(this, presentation);
+		menuController = new MenuController();
+
+		menuController.addMenuItem(Constants.Commands.NEXT, nextSlideCommand);
+		menuController.addMenuItem(Constants.Commands.PREV, prevSlideCommand);
+		menuController.addMenuItem(Constants.Commands.GOTO, goToCommand);
+		menuController.addMenuItem(Constants.Commands.EXIT, exitCommand);
+		menuController.addMenuItem(Constants.Commands.OPEN, openCommand);
+		menuController.addMenuItem(Constants.Commands.SAVE, saveCommand);
+		menuController.addMenuItem(Constants.Commands.NEW, newCommand);
+		menuController.addMenuItem(Constants.Commands.ABOUT, aboutCommand);
+
+		menuController.createMenus();
 		setMenuBar(menuController);
 	}
 	

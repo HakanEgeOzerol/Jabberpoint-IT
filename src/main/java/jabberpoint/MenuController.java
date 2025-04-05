@@ -22,8 +22,6 @@ import java.util.Map;
  */
 public class MenuController extends MenuBar {
 	
-	private SlideViewerFrame parent; // the frame, only used as parent for the Dialogs
-	private Presentation presentation; // Commands are given to the presentation
 	private Map<String, Command> menuItems;
 	
 	private static final long serialVersionUID = 227L;
@@ -45,36 +43,16 @@ public class MenuController extends MenuBar {
 	// protected static final String TESTFILE = "test.xml";
 	// protected static final String SAVEFILE = "dump.xml";
 	
-	public MenuController(SlideViewerFrame frame, Presentation pres) {
-		parent = frame;
-		presentation = pres;
+	public MenuController() {
 		menuItems = new HashMap<>();
 		
-		// Initialize commands
-		Command nextSlideCommand = new NextSlideCommand(presentation);
-		Command prevSlideCommand = new PreviousSlideCommand(presentation);
-		Command exitCommand = new ExitCommand(presentation);
-		Command openCommand = new OpenFileCommand(parent, presentation, Constants.Commands.TESTFILE);
-		Command saveCommand = new SaveFileCommand(parent, presentation, Constants.Commands.SAVEFILE);
-		Command newCommand = new NewPresentationCommand(parent, presentation);
-		Command aboutCommand = new AboutBoxCommand(parent, presentation);
-		
 		// Register commands in the map
-		menuItems.put(Constants.Commands.NEXT, nextSlideCommand);
-		menuItems.put(Constants.Commands.PREV, prevSlideCommand);
-		menuItems.put(Constants.Commands.EXIT, exitCommand);
-		menuItems.put(Constants.Commands.OPEN, openCommand);
-		menuItems.put(Constants.Commands.SAVE, saveCommand);
-		menuItems.put(Constants.Commands.NEW, newCommand);
-		menuItems.put(Constants.Commands.ABOUT, aboutCommand);
-		
-		createMenus();
 	}
 	
 	/**
 	 * Creates the menus and menu items
 	 */
-	private void createMenus() {
+	public void createMenus() {
 		Menu fileMenu = new Menu(Constants.Commands.FILE);
 		fileMenu.add(mkMenuItem(Constants.Commands.OPEN));
 		fileMenu.add(mkMenuItem(Constants.Commands.NEW));
@@ -106,9 +84,6 @@ public class MenuController extends MenuBar {
 		Command command = menuItems.get(name);
 		if (command != null) {
 			menuItem.addActionListener(createActionListener(command));
-		} else if (Constants.Commands.GOTO.equals(name)) {
-			// Special case for Go to which needs input
-			menuItem.addActionListener(createGoToActionListener());
 		}
 		
 		return menuItem;
@@ -123,26 +98,6 @@ public class MenuController extends MenuBar {
 		return new ActionListener() {
 			public void actionPerformed(ActionEvent actionEvent) {
 				command.execute();
-			}
-		};
-	}
-	
-	/**
-	 * Creates an ActionListener for the GoTo menu item
-	 * @return The ActionListener
-	 */
-	private ActionListener createGoToActionListener() {
-		return new ActionListener() {
-			public void actionPerformed(ActionEvent actionEvent) {
-				String pageNumberStr = javax.swing.JOptionPane.showInputDialog(Constants.Commands.PAGENR);
-				try {
-					int pageNumber = Integer.parseInt(pageNumberStr);
-					// Go to page
-					Command gotoCommand = new GoToSlideCommand(presentation, pageNumber - 1);
-					gotoCommand.execute();
-				} catch (NumberFormatException ex) {
-					// Ignore if not a valid number
-				}
 			}
 		};
 	}

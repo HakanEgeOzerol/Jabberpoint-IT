@@ -17,39 +17,10 @@ import java.util.Map;
 */
 
 public class KeyController extends KeyAdapter {
-	private Presentation presentation; // Reference to the presentation
 	private Map<Integer, Command> commands; // Map of key codes to commands
 
-	public KeyController(Presentation p) {
-		if (p == null) {
-			throw new IllegalArgumentException("Presentation cannot be null");
-		}
-		presentation = p;
+	public KeyController() {
 		commands = new HashMap<>();
-		initializeCommands();
-	}
-	
-	/**
-	 * Initialize default key bindings
-	 */
-	private void initializeCommands() {
-		// Initialize commands
-		Command nextSlideCommand = new NextSlideCommand(presentation);
-		Command prevSlideCommand = new PreviousSlideCommand(presentation);
-		Command exitCommand = new ExitCommand(presentation);
-		
-		// Bind keys to commands
-		commands.put(KeyEvent.VK_PAGE_DOWN, nextSlideCommand);
-		commands.put(KeyEvent.VK_DOWN, nextSlideCommand);
-		commands.put(KeyEvent.VK_ENTER, nextSlideCommand);
-		commands.put((int)'+', nextSlideCommand);
-		
-		commands.put(KeyEvent.VK_PAGE_UP, prevSlideCommand);
-		commands.put(KeyEvent.VK_UP, prevSlideCommand);
-		commands.put((int)'-', prevSlideCommand);
-		
-		commands.put((int)'q', exitCommand);
-		commands.put((int)'Q', exitCommand);
 	}
 	
 	/**

@@ -3,17 +3,15 @@ package jabberpoint;
 /**
  * Command to navigate to a specific slide in the presentation
  */
-public class GoToSlideCommand extends PresentationCommand {
-    private int slideNumber;
+public class GoToSlideCommand extends UICommand {
     
     /**
      * Constructor
      * @param presentation The presentation to operate on
      * @param slideNumber The slide number to navigate to (0-based)
      */
-    public GoToSlideCommand(Presentation presentation, int slideNumber) {
-        super(presentation);
-        this.slideNumber = slideNumber;
+    public GoToSlideCommand(SlideViewerFrame frame, Presentation presentation) {
+        super(frame, presentation);
     }
     
     /**
@@ -21,7 +19,14 @@ public class GoToSlideCommand extends PresentationCommand {
      */
     @Override
     public void execute() {
-        // Presentation methods expect 0-based slide numbers
-        presentation.setSlideNumber(slideNumber);
+        String pageNumberStr = javax.swing.JOptionPane.showInputDialog(Constants.Commands.PAGENR);
+		try {
+			int pageNumber = Integer.parseInt(pageNumberStr);
+			// Presentation methods expect 0-based slide numbers
+            presentation.setSlideNumber(pageNumber - 1);
+		} catch (NumberFormatException ex) {
+			// Ignore if not a valid number
+		}
+        
     }
 } 
