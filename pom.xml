@@ -119,6 +119,9 @@
                     <testFailureIgnore>true</testFailureIgnore>
                     <reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
                     <argLine>-Djava.awt.headless=true</argLine>
+                    <systemPropertyVariables>
+                        <java.awt.headless>true</java.awt.headless>
+                    </systemPropertyVariables>
                 </configuration>
             </plugin>
 
@@ -282,6 +285,10 @@
                                     <includes>
                                         <include>**/integration/**/*Test.java</include>
                                     </includes>
+                                    <argLine>-Djava.awt.headless=true</argLine>
+                                    <systemPropertyVariables>
+                                        <java.awt.headless>true</java.awt.headless>
+                                    </systemPropertyVariables>
                                 </configuration>
                             </execution>
                         </executions>
@@ -308,6 +315,10 @@
                                     <includes>
                                         <include>**/acceptance/**/*Test.java</include>
                                     </includes>
+                                    <argLine>-Djava.awt.headless=true</argLine>
+                                    <systemPropertyVariables>
+                                        <java.awt.headless>true</java.awt.headless>
+                                    </systemPropertyVariables>
                                 </configuration>
                             </execution>
                         </executions>

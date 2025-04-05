@@ -11,6 +11,8 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.io.File;
+import java.net.URL;
 import java.lang.reflect.Field;
 
 import jabberpoint.slideitem.BitmapItem;
@@ -24,11 +26,21 @@ public class BitmapItemTest {
     private ImageObserver observer;
     private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
     private final PrintStream originalErr = System.err;
+    private String testImagePath;
 
     @BeforeEach
     public void setUp() {
         System.setErr(new PrintStream(errContent));
-        bitmapItem = new BitmapItem(1, "test.jpg");
+        
+        // Get the absolute path to the test.jpg file in the test resources directory
+        URL resource = getClass().getClassLoader().getResource("test.jpg");
+        if (resource != null) {
+            testImagePath = new File(resource.getFile()).getAbsolutePath();
+        } else {
+            testImagePath = "test.jpg"; // Fallback to relative path
+        }
+        
+        bitmapItem = new BitmapItem(1, testImagePath);
         style = mock(Style.class);
         graphics = mock(Graphics.class);
         observer = mock(ImageObserver.class);
@@ -40,9 +52,9 @@ public class BitmapItemTest {
 
     @Test
     public void testConstructorWithValidImage() {
-        BitmapItem item = new BitmapItem(2, "test.jpg");
+        BitmapItem item = new BitmapItem(2, testImagePath);
         assertEquals(2, item.getLevel());
-        assertEquals("test.jpg", item.getName());
+        assertEquals(testImagePath, item.getName());
     }
 
     @Test
@@ -64,7 +76,7 @@ public class BitmapItemTest {
 
     @Test
     public void testGetName() {
-        assertEquals("test.jpg", bitmapItem.getName());
+        assertEquals(testImagePath, bitmapItem.getName());
         
         BitmapItem nullItem = new BitmapItem(1, null);
         assertNull(nullItem.getName());
@@ -92,7 +104,8 @@ public class BitmapItemTest {
 
     @Test
     public void testToString() {
-        assertEquals("BitmapItem[1,test.jpg]", bitmapItem.toString());
+        String expected = "BitmapItem[1," + testImagePath + "]";
+        assertEquals(expected, bitmapItem.toString());
         
         BitmapItem nullItem = new BitmapItem(2, null);
         assertEquals("BitmapItem[2,null]", nullItem.toString());
@@ -131,7 +144,7 @@ public class BitmapItemTest {
         when(mockStyle.getLeading()).thenReturn(5);
         
         // Create a BitmapItem with a test image of known dimensions
-        BitmapItem item = new BitmapItem(1, "test.jpg");
+        BitmapItem item = new BitmapItem(1, testImagePath);
         BufferedImage testImage = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
         
         // This is the key change - create a spy of the image to properly mock methods
@@ -160,7 +173,7 @@ public class BitmapItemTest {
         when(mockStyle.getLeading()).thenReturn(5);
         
         // Create a BitmapItem with a test image
-        BitmapItem item = new BitmapItem(1, "test.jpg");
+        BitmapItem item = new BitmapItem(1, testImagePath);
         BufferedImage testImage = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
         setBufferedImage(item, testImage);
         
@@ -229,7 +242,7 @@ public class BitmapItemTest {
         when(mockStyle.getLeading()).thenReturn(5);
         
         // Create a BitmapItem with a test image
-        BitmapItem item = new BitmapItem(1, "test.jpg");
+        BitmapItem item = new BitmapItem(1, testImagePath);
         BufferedImage testImage = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
         
         // Create a spy of the BufferedImage to properly mock methods

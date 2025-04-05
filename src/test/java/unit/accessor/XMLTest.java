@@ -27,12 +27,21 @@ public class XMLTest {
     private Presentation presentation;
     private XMLReader reader;
     private XMLWriter writer;
+    private String testImagePath;
     
     @BeforeEach
     void setUp() {
         presentation = new Presentation();
         reader = new XMLReader();
         writer = new XMLWriter();
+        
+        // Set up the test image path once
+        URL resourceUrl = getClass().getClassLoader().getResource("test.jpg");
+        if (resourceUrl != null) {
+            testImagePath = new File(resourceUrl.getFile()).getAbsolutePath();
+        } else {
+            testImagePath = "test.jpg"; // Fallback to relative path
+        }
     }
 
     @Test
@@ -45,15 +54,8 @@ public class XMLTest {
         slide.setTitle("Test Slide");
         slide.append(new TextItem(1, "Test Text Item"));
         
-        // Use a path that matches exactly what we have in resources
-        // Getting it from the classpath to ensure it works regardless of working directory
-        URL resourceUrl = getClass().getClassLoader().getResource("test.jpg");
-        if (resourceUrl == null) {
-            fail("Test image not found. Make sure src/test/resources/test.jpg exists.");
-        }
-        String imagePath = new File(resourceUrl.getFile()).getAbsolutePath();
-        
-        slide.append(new BitmapItem(2, imagePath));
+        // Use the preconfigured test image path
+        slide.append(new BitmapItem(2, testImagePath));
         presentation.append(slide);
         
         // Write to temporary file
@@ -80,11 +82,13 @@ public class XMLTest {
         assertEquals(1, textItem.getLevel(), "Text item level should be 1");
         assertEquals("Test Text Item", textItem.getText(), "Text content should match");
         
-        // Verify second item (BitmapItem)
+        // Verify second item (BitmapItem) - only check that it's a BitmapItem and the level is correct
         assertTrue(items.get(1) instanceof BitmapItem, "Second item should be BitmapItem");
         BitmapItem bitmapItem = (BitmapItem) items.get(1);
         assertEquals(2, bitmapItem.getLevel(), "Bitmap item level should be 2");
-        assertTrue(bitmapItem.getName().contains("test.jpg"), "Image name should match");
+        // Check that the name contains test.jpg but don't check for full path equality
+        assertTrue(bitmapItem.getName() != null && bitmapItem.getName().contains("test.jpg"), 
+                "Image name should contain test.jpg");
     }
 
     @Test
@@ -99,10 +103,10 @@ public class XMLTest {
         assertEquals("Test Content", ((TextItem)textItem).getText());
         
         // Use a special factory method that doesn't actually load the image
-        SlideItem bitmapItem = bitmapFactory.createSlideItem("image", 2, "test.jpg");
+        SlideItem bitmapItem = bitmapFactory.createSlideItem("image", 2, testImagePath);
         assertTrue(bitmapItem instanceof BitmapItem);
         assertEquals(2, bitmapItem.getLevel());
-        assertEquals("test.jpg", ((BitmapItem)bitmapItem).getName());
+        assertEquals(testImagePath, ((BitmapItem)bitmapItem).getName());
     }
 
     @Test
@@ -125,7 +129,6 @@ public class XMLTest {
         Slide slide = new Slide();
         slide.setTitle("Accessor Slide");
         slide.append(new TextItem(1, "Accessor Text"));
-        // Use MockBitmapItem instead of real BitmapItem
         presentation.append(slide);
         
         // Test save and load using accessor

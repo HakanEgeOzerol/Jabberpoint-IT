@@ -22,6 +22,7 @@ public class XMLAccessorIntegrationTest {
         slide.append(1, "Test Content");
         presentation.append(slide);
         
+        // Use the TempDir to create a file path that works in any environment
         String filename = tempDir.resolve("test.xml").toString();
         XMLAccessor accessor = new XMLAccessor();
         

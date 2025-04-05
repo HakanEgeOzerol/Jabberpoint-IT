@@ -1,6 +1,7 @@
 package unit.controller;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import static org.junit.jupiter.api.Assertions.*;
@@ -19,6 +20,12 @@ public class KeyControllerTest {
     private KeyController keyController;
     private Command mockCommand;
     private KeyEvent mockKeyEvent;
+    
+    @BeforeAll
+    public static void setUpHeadlessMode() {
+        // Ensure we're running in headless mode for GitHub Actions
+        System.setProperty("java.awt.headless", "true");
+    }
     
     @BeforeEach
     public void setUp() {

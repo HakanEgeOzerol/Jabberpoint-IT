@@ -1,6 +1,7 @@
 package unit.controller;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import static org.junit.jupiter.api.Assertions.*;
@@ -31,6 +32,12 @@ import jabberpoint.controller.MenuController;
 public class MenuControllerTest {
     private MenuController menuController;
     private Command mockCommand;
+    
+    @BeforeAll
+    public static void setUpHeadlessMode() {
+        // Ensure we're running in headless mode for GitHub Actions
+        System.setProperty("java.awt.headless", "true");
+    }
     
     @BeforeEach
     public void setUp() {
