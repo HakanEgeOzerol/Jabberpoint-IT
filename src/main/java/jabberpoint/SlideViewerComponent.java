@@ -23,8 +23,10 @@ import javax.swing.JFrame;
 public class SlideViewerComponent extends JComponent implements Subscriber {
 		
 	private Slide slide; // current slide
+	private int maxSlides;
+	private int slideNumber;
+
 	private Font labelFont = null; // font for labels
-	private Presentation presentation = null; // the presentation
 	private JFrame frame = null;
 	
 	private static final long serialVersionUID = 227L;
@@ -39,19 +41,12 @@ public class SlideViewerComponent extends JComponent implements Subscriber {
 
 	/**
 	 * Constructor for the viewer component
-	 * @param pres The presentation to display
 	 * @param frame The frame in which the component is shown
 	 */
-	public SlideViewerComponent(Presentation pres, JFrame frame) {
+	public SlideViewerComponent(JFrame frame) {
 		setBackground(BGCOLOR); 
-		presentation = pres;
 		labelFont = new Font(FONTNAME, FONTSTYLE, FONTHEIGHT);
 		this.frame = frame;
-		
-		// Register as a subscriber
-		if (presentation != null) {
-			presentation.addSubscriber(this);
-		}
 	}
 
 	/**
@@ -60,22 +55,6 @@ public class SlideViewerComponent extends JComponent implements Subscriber {
 	 */
 	public Dimension getPreferredSize() {
 		return new Dimension(Slide.WIDTH, Slide.HEIGHT);
-	}
-
-	/**
-	 * Legacy update method for backward compatibility
-	 * @param presentation The presentation
-	 * @param data The slide data
-	 */
-	public void update(Presentation presentation, Slide data) {
-		if (data == null) {
-			repaint();
-			return;
-		}
-		this.presentation = presentation;
-		this.slide = data;
-		repaint();
-		frame.setTitle(presentation.getTitle());
 	}
 	
 	/**
@@ -87,17 +66,18 @@ public class SlideViewerComponent extends JComponent implements Subscriber {
 	@Override
 	public void update(Event event, Object data, Publisher publisher) {
 		if (publisher instanceof Presentation) {
-			this.presentation = (Presentation) publisher;
+			Presentation presentation = (Presentation) publisher;
 			
 			if (event == Event.SLIDE_CHANGED && data instanceof Slide) {
 				this.slide = (Slide) data;
-				repaint();
-				frame.setTitle(presentation.getTitle());
+				this.slideNumber = presentation.getSlideNumber();
+				this.maxSlides = presentation.getSize();
+				
 			} else if (event == Event.PRESENTATION_CLEARED) {
 				this.slide = null;
-				repaint();
-				frame.setTitle(presentation.getTitle());
 			}
+			repaint();
+			frame.setTitle(presentation.getTitle());
 		}
 	}
 
@@ -109,13 +89,13 @@ public class SlideViewerComponent extends JComponent implements Subscriber {
 	public void paintComponent(Graphics g) {
 		g.setColor(BGCOLOR);
 		g.fillRect(0, 0, getSize().width, getSize().height);
-		if (presentation.getSlideNumber() < 0 || slide == null) {
+		if (this.slideNumber < 0 || slide == null) {
 			return;
 		}
 		g.setFont(labelFont);
 		g.setColor(COLOR);
-		g.drawString("Slide " + (1 + presentation.getSlideNumber()) + " of " +
-                 presentation.getSize(), XPOS, YPOS);
+		g.drawString("Slide " + (1 + this.slideNumber) + " of " +
+                 this.maxSlides, XPOS, YPOS);
 		Rectangle area = new Rectangle(0, YPOS, getWidth(), (getHeight() - YPOS));
 		slide.draw(g, area, this);
 	}

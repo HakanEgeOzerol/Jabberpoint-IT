@@ -1,8 +1,6 @@
 package jabberpoint;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 
 /**
@@ -18,14 +16,13 @@ import java.util.Map;
  * @version 1.7 2023/03/28 Updated to implement Publisher interface
  */
 
-public class Presentation implements Publisher {
+public class Presentation extends Publisher {
 	private String showTitle; // title of the presentation
 	private ArrayList<Slide> showList = null; // an ArrayList with Slides
 	private int currentSlideNumber = -1; // the slidenummer of the current Slide
-	private Map<Subscriber, Boolean> subscribers; // Subscribers to this presentation
 
 	public Presentation() {
-		subscribers = new HashMap<>();
+		super();
 		clear();
 	}
 
@@ -96,27 +93,5 @@ public class Presentation implements Publisher {
 
 	public void exit(int n) {
 		System.exit(n);
-	}
-	
-	// Publisher interface methods
-	
-	@Override
-	public void addSubscriber(Subscriber subscriber) {
-		subscribers.put(subscriber, true);
-	}
-	
-	@Override
-	public Subscriber removeSubscriber(Subscriber subscriber) {
-		if (subscribers.remove(subscriber) != null) {
-			return subscriber;
-		}
-		return null;
-	}
-	
-	@Override
-	public void notifySubscribers(Event event, Object data) {
-		for (Subscriber subscriber : subscribers.keySet()) {
-			subscriber.update(event, data, this);
-		}
 	}
 }
