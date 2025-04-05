@@ -101,9 +101,9 @@ public class BitmapItemTest {
     @Test
     public void testLoadImageWithInvalidPath() {
         errContent.reset();
-        BitmapItem item = new BitmapItem(1, "images/nonexistent.jpg");
+        BitmapItem item = new BitmapItem(1, "nonexistent.jpg");
         
-        assertTrue(errContent.toString().contains("File images/nonexistent.jpg not found"));
+        assertTrue(errContent.toString().contains("File nonexistent.jpg not found"));
         assertNull(item.getName());
     }
 
@@ -120,21 +120,67 @@ public class BitmapItemTest {
     }
 
     @Test
+    public void testGetBoundingBoxWithValidImage() {
+        // Create a mock Graphics and ImageObserver
+        Graphics mockGraphics = mock(Graphics.class);
+        ImageObserver mockObserver = mock(ImageObserver.class);
+        Style mockStyle = mock(Style.class);
+        
+        // Set up the mock style
+        when(style.getIndent()).thenReturn(10);
+        when(style.getLeading()).thenReturn(5);
+        
+        // Create a BitmapItem with a test image of known dimensions
+        BitmapItem item = new BitmapItem(1, "test.jpg");
+        BufferedImage testImage = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
+        setBufferedImage(item, testImage);
+        
+        // Mock the image dimensions
+        when(testImage.getWidth(any())).thenReturn(100);
+        when(testImage.getHeight(any())).thenReturn(100);
+        
+        // Test with different scale factors
+        Rectangle bounds1 = item.getBoundingBox(mockGraphics, mockObserver, 1.0f, mockStyle);
+        assertEquals(10, bounds1.x);
+        assertEquals(0, bounds1.y);
+        assertEquals(100, bounds1.width);
+        assertEquals(105, bounds1.height); // Height includes leading (5)
+    }
+
+    @Test
     public void testGetBoundingBoxWithDifferentScales() {
+        // Create a mock Graphics and ImageObserver
+        Graphics mockGraphics = mock(Graphics.class);
+        ImageObserver mockObserver = mock(ImageObserver.class);
+        Style mockStyle = mock(Style.class);
+        
+        // Set up the mock style
+        when(mockStyle.getIndent()).thenReturn(10);
+        when(mockStyle.getLeading()).thenReturn(5);
+        
+        // Create a BitmapItem with a test image
+        BitmapItem item = new BitmapItem(1, "test.jpg");
+        BufferedImage testImage = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
+        setBufferedImage(item, testImage);
+        
+        // Mock the image dimensions
+        when(testImage.getWidth(any())).thenReturn(100);
+        when(testImage.getHeight(any())).thenReturn(100);
+        
         float scale = 2.0f;
-        Rectangle bounds = bitmapItem.getBoundingBox(graphics, observer, scale, style);
+        Rectangle bounds = item.getBoundingBox(mockGraphics, mockObserver, scale, mockStyle);
         
         assertNotNull(bounds);
-        assertEquals((int)(style.getIndent() * scale), bounds.x);
+        assertEquals((int)(mockStyle.getIndent() * scale), bounds.x);
         assertEquals(0, bounds.y);
-        assertTrue(bounds.width >= 0);
-        assertTrue(bounds.height >= 0);
+        assertEquals(200, bounds.width); // 100 * scale
+        assertEquals(210, bounds.height); // (100 + 5) * scale
         
         // Test with very small scale
         scale = 0.1f;
-        Rectangle smallBounds = bitmapItem.getBoundingBox(graphics, observer, scale, style);
-        assertTrue(smallBounds.width < bounds.width);
-        assertTrue(smallBounds.height < bounds.height);
+        Rectangle smallBounds = item.getBoundingBox(mockGraphics, mockObserver, scale, mockStyle);
+        assertTrue(smallBounds.width < bounds.width, "Small scale bounds should be smaller");
+        assertTrue(smallBounds.height < bounds.height, "Small scale bounds should be smaller");
     }
 
     @Test
@@ -190,36 +236,6 @@ public class BitmapItemTest {
         // Test with larger scale
         item.draw(20, 30, 2.0f, mockGraphics, mockStyle, mockObserver);
         verify(mockGraphics, times(2)).drawImage(eq(testImage), anyInt(), anyInt(), anyInt(), anyInt(), eq(mockObserver));
-    }
-
-    @Test
-    public void testGetBoundingBoxWithValidImage() {
-        // Create a mock Graphics and ImageObserver
-        Graphics mockGraphics = mock(Graphics.class);
-        ImageObserver mockObserver = mock(ImageObserver.class);
-        Style mockStyle = mock(Style.class);
-        
-        // Set up the mock style
-        when(mockStyle.getIndent()).thenReturn(10);
-        when(mockStyle.getLeading()).thenReturn(5);
-        
-        // Create a BitmapItem with a test image
-        BitmapItem item = new BitmapItem(1, "test.jpg");
-        BufferedImage testImage = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB);
-        setBufferedImage(item, testImage);
-        
-        // Test with different scale factors
-        Rectangle bounds1 = item.getBoundingBox(mockGraphics, mockObserver, 1.0f, mockStyle);
-        assertEquals(10, bounds1.x);
-        assertEquals(0, bounds1.y);
-        assertEquals(100, bounds1.width);
-        assertEquals(100, bounds1.height);
-        
-        Rectangle bounds2 = item.getBoundingBox(mockGraphics, mockObserver, 2.0f, mockStyle);
-        assertEquals(20, bounds2.x);
-        assertEquals(0, bounds2.y);
-        assertEquals(200, bounds2.width);
-        assertEquals(200, bounds2.height);
     }
 
     // Helper method to set the buffered image directly for testing
