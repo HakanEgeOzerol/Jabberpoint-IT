@@ -47,8 +47,56 @@ jobs:
       - name: Run unit tests
         run: |
           echo "Running unit tests..."
-          mvn test
-          echo "Unit tests completed"
+          # Run tests and store the exit code
+          mvn test jacoco:report
+          MVN_EXIT_CODE=$?
+          
+          # Display test results summary
+          echo "=== Unit Test Results ==="
+          find . -type f -name "TEST-*.xml" -path "*/surefire-reports/*" -exec grep -h "<testcase" {} \; | wc -l | xargs -I {} echo "Total Tests: {}"
+          FAILED=$(find . -type f -name "TEST-*.xml" -path "*/surefire-reports/*" -exec grep -h "<failure" {} \; | wc -l)
+          ERRORS=$(find . -type f -name "TEST-*.xml" -path "*/surefire-reports/*" -exec grep -h "<error" {} \; | wc -l)
+          echo "Failed Tests: $FAILED"
+          echo "Error Tests: $ERRORS"
+          
+          # If Maven failed or there are test failures, fail the build
+          if [ $MVN_EXIT_CODE -ne 0 ] || [ $FAILED -gt 0 ] || [ $ERRORS -gt 0 ]; then
+            echo "❌ Tests failed! Check the logs for details."
+            echo "Maven exit code: $MVN_EXIT_CODE"
+            echo "Failed tests: $FAILED"
+            echo "Test errors: $ERRORS"
+            
+            # Display failed test details
+            echo -e "\n=== Failed Test Details ==="
+            find . -type f -name "TEST-*.xml" -path "*/surefire-reports/*" -exec grep -A 5 -B 1 "<failure\|<error" {} \;
+            exit 1
+          fi
+          
+          echo "✅ All unit tests passed!"
+
+      - name: Check code coverage
+        run: |
+          echo "Checking code coverage..."
+          # Extract coverage metrics
+          COVERAGE_FILE="target/site/jacoco/index.html"
+          if [ -f "$COVERAGE_FILE" ]; then
+            LINE_COVERAGE=$(grep -o 'Total[^%]*%' "$COVERAGE_FILE" | grep -o '[0-9]\+%' | head -1 | grep -o '[0-9]\+')
+            
+            # Set minimum required coverage
+            MIN_COVERAGE=80
+            
+            if [ "$LINE_COVERAGE" -lt "$MIN_COVERAGE" ]; then
+              echo "❌ Code coverage is below minimum required coverage of ${MIN_COVERAGE}%"
+              echo "Current coverage: ${LINE_COVERAGE}%"
+              exit 1
+            else
+              echo "✅ Code coverage is above minimum required coverage of ${MIN_COVERAGE}%"
+              echo "Current coverage: ${LINE_COVERAGE}%"
+            fi
+          else
+            echo "❌ No coverage report found"
+            exit 1
+          fi
 
       - name: Upload test results
         if: always()
