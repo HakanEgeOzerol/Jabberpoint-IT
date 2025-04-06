@@ -121,6 +121,16 @@ jobs:
           path: target/site/jacoco/
           retention-days: 30
 
+      - name: 📢 Deploy coverage report to GitHub Pages
+        if: github.ref == 'refs/heads/development'
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+            github_token: ${{ secrets.GITHUB_TOKEN }}
+            publish_dir: ./target/site/jacoco
+            publish_branch: gh-pages
+            destination_dir: coverage
+  
+
   #######################################################################
   # 3) Integration Tests – always run, after build
   #######################################################################
