@@ -148,11 +148,55 @@
                         </configuration>
                     </execution>
                     <execution>
+                        <id>jacoco-initialize-integration</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                        <configuration>
+                            <destFile>${project.build.directory}/jacoco-it.exec</destFile>
+                            <propertyName>jacoco-it.argLine</propertyName>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>jacoco-initialize-acceptance</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                        <configuration>
+                            <destFile>${project.build.directory}/jacoco-acceptance.exec</destFile>
+                            <propertyName>jacoco-acceptance.argLine</propertyName>
+                        </configuration>
+                    </execution>
+                    <execution>
                         <id>jacoco-report</id>
                         <phase>test</phase>
                         <goals>
                             <goal>report</goal>
                         </goals>
+                    </execution>
+                    <execution>
+                        <id>jacoco-report-integration</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <configuration>
+                            <dataFile>${project.build.directory}/jacoco-it.exec</dataFile>
+                            <outputDirectory>${project.reporting.outputDirectory}/jacoco-it</outputDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>jacoco-report-acceptance</id>
+                        <phase>post-integration-test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                        <configuration>
+                            <dataFile>${project.build.directory}/jacoco-acceptance.exec</dataFile>
+                            <outputDirectory>${project.reporting.outputDirectory}/jacoco-acceptance</outputDirectory>
+                        </configuration>
                     </execution>
                     <execution>
                         <id>jacoco-check</id>
@@ -308,6 +352,46 @@
                     <threshold>Low</threshold>
                     <failOnError>true</failOnError>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>3.1.2</version>
+                <configuration>
+                    <argLine>${jacoco-it.argLine} -Djava.awt.headless=true -Djava.awt.graphicsenv=sun.awt.CGraphicsEnvironment</argLine>
+                    <excludes>
+                        <exclude>**/ui/**</exclude>
+                    </excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>integration-tests</id>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                        <configuration>
+                            <argLine>${jacoco-it.argLine} -Djava.awt.headless=true -Djava.awt.graphicsenv=sun.awt.CGraphicsEnvironment</argLine>
+                            <excludes>
+                                <exclude>**/ui/**</exclude>
+                            </excludes>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>acceptance-tests</id>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                        <configuration>
+                            <argLine>${jacoco-acceptance.argLine} -Djava.awt.headless=true -Djava.awt.graphicsenv=sun.awt.CGraphicsEnvironment</argLine>
+                            <excludes>
+                                <exclude>**/ui/**</exclude>
+                            </excludes>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
