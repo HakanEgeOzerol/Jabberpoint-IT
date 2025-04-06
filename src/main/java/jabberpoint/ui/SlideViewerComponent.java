@@ -35,7 +35,7 @@ public class SlideViewerComponent extends JComponent implements Subscriber {
 
 	private Font labelFont = null; // font for labels
 	private JFrame frame = null;
-	
+
 	private static final long serialVersionUID = 227L;
 	
 	// Using constants from Constants.UI
