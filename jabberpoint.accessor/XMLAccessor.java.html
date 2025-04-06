@@ -2,7 +2,6 @@
 
 import java.io.IOException;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
 import jabberpoint.presentation.Presentation;
 
@@ -43,23 +42,23 @@ public class XMLAccessor extends Accessor {
     private XMLWriter writer;
     private XMLReader reader;
     
-<span class="fc" id="L46">    public XMLAccessor() {</span>
-<span class="fc" id="L47">        this.writer = new XMLWriter();</span>
-<span class="fc" id="L48">        this.reader = new XMLReader();</span>
-<span class="fc" id="L49">    }</span>
+<span class="fc" id="L45">    public XMLAccessor() {</span>
+<span class="fc" id="L46">        this.writer = new XMLWriter();</span>
+<span class="fc" id="L47">        this.reader = new XMLReader();</span>
+<span class="fc" id="L48">    }</span>
     
     protected String getTitle(Element element, String tagName) {
-<span class="nc" id="L52">        return reader.getTitle(element, tagName);</span>
+<span class="nc" id="L51">        return reader.getTitle(element, tagName);</span>
     }
 
     @Override
     public void loadFile(Presentation presentation, String filename) throws IOException {
-<span class="fc" id="L57">        reader.loadFile(presentation, filename);</span>
-<span class="fc" id="L58">    }</span>
+<span class="fc" id="L56">        reader.loadFile(presentation, filename);</span>
+<span class="fc" id="L57">    }</span>
 
     @Override
     public void saveFile(Presentation presentation, String filename) throws IOException {
-<span class="fc" id="L62">        writer.saveFile(presentation, filename);</span>
-<span class="fc" id="L63">    }</span>
+<span class="fc" id="L61">        writer.saveFile(presentation, filename);</span>
+<span class="fc" id="L62">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
