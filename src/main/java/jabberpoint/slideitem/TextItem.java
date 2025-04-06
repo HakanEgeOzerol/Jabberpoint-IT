@@ -12,14 +12,10 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.ImageObserver;
 import java.text.AttributedString;
 import java.util.List;
+import java.util.ArrayList;
 
 import jabberpoint.constants.Constants;
-import jabberpoint.constants.Constants.TextItems;
-import jabberpoint.constants.Constants.UI;
 import jabberpoint.presentation.Style;
-
-import java.util.Iterator;
-import java.util.ArrayList;
 
 /** <p>A tekst item.</p>
  * <p>A TextItem has drawingfunctionality.</p>

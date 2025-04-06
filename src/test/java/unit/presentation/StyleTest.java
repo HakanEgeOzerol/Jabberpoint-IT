@@ -9,7 +9,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.GraphicsEnvironment;
 import java.util.Arrays;
 import java.util.List;
 
@@ -37,42 +36,37 @@ class StyleTest {
     
     @Test
     void testCreateStyles() {
-        // Test that all default styles are created
-        Style style0 = Style.getStyle(0);
-        Style style1 = Style.getStyle(1);
-        Style style2 = Style.getStyle(2);
-        Style style3 = Style.getStyle(3);
-        Style style4 = Style.getStyle(4);
-        
-        // Test style 0 (title style)
-        assertEquals(0, style0.getIndent());
-        assertEquals(Color.red, style0.getColor());
-        assertEquals(48, style0.getFontSize());
-        assertEquals(20, style0.getLeading());
-        
-        // Test style 1
-        assertEquals(20, style1.getIndent());
-        assertEquals(Color.blue, style1.getColor());
-        assertEquals(40, style1.getFontSize());
-        assertEquals(10, style1.getLeading());
-        
-        // Test style 2
-        assertEquals(50, style2.getIndent());
-        assertEquals(Color.black, style2.getColor());
-        assertEquals(36, style2.getFontSize());
-        assertEquals(10, style2.getLeading());
-        
-        // Test remaining styles have expected values
-        assertEquals(70, style3.getIndent());
-        assertEquals(90, style4.getIndent());
-    }
-    
-    @Test
-    void testGetStyleWithValidLevels() {
+        // Test all default styles
+        Style[] styles = new Style[5];
         for (int i = 0; i < 5; i++) {
-            Style style = Style.getStyle(i);
-            assertNotNull(style);
+            styles[i] = Style.getStyle(i);
+            assertNotNull(styles[i], "Style " + i + " should not be null");
         }
+        
+        // Test specific style properties
+        assertAll("Default styles properties",
+            // Style 0 (title)
+            () -> assertEquals(0, styles[0].getIndent()),
+            () -> assertEquals(Color.red, styles[0].getColor()),
+            () -> assertEquals(48, styles[0].getFontSize()),
+            () -> assertEquals(20, styles[0].getLeading()),
+            
+            // Style 1
+            () -> assertEquals(20, styles[1].getIndent()),
+            () -> assertEquals(Color.blue, styles[1].getColor()),
+            () -> assertEquals(40, styles[1].getFontSize()),
+            () -> assertEquals(10, styles[1].getLeading()),
+            
+            // Style 2
+            () -> assertEquals(50, styles[2].getIndent()),
+            () -> assertEquals(Color.black, styles[2].getColor()),
+            () -> assertEquals(36, styles[2].getFontSize()),
+            () -> assertEquals(10, styles[2].getLeading()),
+            
+            // Remaining styles indents
+            () -> assertEquals(70, styles[3].getIndent()),
+            () -> assertEquals(90, styles[4].getIndent())
+        );
     }
     
     @Test
@@ -88,8 +82,9 @@ class StyleTest {
     @Test
     void testGetFontWithDifferentScales() {
         Style style = Style.getStyle(0);
-        float scale = 2.0f;
         
+        // Test with scale > 1
+        float scale = 2.0f;
         Font scaledFont = style.getFont(scale);
         assertEquals(Math.round(48 * scale), scaledFont.getSize());
         assertTrue(VALID_FONTS.contains(scaledFont.getFamily()),

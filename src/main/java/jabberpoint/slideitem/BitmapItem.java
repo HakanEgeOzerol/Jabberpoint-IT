@@ -8,7 +8,6 @@ import java.io.InputStream;
 import javax.imageio.ImageIO;
 
 import jabberpoint.constants.Constants;
-import jabberpoint.constants.Constants.ErrorMessages;
 import jabberpoint.presentation.Style;
 
 import java.io.IOException;
