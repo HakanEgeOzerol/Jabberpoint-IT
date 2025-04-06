@@ -2,9 +2,16 @@ package jabberpoint;
 
 import javax.swing.JOptionPane;
 
+import jabberpoint.command.Command;
+import jabberpoint.command.OpenFileCommand;
+import jabberpoint.constants.Constants;
+import jabberpoint.presentation.Presentation;
+import jabberpoint.presentation.Style;
+import jabberpoint.ui.SlideViewerFrame;
+
 import java.io.IOException;
 
-/** JabberPoint Main Programma
+/** JabberPoint Main Program
  * <p>This program is distributed under the terms of the accompanying
  * COPYRIGHT.txt file (which is NOT the GNU General Public License).
  * Please read it. Your use of the software constitutes acceptance
@@ -16,29 +23,42 @@ import java.io.IOException;
  * @version 1.4 2007/07/16 Sylvia Stuurman
  * @version 1.5 2010/03/03 Sylvia Stuurman
  * @version 1.6 2014/05/16 Sylvia Stuurman
+ * @version 1.7 2023/03/28 Updated to reflect new architecture
  */
 
 public class JabberPoint {
-	protected static final String IOERR = "IO Error: ";
-	protected static final String JABERR = "Jabberpoint Error ";
-	protected static final String JABVERSION = "Jabberpoint 1.6 - OU version";
+	// Using constants from Constants.ErrorMessages and Constants.Info
+	// protected static final String IOERR = "IO Error: ";
+	// protected static final String JABERR = "Jabberpoint Error ";
+	// protected static final String JABVERSION = "Jabberpoint 1.7 - Updated Architecture";
 
-	/** Het Main Programma */
+	/** The Main Program */
 	public static void main(String argv[]) {
 		
+		// Initialize the styles
 		Style.createStyles();
+		
+		// Create the presentation model
 		Presentation presentation = new Presentation();
-		new SlideViewerFrame(JABVERSION, presentation);
+		
+		// Create the main window and connect it to the presentation
+		SlideViewerFrame viewerFrame = new SlideViewerFrame(Constants.Info.JABVERSION, presentation);
+		
+		// Load presentation data
 		try {
-			if (argv.length == 0) { // een demo presentatie
-				Accessor.getDemoAccessor().loadFile(presentation, "");
-			} else {
-				new XMLAccessor().loadFile(presentation, argv[0]);
+			if (argv.length == 0) { // Load default demo presentation
+				Command demoCommand = new OpenFileCommand(viewerFrame, presentation, "");
+				demoCommand.execute();
+			} else { // Load from file specified in command-line argument
+				Command openCommand = new OpenFileCommand(viewerFrame, presentation, argv[0]);
+				openCommand.execute();
 			}
+			// Set starting slide
 			presentation.setSlideNumber(0);
-		} catch (IOException ex) {
+
+		} catch (Exception ex) {
 			JOptionPane.showMessageDialog(null,
-					IOERR + ex, JABERR,
+					Constants.ErrorMessages.IOERR + ex, Constants.ErrorMessages.JABERR,
 					JOptionPane.ERROR_MESSAGE);
 		}
 	}

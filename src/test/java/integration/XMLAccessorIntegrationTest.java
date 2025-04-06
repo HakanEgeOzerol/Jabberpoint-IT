@@ -1,8 +1,9 @@
 package integration;
 
-import jabberpoint.Presentation;
-import jabberpoint.Slide;
-import jabberpoint.XMLAccessor;
+import jabberpoint.accessor.XMLAccessor;
+import jabberpoint.presentation.Presentation;
+import jabberpoint.presentation.Slide;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import java.nio.file.Path;
@@ -21,6 +22,7 @@ public class XMLAccessorIntegrationTest {
         slide.append(1, "Test Content");
         presentation.append(slide);
         
+        // Use the TempDir to create a file path that works in any environment
         String filename = tempDir.resolve("test.xml").toString();
         XMLAccessor accessor = new XMLAccessor();
         
