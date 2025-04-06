@@ -41,32 +41,6 @@ public class XMLWriter {
      * @param filename     The path to the XML file
      * @throws IOException if writing fails
      */
-    public void write(Presentation presentation, String filename) throws IOException {
-        try (PrintWriter out = new PrintWriter(new FileWriter(filename))) {
-            // XML Header + DOCTYPE
-            out.println("<?xml version=\"1.0\"?>");
-            // In the original JabberPoint, there's often a DOCTYPE line referencing a DTD:
-            out.println("<!DOCTYPE presentation SYSTEM \"jabberpoint.dtd\">");
-            
-            // Root element
-            out.println("<presentation>");
-
-            // Show title
-            out.print("  <" + Constants.XML.SHOWTITLE + ">");
-            out.print(presentation.getTitle());
-            out.println("</" + Constants.XML.SHOWTITLE + ">");
-
-            // For each slide
-            int slideCount = presentation.getSize();
-            for (int slideNumber = 0; slideNumber < slideCount; slideNumber++) {
-                Slide slide = presentation.getSlide(slideNumber);
-                convertSlide(slide, out);
-            }
-
-            // Close root element
-            out.println("</presentation>");
-        }
-    }
 
     private void convertSlide(Slide slide, PrintWriter out) {
         out.println("  <" + Constants.XML.SLIDE + ">");

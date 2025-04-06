@@ -98,7 +98,7 @@ public class XMLReader {
     /**
      * Helper method to get text content of a tag (e.g. <showtitle>, <title>).
      */
-    private String getTitle(Element element, String tagName) {
+    public String getTitle(Element element, String tagName) {
         NodeList titles = element.getElementsByTagName(tagName);
         if (titles != null && titles.getLength() > 0) {
             return titles.item(0).getTextContent();
