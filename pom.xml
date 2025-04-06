@@ -116,16 +116,12 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.2.5</version>
                 <configuration>
-                    <testFailureIgnore>true</testFailureIgnore>
-                    <reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
-                    <argLine>
-                        -Djava.awt.headless=true
-                        -Djava.awt.graphicsenv=sun.awt.CGraphicsEnvironment
-                    </argLine>
+                    <argLine>${jacoco.argLine} -Djava.awt.headless=true -Djava.awt.graphicsenv=sun.awt.CGraphicsEnvironment</argLine>
                     <systemPropertyVariables>
                         <java.awt.headless>true</java.awt.headless>
                         <java.awt.graphicsenv>sun.awt.CGraphicsEnvironment</java.awt.graphicsenv>
                     </systemPropertyVariables>
+                    <reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
                     <excludes>
                         <exclude>**/ui/**</exclude>
                     </excludes>
@@ -142,6 +138,9 @@
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
+                        <configuration>
+                            <propertyName>jacoco.argLine</propertyName>
+                        </configuration>
                     </execution>
                     <execution>
                         <id>jacoco-report</id>
@@ -338,10 +337,7 @@
                                     <includes>
                                         <include>**/integration/**/*Test.java</include>
                                     </includes>
-                                    <argLine>
-                                        -Djava.awt.headless=true
-                                        -Djava.awt.graphicsenv=sun.awt.CGraphicsEnvironment
-                                    </argLine>
+                                    <argLine>${jacoco.argLine} -Djava.awt.headless=true -Djava.awt.graphicsenv=sun.awt.CGraphicsEnvironment</argLine>
                                     <systemPropertyVariables>
                                         <java.awt.headless>true</java.awt.headless>
                                         <java.awt.graphicsenv>sun.awt.CGraphicsEnvironment</java.awt.graphicsenv>
@@ -372,10 +368,7 @@
                                     <includes>
                                         <include>**/acceptance/**/*Test.java</include>
                                     </includes>
-                                    <argLine>
-                                        -Djava.awt.headless=true
-                                        -Djava.awt.graphicsenv=sun.awt.CGraphicsEnvironment
-                                    </argLine>
+                                    <argLine>${jacoco.argLine} -Djava.awt.headless=true -Djava.awt.graphicsenv=sun.awt.CGraphicsEnvironment</argLine>
                                     <systemPropertyVariables>
                                         <java.awt.headless>true</java.awt.headless>
                                         <java.awt.graphicsenv>sun.awt.CGraphicsEnvironment</java.awt.graphicsenv>
