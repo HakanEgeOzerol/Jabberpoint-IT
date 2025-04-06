@@ -1,101 +1,97 @@
-# Jabberpoint - Improved Architecture
+# 🎯 Jabberpoint - Modern Presentation Software
 
-This is an improved version of the JabberPoint presentation software with significant architectural enhancements.
+![JabberPoint Demo](JabberPoint.gif)
 
-## Key Architectural Improvements
+A modern, well-architected presentation software built with Java, featuring clean design patterns and comprehensive testing.
 
-1. **Command Pattern**
-   - Added a Command interface with concrete command implementations
-   - Separated menu and keyboard actions into their own command classes
-   - Makes it easier to extend with new commands
-   - Unified handling of actions across keyboard and menu interfaces
+## 🚀 Features
 
-2. **Observer Pattern**
-   - Implemented Publisher-Subscriber design pattern
-   - Presentation acts as a Publisher that notifies Subscribers of changes
-   - SlideViewerComponent subscribes to receive updates
-   - Allows for better decoupling of components and real-time updates
+- **Command Pattern** - Clean separation of actions and commands
+- **Observer Pattern** - Real-time updates and decoupled components
+- **Factory Pattern** - Flexible slide item creation
+- **Comprehensive Testing** - High code coverage and quality assurance
 
-3. **Factory Pattern**
-   - Uses a Factory for SlideItem creation
-   - Concrete factories for TextItem and BitmapItem
-   - Makes it easy to add new types of slide items
+## 📊 Code Coverage
 
-## Running the Application
+[![Code Coverage](https://img.shields.io/badge/Code%20Coverage-View%20Report-blue)](https://hakanegeozerol.github.io/Jabberpoint-IT/coverage/index.html)
+
+[🔍 View Interactive JaCoCo Report](https://hakanegeozerol.github.io/Jabberpoint-IT/coverage/index.html)
+
+
+## 🏗️ Architecture
+
+### Core Patterns
+
+- **Command Pattern**
+  - Clean separation of actions
+  - Unified handling of keyboard and menu commands
+  - Easy extensibility for new commands
+
+- **Observer Pattern**
+  - Publisher-Subscriber design
+  - Real-time updates
+  - Decoupled components
+
+- **Factory Pattern**
+  - Flexible slide item creation
+  - Easy addition of new item types
+
+### Package Structure
 
 ```
-java jabberpoint.JabberPoint [filename]
+jabberpoint/
+├── accessor/     # Data access and file handling
+├── command/      # Command pattern implementations
+├── constants/    # Application constants
+├── controller/   # Application controllers
+├── observer/     # Observer pattern implementations
+├── presentation/ # Core presentation model
+├── slideitem/    # Slide item implementations
+└── ui/           # User interface components
+```
+
+## 🛠️ Getting Started
+
+### Prerequisites
+- Java 11 or higher
+- Maven 3.6 or higher
+
+### Running the Application
+```bash
+mvn clean install
+java -jar target/jabberpoint-1.0-SNAPSHOT.jar [filename]
 ```
 
 If no filename is provided, a demo presentation will be shown.
 
-## Classes and Packages
-
-### Command Pattern Classes
-- `Command` (interface)
-- `PresentationCommand` (abstract)
-- `UICommand` (abstract)
-- `NextSlideCommand`, `PreviousSlideCommand`, etc.
-
-### Observer Pattern Classes
-- `Publisher` (interface)
-- `Subscriber` (interface)
-- `Event` (enum)
-
-### Factory Pattern Classes
-- `SlideItemFactory` (interface)
-- `TextItemFactory`, `BitmapItemFactory`
-
-### Controllers
-- `KeyController` - Handles keyboard input
-- `MenuController` - Manages menu actions
-
-### View Components
-- `SlideViewerFrame` - Main window
-- `SlideViewerComponent` - Renders slides
-
-### Model Classes
-- `Presentation` - Manages slides and presentation state
-- `Slide` - Individual slide with content
-- `SlideItem` - Base class for slide content
-- `TextItem`, `BitmapItem` - Concrete slide content types
-
-## Future Improvements
-- File chooser dialog for opening and saving presentations
-- More slide transition effects
-- Better image handling and caching
-- Consider implementing true MVC pattern in future versions
-
-## Testing
+## 🧪 Testing
 
 ### Running Tests
-The application uses JUnit 5 and Mockito for testing. To run all tests:
+The project uses Maven for building and testing. Here's how to run different types of tests:
 
 ```bash
+# Run all unit tests
 mvn test
-```
 
-For integration tests only:
-```bash
+# Run integration tests with the integration-test profile
 mvn verify -P integration-test
-```
 
-For acceptance tests only:
-```bash
+# Run acceptance tests with the acceptance-test profile
 mvn verify -P acceptance-test
+
+# Run a specific test class
+mvn test -Dtest=TestClassName
+
+# Run a specific test method
+mvn test -Dtest=TestClassName#testMethodName
 ```
 
-### Headless Testing
-All tests are configured to run in headless mode, making them suitable for CI environments. This is achieved through:
-- System property `-Djava.awt.headless=true`
-- Mocking GUI components instead of creating actual windows
-- Using PowerMock for static method mocking
+### Test Coverage Requirements
+- Minimum 80% code coverage for core packages
+- Headless testing for CI compatibility
+- Comprehensive unit and integration tests
 
-### Code Coverage Requirements
-The project enforces a minimum of 80% code coverage for the following key packages:
-- `jabberpoint.command` - Command pattern implementations
-- `jabberpoint.controller` - Application controllers
-- `jabberpoint.accessor` - Data access classes
-- `jabberpoint.presentation` - Core presentation model
+## 📄 Documentation
 
-See the `TEST_GUIDELINES.md` file for detailed best practices for writing tests.
+- [Software Quality Advice](SQ_Advice.pdf)
+
