@@ -1,7 +1,21 @@
-# Compiled class files
+# Compiled files
 *.class
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
 
-# Maven specific
+# Build directories
+target/
+build/
+out/
+dist/
+bin/
+
+# Maven
 target/
 pom.xml.tag
 pom.xml.releaseBackup
@@ -11,32 +25,9 @@ release.properties
 dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
 
-# Log files
-*.log
-logs/
-
-# BlueJ files
-*.ctxt
-
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
-
-# Package Files
-*.jar
-*.war
-*.nar
-*.ear
-*.zip
-*.tar.gz
-*.rar
-
-# virtual machine crash logs
-hs_err_pid*
-replay_pid*
-
-# IDE-specific files
-# IntelliJ IDEA
+# IDE - IntelliJ
 .idea/
 *.iml
 *.iws
@@ -44,24 +35,65 @@ replay_pid*
 .idea_modules/
 out/
 
-# VS Code
+# IDE - VS Code
 .vscode/
 .settings/
 .classpath
 .project
 .factorypath
 .apt_generated/
-.settings/
 .springBeans
 .sts4-cache/
 
-# Build directories
+# IDE - Eclipse
+.metadata
 bin/
-target/
-build/
-out/
-dist/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+.recommenders
 
-# OS-specific files
+# Logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Testing
+coverage/
+.coverage
+htmlcov/
+.pytest_cache/
+.coverage.*
+.coverage
+*.cover
+.hypothesis/
+
+# OS generated files
 .DS_Store
-Thumbs.db 
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Java specific
+hs_err_pid*
+replay_pid*
+*.ctxt
+.mtj.tmp/
+
+# Temporary files
+*.swp
+*.swo
+*~
+*.bak
+*.tmp
+*.temp 
