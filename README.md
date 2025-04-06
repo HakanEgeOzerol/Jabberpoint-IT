@@ -13,8 +13,6 @@ A modern, well-architected presentation software built with Java, featuring clea
 
 ## 📊 Code Coverage
 
-[![Code Coverage](https://img.shields.io/badge/Code%20Coverage-View%20Report-blue)](https://hakanegeozerol.github.io/Jabberpoint-IT/coverage/index.html)
-
 [🔍 View Interactive JaCoCo Report](https://hakanegeozerol.github.io/Jabberpoint-IT/coverage/index.html)
 
 
