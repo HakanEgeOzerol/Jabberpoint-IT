@@ -90,10 +90,16 @@ jobs:
           echo "- Line Coverage: $LINE_COVERAGE%" >> $GITHUB_STEP_SUMMARY
 
           # -------------------------------------------------------------------
-          # 4) Fail if Tests Did Not Pass
+          # 4) Fail if Tests Did Not Pass or Coverage Is Low
           # -------------------------------------------------------------------
           if [ $MVN_EXIT_CODE -ne 0 ] || [ $FAILED -gt 0 ] || [ $ERRORS -gt 0 ]; then
             echo "❌ Unit tests failed!"
+            exit 1
+          fi
+          
+          # Check if coverage meets the 80% threshold
+          if [ "$LINE_COVERAGE" != "N/A" ] && [ $LINE_COVERAGE -lt 80 ]; then
+            echo "❌ Code coverage below 80% threshold: $LINE_COVERAGE%"
             exit 1
           fi
 

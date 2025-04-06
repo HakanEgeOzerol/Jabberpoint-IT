@@ -1,7 +1,6 @@
 package unit.command;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -14,17 +13,12 @@ import jabberpoint.command.OpenFileCommand;
 import jabberpoint.presentation.Presentation;
 import jabberpoint.ui.SlideViewerFrame;
 import jabberpoint.accessor.XMLAccessor;
+import unit.BaseTest;
 
-public class OpenFileCommandTest {
+public class OpenFileCommandTest extends BaseTest {
     private SlideViewerFrame mockFrame;
     private Presentation mockPresentation;
     private final String testFilename = "test.xml";
-    
-    @BeforeAll
-    public static void setUpHeadlessMode() {
-        // Ensure we're running in headless mode for GitHub Actions
-        System.setProperty("java.awt.headless", "true");
-    }
     
     @BeforeEach
     public void setUp() {

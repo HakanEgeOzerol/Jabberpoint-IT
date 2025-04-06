@@ -65,3 +65,37 @@ If no filename is provided, a demo presentation will be shown.
 - More slide transition effects
 - Better image handling and caching
 - Consider implementing true MVC pattern in future versions
+
+## Testing
+
+### Running Tests
+The application uses JUnit 5 and Mockito for testing. To run all tests:
+
+```bash
+mvn test
+```
+
+For integration tests only:
+```bash
+mvn verify -P integration-test
+```
+
+For acceptance tests only:
+```bash
+mvn verify -P acceptance-test
+```
+
+### Headless Testing
+All tests are configured to run in headless mode, making them suitable for CI environments. This is achieved through:
+- System property `-Djava.awt.headless=true`
+- Mocking GUI components instead of creating actual windows
+- Using PowerMock for static method mocking
+
+### Code Coverage Requirements
+The project enforces a minimum of 80% code coverage for the following key packages:
+- `jabberpoint.command` - Command pattern implementations
+- `jabberpoint.controller` - Application controllers
+- `jabberpoint.accessor` - Data access classes
+- `jabberpoint.presentation` - Core presentation model
+
+See the `TEST_GUIDELINES.md` file for detailed best practices for writing tests.

@@ -1,7 +1,6 @@
 package unit.controller;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import static org.junit.jupiter.api.Assertions.*;
@@ -21,6 +20,7 @@ import java.awt.event.ActionListener;
 import jabberpoint.command.Command;
 import jabberpoint.constants.Constants;
 import jabberpoint.controller.MenuController;
+import unit.BaseTest;
 
 /**
  * Tests for the MenuController class using PowerMock to handle
@@ -29,15 +29,9 @@ import jabberpoint.controller.MenuController;
 @RunWith(PowerMockRunner.class)
 @PowerMockIgnore({"javax.management.*", "javax.swing.*", "java.awt.*"})
 @PrepareForTest({MenuController.class, MenuBar.class, Menu.class, MenuItem.class, MenuShortcut.class})
-public class MenuControllerTest {
+public class MenuControllerTest extends BaseTest {
     private MenuController menuController;
     private Command mockCommand;
-    
-    @BeforeAll
-    public static void setUpHeadlessMode() {
-        // Ensure we're running in headless mode for GitHub Actions
-        System.setProperty("java.awt.headless", "true");
-    }
     
     @BeforeEach
     public void setUp() {

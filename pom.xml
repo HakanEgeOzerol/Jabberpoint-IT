@@ -118,10 +118,17 @@
                 <configuration>
                     <testFailureIgnore>true</testFailureIgnore>
                     <reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
-                    <argLine>-Djava.awt.headless=true</argLine>
+                    <argLine>
+                        -Djava.awt.headless=true
+                        -Djava.awt.graphicsenv=sun.awt.CGraphicsEnvironment
+                    </argLine>
                     <systemPropertyVariables>
                         <java.awt.headless>true</java.awt.headless>
+                        <java.awt.graphicsenv>sun.awt.CGraphicsEnvironment</java.awt.graphicsenv>
                     </systemPropertyVariables>
+                    <excludes>
+                        <exclude>**/ui/**</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
 
@@ -142,6 +149,52 @@
                         <goals>
                             <goal>report</goal>
                         </goals>
+                    </execution>
+                    <execution>
+                        <id>jacoco-check</id>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <rule>
+                                    <element>BUNDLE</element>
+                                    <limits>
+                                        <limit>
+                                            <counter>INSTRUCTION</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>0.80</minimum>
+                                        </limit>
+                                        <limit>
+                                            <counter>LINE</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>0.80</minimum>
+                                        </limit>
+                                        <limit>
+                                            <counter>BRANCH</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>0.80</minimum>
+                                        </limit>
+                                    </limits>
+                                </rule>
+                                <rule>
+                                    <element>PACKAGE</element>
+                                    <includes>
+                                        <include>jabberpoint.command.*</include>
+                                        <include>jabberpoint.controller.*</include>
+                                        <include>jabberpoint.accessor.*</include>
+                                        <include>jabberpoint.presentation.*</include>
+                                    </includes>
+                                    <limits>
+                                        <limit>
+                                            <counter>LINE</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <minimum>0.80</minimum>
+                                        </limit>
+                                    </limits>
+                                </rule>
+                            </rules>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -285,9 +338,13 @@
                                     <includes>
                                         <include>**/integration/**/*Test.java</include>
                                     </includes>
-                                    <argLine>-Djava.awt.headless=true</argLine>
+                                    <argLine>
+                                        -Djava.awt.headless=true
+                                        -Djava.awt.graphicsenv=sun.awt.CGraphicsEnvironment
+                                    </argLine>
                                     <systemPropertyVariables>
                                         <java.awt.headless>true</java.awt.headless>
+                                        <java.awt.graphicsenv>sun.awt.CGraphicsEnvironment</java.awt.graphicsenv>
                                     </systemPropertyVariables>
                                 </configuration>
                             </execution>
@@ -315,9 +372,13 @@
                                     <includes>
                                         <include>**/acceptance/**/*Test.java</include>
                                     </includes>
-                                    <argLine>-Djava.awt.headless=true</argLine>
+                                    <argLine>
+                                        -Djava.awt.headless=true
+                                        -Djava.awt.graphicsenv=sun.awt.CGraphicsEnvironment
+                                    </argLine>
                                     <systemPropertyVariables>
                                         <java.awt.headless>true</java.awt.headless>
+                                        <java.awt.graphicsenv>sun.awt.CGraphicsEnvironment</java.awt.graphicsenv>
                                     </systemPropertyVariables>
                                 </configuration>
                             </execution>
