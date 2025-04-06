@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>XMLWriter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JabberPoint</a> &gt; <a href="index.source.html" class="el_package">jabberpoint.accessor</a> &gt; <span class="el_source">XMLWriter.java</span></div><h1>XMLWriter.java</h1><pre class="source lang-java linenums">package jabberpoint.accessor;
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Vector;
+
+import jabberpoint.constants.Constants;
+import jabberpoint.presentation.Presentation;
+import jabberpoint.presentation.Slide;
+import jabberpoint.slideitem.BitmapItem;
+import jabberpoint.slideitem.SlideItem;
+import jabberpoint.slideitem.TextItem;
+
+/**
+ * XMLWriter: A class for writing a Presentation to an XML file.
+ * 
+ * This class mirrors the functionality of the saveFile method in XMLAccessor.
+ * It uses a PrintWriter to output XML tags for slides, items, etc.
+ * 
+ * @author ...
+ */
+public class XMLWriter {
+
+    // Using constants from Constants.XML
+    // protected static final String SHOWTITLE  = &quot;showtitle&quot;;
+    // protected static final String SLIDETITLE = &quot;title&quot;;
+    // protected static final String SLIDE      = &quot;slide&quot;;
+    // protected static final String ITEM       = &quot;item&quot;;
+    // protected static final String LEVEL      = &quot;level&quot;;
+    // protected static final String KIND       = &quot;kind&quot;;
+    // protected static final String TEXT       = &quot;text&quot;;
+    // protected static final String IMAGE      = &quot;image&quot;;
+
+<span class="fc" id="L35">    public XMLWriter() {}  // Add constructor to match diagram</span>
+
+    /**
+     * Writes the given Presentation to an XML file.
+     * 
+     * @param presentation The Presentation model to serialize
+     * @param filename     The path to the XML file
+     * @throws IOException if writing fails
+     */
+
+    private void convertSlide(Slide slide, PrintWriter out) {
+<span class="fc" id="L46">        out.println(&quot;  &lt;&quot; + Constants.XML.SLIDE + &quot;&gt;&quot;);</span>
+<span class="fc" id="L47">        out.println(&quot;    &lt;&quot; + Constants.XML.SLIDETITLE + &quot;&gt;&quot; + slide.getTitle() + &quot;&lt;/&quot; + Constants.XML.SLIDETITLE + &quot;&gt;&quot;);</span>
+        
+<span class="fc" id="L49">        Vector&lt;SlideItem&gt; items = slide.getSlideItems();</span>
+<span class="fc bfc" id="L50" title="All 2 branches covered.">        for (SlideItem item : items) {</span>
+<span class="fc" id="L51">            convertSlideItem(item, out);</span>
+<span class="fc" id="L52">        }</span>
+        
+<span class="fc" id="L54">        out.println(&quot;  &lt;/&quot; + Constants.XML.SLIDE + &quot;&gt;&quot;);</span>
+<span class="fc" id="L55">    }</span>
+
+    private void convertSlideItem(SlideItem slideItem, PrintWriter out) {
+<span class="fc" id="L58">        out.print(&quot;    &lt;&quot; + Constants.XML.ITEM + &quot; &quot; + Constants.XML.KIND + &quot;=\&quot;&quot;);</span>
+        
+<span class="fc bfc" id="L60" title="All 2 branches covered.">        if (slideItem instanceof TextItem) {</span>
+<span class="fc" id="L61">            TextItem textItem = (TextItem) slideItem;</span>
+<span class="fc" id="L62">            out.print(Constants.XML.TEXT + &quot;\&quot; &quot; + Constants.XML.LEVEL + &quot;=\&quot;&quot; + textItem.getLevel() + &quot;\&quot;&gt;&quot;);</span>
+<span class="fc" id="L63">            out.print(((TextItem) slideItem).getText());</span>
+<span class="fc" id="L64">        } </span>
+<span class="pc bpc" id="L65" title="1 of 2 branches missed.">        else if (slideItem instanceof BitmapItem) {</span>
+<span class="fc" id="L66">            BitmapItem bitmapItem = (BitmapItem) slideItem;</span>
+<span class="fc" id="L67">            out.print(Constants.XML.IMAGE + &quot;\&quot; &quot; + Constants.XML.LEVEL + &quot;=\&quot;&quot; + bitmapItem.getLevel() + &quot;\&quot;&gt;&quot;);</span>
+<span class="fc" id="L68">            out.print(((BitmapItem) slideItem).getName());</span>
+        }
+        
+<span class="fc" id="L71">        out.println(&quot;&lt;/&quot; + Constants.XML.ITEM + &quot;&gt;&quot;);</span>
+<span class="fc" id="L72">    }</span>
+
+    public void saveFile(Presentation p, String fn) throws IOException {
+<span class="fc" id="L75">        try (PrintWriter out = new PrintWriter(new FileWriter(fn))) {</span>
+<span class="fc" id="L76">            out.println(&quot;&lt;?xml version=\&quot;1.0\&quot;?&gt;&quot;);</span>
+<span class="fc" id="L77">            out.println(&quot;&lt;presentation&gt;&quot;);</span>
+<span class="fc" id="L78">            out.println(&quot;  &lt;&quot; + Constants.XML.SHOWTITLE + &quot;&gt;&quot; + p.getTitle() + &quot;&lt;/&quot; + Constants.XML.SHOWTITLE + &quot;&gt;&quot;);</span>
+            
+<span class="fc bfc" id="L80" title="All 2 branches covered.">            for (int slideNumber = 0; slideNumber &lt; p.getSize(); slideNumber++) {</span>
+<span class="fc" id="L81">                Slide slide = p.getSlide(slideNumber);</span>
+<span class="fc" id="L82">                convertSlide(slide, out);</span>
+            }
+            
+<span class="fc" id="L85">            out.println(&quot;&lt;/presentation&gt;&quot;);</span>
+        }
+<span class="fc" id="L87">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

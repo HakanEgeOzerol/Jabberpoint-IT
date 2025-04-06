@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TextItem.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JabberPoint</a> &gt; <a href="index.source.html" class="el_package">jabberpoint.slideitem</a> &gt; <span class="el_source">TextItem.java</span></div><h1>TextItem.java</h1><pre class="source lang-java linenums">package jabberpoint.slideitem;
+
+import java.awt.Rectangle;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.font.TextLayout;
+import java.awt.font.TextAttribute;
+import java.awt.font.LineBreakMeasurer;
+import java.awt.font.FontRenderContext;
+import java.awt.geom.Rectangle2D;
+import java.awt.image.ImageObserver;
+import java.text.AttributedString;
+import java.util.List;
+
+import jabberpoint.constants.Constants;
+import jabberpoint.constants.Constants.TextItems;
+import jabberpoint.constants.Constants.UI;
+import jabberpoint.presentation.Style;
+
+import java.util.Iterator;
+import java.util.ArrayList;
+
+/** &lt;p&gt;A tekst item.&lt;/p&gt;
+ * &lt;p&gt;A TextItem has drawingfunctionality.&lt;/p&gt;
+ * @author Ian F. Darwin, ian@darwinsys.com, Gert Florijn, Sylvia Stuurman
+ * @version 1.1 2002/12/17 Gert Florijn
+ * @version 1.2 2003/11/19 Sylvia Stuurman
+ * @version 1.3 2004/08/17 Sylvia Stuurman
+ * @version 1.4 2007/07/16 Sylvia Stuurman
+ * @version 1.5 2010/03/03 Sylvia Stuurman
+ * @version 1.6 2014/05/16 Sylvia Stuurman
+ */
+
+public class TextItem extends SlideItem {
+	private String text;
+	
+	// Using constant from Constants.TextItems
+	// private static final String EMPTYTEXT = &quot;No Text Given&quot;;
+
+// a textitem of level level, with the text string
+	public TextItem(int level, String string) {
+<span class="fc" id="L43">		super(level);</span>
+<span class="fc" id="L44">		text = string;</span>
+<span class="fc" id="L45">	}</span>
+
+// an empty textitem
+	public TextItem() {
+<span class="fc" id="L49">		this(0, Constants.TextItems.EMPTYTEXT);</span>
+<span class="fc" id="L50">	}</span>
+
+// give the text
+	public String getText() {
+<span class="fc bfc" id="L54" title="All 2 branches covered.">		return text == null ? &quot;&quot; : text;</span>
+	}
+
+// geef de AttributedString voor het item
+	public AttributedString getAttributedString(Style style, float scale) {
+<span class="fc" id="L59">		AttributedString attrStr = new AttributedString(getText());</span>
+<span class="fc" id="L60">		attrStr.addAttribute(TextAttribute.FONT, style.getFont(scale), 0, getText().length());</span>
+<span class="fc" id="L61">		return attrStr;</span>
+	}
+
+// give the bounding box of the item
+	public Rectangle getBoundingBox(Graphics g, ImageObserver observer, 
+			float scale, Style myStyle) {
+<span class="fc" id="L67">		List&lt;TextLayout&gt; layouts = getLayouts(g, myStyle, scale);</span>
+<span class="fc" id="L68">		int xsize = 0, ysize = (int) (myStyle.getLeading() * scale);</span>
+		
+<span class="pc bpc" id="L70" title="1 of 2 branches missed.">		if (layouts != null) {</span>
+<span class="fc bfc" id="L71" title="All 2 branches covered.">			for (TextLayout layout : layouts) {</span>
+<span class="fc" id="L72">				Rectangle2D bounds = layout.getBounds();</span>
+<span class="pc bpc" id="L73" title="1 of 2 branches missed.">				if (bounds.getWidth() &gt; xsize) {</span>
+<span class="fc" id="L74">					xsize = (int) bounds.getWidth();</span>
+				}
+<span class="fc" id="L76">				ysize += layout.getAscent() + layout.getDescent() + layout.getLeading();</span>
+<span class="fc" id="L77">			}</span>
+		}
+		
+<span class="fc" id="L80">		return new Rectangle((int) (myStyle.getIndent() * scale), 0, xsize, ysize);</span>
+	}
+
+// draw the item
+	public void draw(int x, int y, float scale, Graphics g, 
+			Style myStyle, ImageObserver o) {
+<span class="fc bfc" id="L86" title="All 2 branches covered.">		if (getText().length() == 0) {</span>
+<span class="fc" id="L87">			return;</span>
+		}
+		
+<span class="fc" id="L90">		List&lt;TextLayout&gt; layouts = getLayouts(g, myStyle, scale);</span>
+<span class="fc" id="L91">		Point pen = new Point(x + (int)(myStyle.getIndent() * scale),</span>
+<span class="fc" id="L92">					y + (int) (myStyle.getLeading() * scale));</span>
+<span class="fc" id="L93">		Graphics2D g2d = (Graphics2D) g;</span>
+<span class="fc" id="L94">		g2d.setColor(myStyle.getColor());</span>
+		
+<span class="fc bfc" id="L96" title="All 2 branches covered.">		for (TextLayout layout : layouts) {</span>
+<span class="fc" id="L97">			pen.y += layout.getAscent();</span>
+<span class="fc" id="L98">			layout.draw(g2d, pen.x, pen.y);</span>
+<span class="fc" id="L99">			pen.y += layout.getDescent() + layout.getLeading();</span>
+<span class="fc" id="L100">		}</span>
+<span class="fc" id="L101">	}</span>
+
+	private List&lt;TextLayout&gt; getLayouts(Graphics g, Style s, float scale) {
+<span class="fc" id="L104">		List&lt;TextLayout&gt; layouts = new ArrayList&lt;TextLayout&gt;();</span>
+<span class="fc" id="L105">		AttributedString attrStr = getAttributedString(s, scale);</span>
+<span class="fc" id="L106">    	Graphics2D g2d = (Graphics2D) g;</span>
+<span class="fc" id="L107">    	FontRenderContext frc = g2d.getFontRenderContext();</span>
+<span class="fc" id="L108">    	LineBreakMeasurer measurer = new LineBreakMeasurer(attrStr.getIterator(), frc);</span>
+<span class="fc" id="L109">    	float wrappingWidth = (Constants.UI.WIDTH - s.getIndent()) * scale;</span>
+<span class="fc bfc" id="L110" title="All 2 branches covered.">    	while (measurer.getPosition() &lt; getText().length()) {</span>
+<span class="fc" id="L111">    		TextLayout layout = measurer.nextLayout(wrappingWidth);</span>
+<span class="fc" id="L112">    		layouts.add(layout);</span>
+<span class="fc" id="L113">    	}</span>
+<span class="fc" id="L114">    	return layouts;</span>
+	}
+
+	public String toString() {
+<span class="fc" id="L118">		return &quot;TextItem[&quot; + getLevel()+&quot;,&quot;+getText()+&quot;]&quot;;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

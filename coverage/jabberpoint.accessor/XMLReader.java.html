@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>XMLReader.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JabberPoint</a> &gt; <a href="index.source.html" class="el_package">jabberpoint.accessor</a> &gt; <span class="el_source">XMLReader.java</span></div><h1>XMLReader.java</h1><pre class="source lang-java linenums">package jabberpoint.accessor;
+
+import java.io.File;
+import java.io.IOException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
+import jabberpoint.constants.Constants;
+import jabberpoint.presentation.Presentation;
+import jabberpoint.presentation.Slide;
+import jabberpoint.slideitem.BitmapItemFactory;
+import jabberpoint.slideitem.SlideItem;
+import jabberpoint.slideitem.TextItemFactory;
+
+/**
+ * XMLReader: A class for reading a Presentation from an XML file.
+ * 
+ * This class mirrors the functionality of the loadFile method in XMLAccessor.
+ * It uses DOM parsing to read slides, slide items, etc.
+ *
+ * @author ...
+ */
+public class XMLReader {
+
+    // Using constants from Constants.XML
+    // protected static final String SHOWTITLE   = &quot;showtitle&quot;;
+    // protected static final String SLIDETITLE  = &quot;title&quot;;
+    // protected static final String SLIDE       = &quot;slide&quot;;
+    // protected static final String ITEM        = &quot;item&quot;;
+    // protected static final String LEVEL       = &quot;level&quot;;
+    // protected static final String KIND        = &quot;kind&quot;;
+    // protected static final String TEXT        = &quot;text&quot;;
+    // protected static final String IMAGE       = &quot;image&quot;;
+
+    // Using constants from Constants.ErrorMessages
+    // protected static final String PCE         = &quot;Parser Configuration Exception&quot;;
+    // protected static final String UNKNOWNTYPE = &quot;Unknown Element type&quot;;
+    // protected static final String NFE         = &quot;Number Format Exception&quot;;
+
+    private final TextItemFactory textItemFactory;
+    private final BitmapItemFactory bitmapItemFactory;
+
+<span class="fc" id="L51">    public XMLReader() {</span>
+<span class="fc" id="L52">        this.textItemFactory = new TextItemFactory();</span>
+<span class="fc" id="L53">        this.bitmapItemFactory = new BitmapItemFactory();</span>
+<span class="fc" id="L54">    }</span>
+
+    /**
+     * Reads an XML file and populates the given Presentation.
+     * 
+     * @param presentation The Presentation model to fill
+     * @param filename     The path to the XML file
+     * @throws IOException if any IO error occurs
+     */
+    public void loadFile(Presentation presentation, String filename) throws IOException {
+        try {
+<span class="fc" id="L65">            DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();</span>
+<span class="fc" id="L66">            Document document = builder.parse(new File(filename));</span>
+
+<span class="fc" id="L68">            Element doc = document.getDocumentElement();</span>
+            // Set the presentation title
+<span class="fc" id="L70">            presentation.setTitle(getTitle(doc, Constants.XML.SHOWTITLE));</span>
+
+            // Process each &lt;slide&gt; element
+<span class="fc" id="L73">            NodeList slides = doc.getElementsByTagName(Constants.XML.SLIDE);</span>
+<span class="fc bfc" id="L74" title="All 2 branches covered.">            for (int i = 0; i &lt; slides.getLength(); i++) {</span>
+<span class="fc" id="L75">                Element xmlSlide = (Element) slides.item(i);</span>
+<span class="fc" id="L76">                Slide slide = new Slide();</span>
+<span class="fc" id="L77">                slide.setTitle(getTitle(xmlSlide, Constants.XML.SLIDETITLE));</span>
+<span class="fc" id="L78">                presentation.append(slide);</span>
+
+                // Process &lt;item&gt; elements within each slide
+<span class="fc" id="L81">                NodeList slideItems = xmlSlide.getElementsByTagName(Constants.XML.ITEM);</span>
+<span class="fc bfc" id="L82" title="All 2 branches covered.">                for (int j = 0; j &lt; slideItems.getLength(); j++) {</span>
+<span class="fc" id="L83">                    Element item = (Element) slideItems.item(j);</span>
+<span class="fc" id="L84">                    loadSlideItem(slide, item);</span>
+                }
+            }
+
+<span class="fc" id="L88">        } catch (IOException iox) {</span>
+<span class="fc" id="L89">            System.err.println(&quot;IO Error while reading &quot; + filename + &quot;: &quot; + iox);</span>
+<span class="fc" id="L90">            throw iox;</span>
+<span class="nc" id="L91">        } catch (SAXException sax) {</span>
+<span class="nc" id="L92">            System.err.println(&quot;SAXException while reading &quot; + filename + &quot;: &quot; + sax.getMessage());</span>
+<span class="nc" id="L93">        } catch (ParserConfigurationException pcx) {</span>
+<span class="nc" id="L94">            System.err.println(Constants.ErrorMessages.PCE + &quot;: &quot; + pcx.getMessage());</span>
+<span class="pc" id="L95">        }</span>
+<span class="fc" id="L96">    }</span>
+
+    /**
+     * Helper method to get text content of a tag (e.g. &lt;showtitle&gt;, &lt;title&gt;).
+     */
+    public String getTitle(Element element, String tagName) {
+<span class="fc" id="L102">        NodeList titles = element.getElementsByTagName(tagName);</span>
+<span class="pc bpc" id="L103" title="2 of 4 branches missed.">        if (titles != null &amp;&amp; titles.getLength() &gt; 0) {</span>
+<span class="fc" id="L104">            return titles.item(0).getTextContent();</span>
+        }
+<span class="nc" id="L106">        return &quot;&quot;;</span>
+    }
+
+    /**
+     * Loads a single &lt;item&gt; element into the given Slide.
+     */
+    private void loadSlideItem(Slide slide, Element item) {
+<span class="fc" id="L113">        NamedNodeMap attributes = item.getAttributes();</span>
+<span class="fc" id="L114">        String levelText = attributes.getNamedItem(Constants.XML.LEVEL).getTextContent();</span>
+<span class="fc" id="L115">        String type = attributes.getNamedItem(Constants.XML.KIND).getTextContent();</span>
+<span class="fc" id="L116">        String content = item.getTextContent();</span>
+
+        try {
+<span class="fc" id="L119">            int level = Integer.parseInt(levelText);</span>
+            SlideItem slideItem;
+<span class="fc bfc" id="L121" title="All 2 branches covered.">            if (Constants.XML.TEXT.equals(type)) {</span>
+<span class="fc" id="L122">                slideItem = textItemFactory.createSlideItem(type, level, content);</span>
+<span class="pc bpc" id="L123" title="1 of 2 branches missed.">            } else if (Constants.XML.IMAGE.equals(type)) {</span>
+<span class="fc" id="L124">                slideItem = bitmapItemFactory.createSlideItem(type, level, content);</span>
+            } else {
+<span class="nc" id="L126">                System.err.println(Constants.ErrorMessages.UNKNOWNTYPE + &quot;: &quot; + type);</span>
+<span class="nc" id="L127">                return;</span>
+            }
+<span class="fc" id="L129">            slide.append(slideItem);</span>
+<span class="nc" id="L130">        } catch (NumberFormatException x) {</span>
+<span class="nc" id="L131">            System.err.println(Constants.ErrorMessages.NFE);</span>
+<span class="fc" id="L132">        }</span>
+<span class="fc" id="L133">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

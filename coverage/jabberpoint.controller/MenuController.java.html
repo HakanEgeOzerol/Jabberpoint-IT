@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MenuController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JabberPoint</a> &gt; <a href="index.source.html" class="el_package">jabberpoint.controller</a> &gt; <span class="el_source">MenuController.java</span></div><h1>MenuController.java</h1><pre class="source lang-java linenums">package jabberpoint.controller;
+
+import java.awt.MenuBar;
+import java.awt.Menu;
+import java.awt.MenuItem;
+import java.awt.MenuShortcut;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.util.HashMap;
+import java.util.Map;
+
+import jabberpoint.command.Command;
+import jabberpoint.constants.Constants;
+
+/** &lt;p&gt;The controller for the menu&lt;/p&gt;
+ * @author Ian F. Darwin, ian@darwinsys.com, Gert Florijn, Sylvia Stuurman
+ * @version 1.1 2002/12/17 Gert Florijn
+ * @version 1.2 2003/11/19 Sylvia Stuurman
+ * @version 1.3 2004/08/17 Sylvia Stuurman
+ * @version 1.4 2007/07/16 Sylvia Stuurman
+ * @version 1.5 2010/03/03 Sylvia Stuurman
+ * @version 1.6 2014/05/16 Sylvia Stuurman
+ * @version 1.7 2023/03/28 Updated to use Command pattern
+ */
+public class MenuController extends MenuBar {
+	
+	private Map&lt;String, Command&gt; menuItems;
+	
+	private static final long serialVersionUID = 227L;
+	
+	// Using constants from Constants.Commands
+	// protected static final String ABOUT = &quot;About&quot;;
+	// protected static final String FILE = &quot;File&quot;;
+	// protected static final String EXIT = &quot;Exit&quot;;
+	// protected static final String GOTO = &quot;Go to&quot;;
+	// protected static final String HELP = &quot;Help&quot;;
+	// protected static final String NEW = &quot;New&quot;;
+	// protected static final String NEXT = &quot;Next&quot;;
+	// protected static final String OPEN = &quot;Open&quot;;
+	// protected static final String PAGENR = &quot;Page number?&quot;;
+	// protected static final String PREV = &quot;Prev&quot;;
+	// protected static final String SAVE = &quot;Save&quot;;
+	// protected static final String VIEW = &quot;View&quot;;
+	
+	// protected static final String TESTFILE = &quot;test.xml&quot;;
+	// protected static final String SAVEFILE = &quot;dump.xml&quot;;
+	
+<span class="nc" id="L48">	public MenuController() {</span>
+<span class="nc" id="L49">		menuItems = new HashMap&lt;&gt;();</span>
+		
+		// Register commands in the map
+<span class="nc" id="L52">	}</span>
+	
+	/**
+	 * Creates the menus and menu items
+	 */
+	public void createMenus() {
+<span class="nc" id="L58">		createFileMenu();</span>
+<span class="nc" id="L59">		createViewMenu();</span>
+<span class="nc" id="L60">		createHelpMenu();</span>
+<span class="nc" id="L61">	}</span>
+
+	private void createFileMenu()
+	{
+<span class="nc" id="L65">		Menu fileMenu = new Menu(Constants.Commands.FILE);</span>
+<span class="nc" id="L66">		fileMenu.add(mkMenuItem(Constants.Commands.OPEN));</span>
+<span class="nc" id="L67">		fileMenu.add(mkMenuItem(Constants.Commands.NEW));</span>
+<span class="nc" id="L68">		fileMenu.add(mkMenuItem(Constants.Commands.SAVE));</span>
+<span class="nc" id="L69">		fileMenu.addSeparator();</span>
+<span class="nc" id="L70">		fileMenu.add(mkMenuItem(Constants.Commands.EXIT));</span>
+<span class="nc" id="L71">		add(fileMenu);</span>
+<span class="nc" id="L72">	}</span>
+
+	private void createViewMenu()
+	{
+<span class="nc" id="L76">		Menu viewMenu = new Menu(Constants.Commands.VIEW);</span>
+<span class="nc" id="L77">		viewMenu.add(mkMenuItem(Constants.Commands.NEXT));</span>
+<span class="nc" id="L78">		viewMenu.add(mkMenuItem(Constants.Commands.PREV));</span>
+<span class="nc" id="L79">		viewMenu.add(mkMenuItem(Constants.Commands.GOTO));</span>
+<span class="nc" id="L80">		add(viewMenu);</span>
+<span class="nc" id="L81">	}</span>
+
+	private void createHelpMenu()
+	{
+<span class="nc" id="L85">		Menu helpMenu = new Menu(Constants.Commands.HELP);</span>
+<span class="nc" id="L86">		helpMenu.add(mkMenuItem(Constants.Commands.ABOUT));</span>
+<span class="nc" id="L87">		setHelpMenu(helpMenu);		</span>
+<span class="nc" id="L88">	}</span>
+
+	/**
+	 * Create a menu item with a command action
+	 * @param name The name of the menu item
+	 * @return The created MenuItem
+	 */
+	public MenuItem mkMenuItem(String name) {
+<span class="nc" id="L96">		MenuItem menuItem = new MenuItem(name, new MenuShortcut(name.charAt(0)));</span>
+		
+		// If the menu item has a command, add an action listener
+<span class="nc" id="L99">		Command command = menuItems.get(name);</span>
+<span class="nc bnc" id="L100" title="All 2 branches missed.">		if (command != null) {</span>
+<span class="nc" id="L101">			menuItem.addActionListener(createActionListener(command));</span>
+		}
+		
+<span class="nc" id="L104">		return menuItem;</span>
+	}
+	
+	/**
+	 * Creates an ActionListener for the given command
+	 * @param command The command to execute
+	 * @return The ActionListener
+	 */
+	private ActionListener createActionListener(Command command) {
+<span class="nc" id="L113">		return new ActionListener() {</span>
+			public void actionPerformed(ActionEvent actionEvent) {
+<span class="nc" id="L115">				command.execute();</span>
+<span class="nc" id="L116">			}</span>
+		};
+	}
+	
+	/**
+	 * Add a menu item with a command
+	 * @param name The name of the menu item
+	 * @param command The command to execute
+	 */
+	public void addMenuItem(String name, Command command) {
+<span class="nc" id="L126">		menuItems.put(name, command);</span>
+<span class="nc" id="L127">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
