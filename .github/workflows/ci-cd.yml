@@ -128,7 +128,6 @@ jobs:
             github_token: ${{ secrets.GITHUB_TOKEN }}
             publish_dir: ./target/site/jacoco
             publish_branch: gh-pages
-            destination_dir: coverage
   
 
   #######################################################################
