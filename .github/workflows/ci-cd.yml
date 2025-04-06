@@ -50,7 +50,7 @@ jobs:
         id: coverage-step
         run: |
           echo "Running unit tests..."
-          mvn test jacoco:report
+          mvn clean verify
           MVN_EXIT_CODE=$?
 
           # -------------------------------------------------------------------
