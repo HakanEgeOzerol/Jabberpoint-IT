@@ -20,9 +20,9 @@ import jabberpoint.observer.Publisher;
  */
 
 public class Presentation extends Publisher {
-	private String showTitle; // title of the presentation
-	private ArrayList<Slide> showList = null; // an ArrayList with Slides
-	private int currentSlideNumber = -1; // the slidenummer of the current Slide
+	private String showTitle;
+	private ArrayList<Slide> showList = null;
+	private int currentSlideNumber = -1;
 
 	public Presentation() {
 		super();
@@ -41,47 +41,41 @@ public class Presentation extends Publisher {
 		showTitle = nt;
 	}
 
-	// give the number of the current slide
 	public int getSlideNumber() {
 		return currentSlideNumber;
 	}
 
-	// change the current slide number and notify subscribers
 	public void setSlideNumber(int number) {
 		if (number < getSize() && number >= 0) {
 			currentSlideNumber = number;
-			// Notify subscribers using the Observer pattern
-			notifySubscribers(Event.SLIDE_CHANGED, getCurrentSlide());
+			notifySubscribers(Event.SLIDE_CHANGED, 
+				new Event.PresentationState(getCurrentSlide(), currentSlideNumber, getSize(), showTitle));
 		}
 	}
 
-	// go to the previous slide unless at the beginning of the presentation
 	public void prevSlide() {
 		if (currentSlideNumber > 0) {
 			setSlideNumber(currentSlideNumber - 1);
 	    }
 	}
 
-	// go to the next slide unless at the end of the presentation.
 	public void nextSlide() {
 		if (currentSlideNumber < (showList.size()-1)) {
 			setSlideNumber(currentSlideNumber + 1);
 		}
 	}
 
-	// Delete the presentation to be ready for the next one.
 	public void clear() {
 		showList = new ArrayList<Slide>();
 		currentSlideNumber = -1;
-		notifySubscribers(Event.PRESENTATION_CLEARED, null);
+		notifySubscribers(Event.PRESENTATION_CLEARED, 
+			new Event.PresentationState(null, -1, 0, showTitle));
 	}
 
-	// Add a slide to the presentation
 	public void append(Slide slide) {
 		showList.add(slide);
 	}
 
-	// Get a slide with a certain slidenumber
 	public Slide getSlide(int number) {
 		if (number < 0 || number >= getSize()){
 			return null;
@@ -89,7 +83,6 @@ public class Presentation extends Publisher {
 		return showList.get(number);
 	}
 
-	// Give the current slide
 	public Slide getCurrentSlide() {
 		return getSlide(currentSlideNumber);
 	}

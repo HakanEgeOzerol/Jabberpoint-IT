@@ -29,70 +29,45 @@ import jabberpoint.presentation.Slide;
 
 public class SlideViewerComponent extends JComponent implements Subscriber {
 		
-	private Slide slide; // current slide
+	private Slide slide;
 	private int maxSlides;
 	private int slideNumber;
-
-	private Font labelFont = null; // font for labels
-	private JFrame frame = null;
+	private Font labelFont;
+	private JFrame frame;
 
 	private static final long serialVersionUID = 227L;
-	
-	// Using constants from Constants.UI
-	// private static final Color BGCOLOR = Color.white;
-	// private static final Color COLOR = Color.black;
-	// private static final String FONTNAME = "Dialog";
-	// private static final int FONTSTYLE = Font.BOLD;
-	// private static final int FONTHEIGHT = 10;
-	// private static final int XPOS = 1100;
-	// private static final int YPOS = 20;
 
-	/**
-	 * Constructor for the viewer component
-	 * @param frame The frame in which the component is shown
-	 */
 	public SlideViewerComponent(JFrame frame) {
 		setBackground(Constants.UI.BGCOLOR); 
 		labelFont = new Font(Constants.UI.FONTNAME, Constants.UI.FONTSTYLE, Constants.UI.FONTHEIGHT);
 		this.frame = frame;
 	}
 
-	/**
-	 * Get the preferred size of the component
-	 * @return The preferred dimension
-	 */
 	public Dimension getPreferredSize() {
 		return new Dimension(Constants.UI.WIDTH, Constants.UI.HEIGHT);
 	}
 	
-	/**
-	 * Implementation of the Subscriber interface update method
-	 * @param event The event that occurred
-	 * @param data The data associated with the event (typically a Slide)
-	 * @param publisher The publisher that sent the notification
-	 */
 	@Override
-	public void update(Event event, Object data, Publisher publisher) {
-		if (publisher instanceof Presentation) {
-			Presentation presentation = (Presentation) publisher;
+	public void update(Event event, Object data) {
+		if (data instanceof Event.PresentationState) {
+			Event.PresentationState state = (Event.PresentationState) data;
 			
-			if (event == Event.SLIDE_CHANGED && data instanceof Slide) {
-				this.slide = (Slide) data;
-				this.slideNumber = presentation.getSlideNumber();
-				this.maxSlides = presentation.getSize();
+			if (event == Event.SLIDE_CHANGED && state.getSlide() instanceof Slide) {
+				this.slide = (Slide) state.getSlide();
+				this.slideNumber = state.getSlideNumber();
+				this.maxSlides = state.getTotalSlides();
 				
 			} else if (event == Event.PRESENTATION_CLEARED) {
 				this.slide = null;
+				this.slideNumber = -1;
+				this.maxSlides = 0;
 			}
+			
 			repaint();
-			frame.setTitle(presentation.getTitle());
+			frame.setTitle(state.getTitle());
 		}
 	}
 
-	/**
-	 * Draw the slide
-	 * @param g The Graphics object to draw on
-	 */
 	@Override
 	public void paintComponent(Graphics g) {
 		g.setColor(Constants.UI.BGCOLOR);
