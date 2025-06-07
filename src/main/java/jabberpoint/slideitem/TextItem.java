@@ -113,4 +113,11 @@ public class TextItem extends SlideItem {
 	public String toString() {
 		return "TextItem[" + getLevel()+","+getText()+"]";
 	}
+
+	@Override
+	public String toXMLString() {
+		return jabberpoint.constants.Constants.XML.TEXT + "\" " + 
+			   jabberpoint.constants.Constants.XML.LEVEL + "=\"" + getLevel() + "\">" + 
+			   getText();
+	}
 }

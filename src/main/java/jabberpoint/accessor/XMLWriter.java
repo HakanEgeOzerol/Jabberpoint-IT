@@ -56,18 +56,7 @@ public class XMLWriter {
 
     private void convertSlideItem(SlideItem slideItem, PrintWriter out) {
         out.print("    <" + Constants.XML.ITEM + " " + Constants.XML.KIND + "=\"");
-        
-        if (slideItem instanceof TextItem) {
-            TextItem textItem = (TextItem) slideItem;
-            out.print(Constants.XML.TEXT + "\" " + Constants.XML.LEVEL + "=\"" + textItem.getLevel() + "\">");
-            out.print(((TextItem) slideItem).getText());
-        } 
-        else if (slideItem instanceof BitmapItem) {
-            BitmapItem bitmapItem = (BitmapItem) slideItem;
-            out.print(Constants.XML.IMAGE + "\" " + Constants.XML.LEVEL + "=\"" + bitmapItem.getLevel() + "\">");
-            out.print(((BitmapItem) slideItem).getName());
-        }
-        
+        out.print(slideItem.toXMLString());
         out.println("</" + Constants.XML.ITEM + ">");
     }
 

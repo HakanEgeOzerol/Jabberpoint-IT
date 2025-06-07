@@ -31,6 +31,11 @@ public class SlideItemTest {
         public void draw(int x, int y, float scale, Graphics g, Style style, ImageObserver observer) {
             // Do nothing, just for testing
         }
+
+        @Override
+        public String toXMLString() {
+            return "test\" level=\"" + getLevel() + "\">Test content";
+        }
     }
     
     @Test

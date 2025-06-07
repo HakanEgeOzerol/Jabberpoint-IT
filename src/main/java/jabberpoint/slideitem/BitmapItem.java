@@ -117,4 +117,11 @@ public class BitmapItem extends SlideItem {
 	public String toString() {
 		return "BitmapItem[" + getLevel() + "," + imageName + "]";
 	}
+
+	@Override
+	public String toXMLString() {
+		return jabberpoint.constants.Constants.XML.IMAGE + "\" " + 
+			   jabberpoint.constants.Constants.XML.LEVEL + "=\"" + getLevel() + "\">" + 
+			   getName();
+	}
 }
