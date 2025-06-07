@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SlideItemFactory.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JabberPoint</a> &gt; <a href="index.source.html" class="el_package">jabberpoint.slideitem</a> &gt; <span class="el_source">SlideItemFactory.java</span></div><h1>SlideItemFactory.java</h1><pre class="source lang-java linenums">package jabberpoint.slideitem;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class SlideItemFactory {
+    private final Map&lt;String, ISlideItemFactory&gt; factoryRegistry;
+    
+<span class="fc" id="L9">    public SlideItemFactory() {</span>
+<span class="fc" id="L10">        this.factoryRegistry = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L11">        registerFactory(&quot;text&quot;, new TextItemFactory());</span>
+<span class="fc" id="L12">        registerFactory(&quot;image&quot;, new BitmapItemFactory());</span>
+<span class="fc" id="L13">    }</span>
+    
+    /**
+     * Constructor for dependency injection
+     */
+<span class="nc" id="L18">    public SlideItemFactory(Map&lt;String, ISlideItemFactory&gt; factories) {</span>
+<span class="nc" id="L19">        this.factoryRegistry = new HashMap&lt;&gt;(factories);</span>
+<span class="nc" id="L20">    }</span>
+    
+    /**
+     * Register factory for a specific type
+     */
+    public void registerFactory(String type, ISlideItemFactory factory) {
+<span class="fc bfc" id="L26" title="All 4 branches covered.">        if (type == null || factory == null) {</span>
+<span class="fc" id="L27">            throw new IllegalArgumentException(&quot;Type and factory cannot be null&quot;);</span>
+        }
+<span class="fc" id="L29">        factoryRegistry.put(type.toLowerCase(), factory);</span>
+<span class="fc" id="L30">    }</span>
+    
+    /**
+     * Creates a SlideItem with type specification
+     */
+    public SlideItem createSlideItem(String type, int level, String content) {
+<span class="fc bfc" id="L36" title="All 2 branches covered.">        if (type == null) {</span>
+<span class="fc" id="L37">            throw new IllegalArgumentException(&quot;Type cannot be null&quot;);</span>
+        }
+        
+<span class="fc" id="L40">        ISlideItemFactory factory = factoryRegistry.get(type.toLowerCase());</span>
+<span class="fc bfc" id="L41" title="All 2 branches covered.">        if (factory == null) {</span>
+<span class="fc" id="L42">            throw new IllegalArgumentException(&quot;Unknown slide item type: &quot; + type);</span>
+        }
+        
+<span class="fc" id="L45">        return factory.createSlideItem(type, level, content);</span>
+    }
+    
+    /**
+     * Creates a SlideItem with level and content
+     * Defaults to text type
+     */
+    public SlideItem createSlideItem(int level, String content) {
+<span class="fc" id="L53">        return createSlideItem(&quot;text&quot;, level, content);</span>
+    }
+} 
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

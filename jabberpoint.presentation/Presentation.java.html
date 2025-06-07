@@ -20,9 +20,9 @@ import jabberpoint.observer.Publisher;
  */
 
 public class Presentation extends Publisher {
-	private String showTitle; // title of the presentation
-<span class="fc" id="L24">	private ArrayList&lt;Slide&gt; showList = null; // an ArrayList with Slides</span>
-<span class="fc" id="L25">	private int currentSlideNumber = -1; // the slidenummer of the current Slide</span>
+	private String showTitle;
+<span class="fc" id="L24">	private ArrayList&lt;Slide&gt; showList = null;</span>
+<span class="fc" id="L25">	private int currentSlideNumber = -1;</span>
 
 	public Presentation() {
 <span class="fc" id="L28">		super();</span>
@@ -41,61 +41,54 @@ public class Presentation extends Publisher {
 <span class="fc" id="L41">		showTitle = nt;</span>
 <span class="fc" id="L42">	}</span>
 
-	// give the number of the current slide
 	public int getSlideNumber() {
-<span class="fc" id="L46">		return currentSlideNumber;</span>
+<span class="fc" id="L45">		return currentSlideNumber;</span>
 	}
 
-	// change the current slide number and notify subscribers
 	public void setSlideNumber(int number) {
-<span class="fc bfc" id="L51" title="All 4 branches covered.">		if (number &lt; getSize() &amp;&amp; number &gt;= 0) {</span>
-<span class="fc" id="L52">			currentSlideNumber = number;</span>
-			// Notify subscribers using the Observer pattern
-<span class="fc" id="L54">			notifySubscribers(Event.SLIDE_CHANGED, getCurrentSlide());</span>
+<span class="fc bfc" id="L49" title="All 4 branches covered.">		if (number &lt; getSize() &amp;&amp; number &gt;= 0) {</span>
+<span class="fc" id="L50">			currentSlideNumber = number;</span>
+<span class="fc" id="L51">			notifySubscribers(Event.SLIDE_CHANGED, </span>
+<span class="fc" id="L52">				new Event.PresentationState(getCurrentSlide(), currentSlideNumber, getSize(), showTitle));</span>
 		}
-<span class="fc" id="L56">	}</span>
+<span class="fc" id="L54">	}</span>
 
-	// go to the previous slide unless at the beginning of the presentation
 	public void prevSlide() {
-<span class="fc bfc" id="L60" title="All 2 branches covered.">		if (currentSlideNumber &gt; 0) {</span>
-<span class="fc" id="L61">			setSlideNumber(currentSlideNumber - 1);</span>
+<span class="fc bfc" id="L57" title="All 2 branches covered.">		if (currentSlideNumber &gt; 0) {</span>
+<span class="fc" id="L58">			setSlideNumber(currentSlideNumber - 1);</span>
 	    }
-<span class="fc" id="L63">	}</span>
+<span class="fc" id="L60">	}</span>
 
-	// go to the next slide unless at the end of the presentation.
 	public void nextSlide() {
-<span class="fc bfc" id="L67" title="All 2 branches covered.">		if (currentSlideNumber &lt; (showList.size()-1)) {</span>
-<span class="fc" id="L68">			setSlideNumber(currentSlideNumber + 1);</span>
+<span class="fc bfc" id="L63" title="All 2 branches covered.">		if (currentSlideNumber &lt; (showList.size()-1)) {</span>
+<span class="fc" id="L64">			setSlideNumber(currentSlideNumber + 1);</span>
 		}
-<span class="fc" id="L70">	}</span>
+<span class="fc" id="L66">	}</span>
 
-	// Delete the presentation to be ready for the next one.
 	public void clear() {
-<span class="fc" id="L74">		showList = new ArrayList&lt;Slide&gt;();</span>
-<span class="fc" id="L75">		currentSlideNumber = -1;</span>
-<span class="fc" id="L76">		notifySubscribers(Event.PRESENTATION_CLEARED, null);</span>
+<span class="fc" id="L69">		showList = new ArrayList&lt;Slide&gt;();</span>
+<span class="fc" id="L70">		currentSlideNumber = -1;</span>
+<span class="fc" id="L71">		notifySubscribers(Event.PRESENTATION_CLEARED, </span>
+			new Event.PresentationState(null, -1, 0, showTitle));
+<span class="fc" id="L73">	}</span>
+
+	public void append(Slide slide) {
+<span class="fc" id="L76">		showList.add(slide);</span>
 <span class="fc" id="L77">	}</span>
 
-	// Add a slide to the presentation
-	public void append(Slide slide) {
-<span class="fc" id="L81">		showList.add(slide);</span>
-<span class="fc" id="L82">	}</span>
-
-	// Get a slide with a certain slidenumber
 	public Slide getSlide(int number) {
-<span class="fc bfc" id="L86" title="All 4 branches covered.">		if (number &lt; 0 || number &gt;= getSize()){</span>
-<span class="fc" id="L87">			return null;</span>
+<span class="fc bfc" id="L80" title="All 4 branches covered.">		if (number &lt; 0 || number &gt;= getSize()){</span>
+<span class="fc" id="L81">			return null;</span>
 	    }
-<span class="fc" id="L89">		return showList.get(number);</span>
+<span class="fc" id="L83">		return showList.get(number);</span>
 	}
 
-	// Give the current slide
 	public Slide getCurrentSlide() {
-<span class="fc" id="L94">		return getSlide(currentSlideNumber);</span>
+<span class="fc" id="L87">		return getSlide(currentSlideNumber);</span>
 	}
 
 	public void exit(int n) {
-<span class="nc" id="L98">		System.exit(n);</span>
-<span class="nc" id="L99">	}</span>
+<span class="nc" id="L91">		System.exit(n);</span>
+<span class="nc" id="L92">	}</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

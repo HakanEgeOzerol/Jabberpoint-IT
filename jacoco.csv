@@ -1,14 +1,15 @@
 GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+JabberPoint,jabberpoint.observer,Event.PresentationState,12,15,0,0,4,6,4,1,4,1
 JabberPoint,jabberpoint.observer,Event,0,27,0,0,0,5,0,1,0,1
-JabberPoint,jabberpoint.observer,Publisher,2,39,1,3,1,11,1,5,0,4
+JabberPoint,jabberpoint.observer,Publisher,2,38,1,3,1,11,1,5,0,4
 JabberPoint,jabberpoint.command,SaveFileCommand,25,39,1,3,6,15,4,4,3,3
 JabberPoint,jabberpoint.command,NewPresentationCommand,12,0,0,0,5,0,2,0,2,0
 JabberPoint,jabberpoint.command,NextSlideCommand,0,8,0,0,0,4,0,2,0,2
-JabberPoint,jabberpoint.command,UICommand,0,7,0,0,0,3,0,1,0,1
 JabberPoint,jabberpoint.command,PreviousSlideCommand,0,8,0,0,0,4,0,2,0,2
+JabberPoint,jabberpoint.command,UICommand,0,7,0,0,0,3,0,1,0,1
 JabberPoint,jabberpoint.command,AboutBoxCommand,9,0,0,0,4,0,2,0,2,0
-JabberPoint,jabberpoint.command,GoToSlideCommand,3,24,0,0,1,10,1,3,1,3
 JabberPoint,jabberpoint.command,ExitCommand,0,9,0,0,0,4,0,2,0,2
+JabberPoint,jabberpoint.command,GoToSlideCommand,3,24,0,0,1,10,1,3,1,3
 JabberPoint,jabberpoint.command,OpenFileCommand,9,54,1,5,2,17,2,5,1,3
 JabberPoint,jabberpoint.command,PresentationCommand,0,6,0,0,0,3,0,1,0,1
 JabberPoint,jabberpoint.controller,MenuController,133,0,2,0,33,0,9,0,8,0
@@ -16,7 +17,7 @@ JabberPoint,jabberpoint.controller,KeyController,0,56,0,10,0,18,0,10,0,5
 JabberPoint,jabberpoint.controller,MenuController.new ActionListener() {...},13,0,0,0,3,0,2,0,2,0
 JabberPoint,jabberpoint.presentation,Style,0,125,0,2,0,23,0,11,0,10
 JabberPoint,jabberpoint.presentation,Slide,0,128,0,2,0,26,0,11,0,10
-JabberPoint,jabberpoint.presentation,Presentation,3,103,0,12,2,30,1,18,1,12
+JabberPoint,jabberpoint.presentation,Presentation,3,119,0,12,2,31,1,18,1,12
 JabberPoint,jabberpoint,JabberPoint,51,0,2,0,15,0,3,0,2,0
 JabberPoint,jabberpoint.constants,Constants.ErrorMessages,3,0,0,0,1,0,1,0,1,0
 JabberPoint,jabberpoint.constants,Constants.XML,3,0,0,0,1,0,1,0,1,0
@@ -26,6 +27,7 @@ JabberPoint,jabberpoint.constants,Constants.Info,3,0,0,0,1,0,1,0,1,0
 JabberPoint,jabberpoint.constants,Constants.UI,8,0,0,0,3,0,2,0,2,0
 JabberPoint,jabberpoint.constants,Constants,3,0,0,0,1,0,1,0,1,0
 JabberPoint,jabberpoint.constants,Constants.TextItems,3,0,0,0,1,0,1,0,1,0
+JabberPoint,jabberpoint.slideitem,SlideItemFactory,9,71,0,8,3,16,1,8,1,4
 JabberPoint,jabberpoint.slideitem,SlideItem,0,16,0,0,0,7,0,3,0,3
 JabberPoint,jabberpoint.slideitem,TextItem,0,238,2,12,0,44,2,13,0,8
 JabberPoint,jabberpoint.slideitem,BitmapItemFactory,0,50,2,10,0,10,2,7,0,3
@@ -33,6 +35,6 @@ JabberPoint,jabberpoint.slideitem,BitmapItem,0,149,0,8,0,30,0,11,0,7
 JabberPoint,jabberpoint.slideitem,TextItemFactory,1,42,2,8,0,10,2,6,0,3
 JabberPoint,jabberpoint.accessor,XMLWriter,0,112,1,7,0,30,1,7,0,4
 JabberPoint,jabberpoint.accessor,Accessor,4,3,0,0,1,2,1,1,1,1
-JabberPoint,jabberpoint.accessor,XMLReader,25,156,3,9,9,38,3,7,0,4
+JabberPoint,jabberpoint.accessor,XMLReader,32,134,2,6,12,34,3,6,1,4
 JabberPoint,jabberpoint.accessor,DemoPresentation,5,128,0,0,1,34,1,2,1,2
 JabberPoint,jabberpoint.accessor,XMLAccessor,6,25,0,0,1,8,1,3,1,3

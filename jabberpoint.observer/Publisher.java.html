@@ -2,32 +2,28 @@
 
 import java.util.HashSet;
 
-/**
- * Publisher abstract class for the Observer pattern.
- * Classes that want to notify subscribers of events should implement this interface.
- */
 public abstract class Publisher {
     protected HashSet&lt;Subscriber&gt; subscribers;
 
-<span class="fc" id="L12">    public Publisher() {</span>
-<span class="fc" id="L13">        this.subscribers = new HashSet&lt;&gt;();</span>
-<span class="fc" id="L14">    }</span>
+<span class="fc" id="L8">    public Publisher() {</span>
+<span class="fc" id="L9">        this.subscribers = new HashSet&lt;&gt;();</span>
+<span class="fc" id="L10">    }</span>
 
 	public void addSubscriber(Subscriber subscriber) {
-<span class="fc" id="L17">		subscribers.add(subscriber);</span>
-<span class="fc" id="L18">	}</span>
+<span class="fc" id="L13">		subscribers.add(subscriber);</span>
+<span class="fc" id="L14">	}</span>
 	
 	public Subscriber removeSubscriber(Subscriber subscriber) {
-<span class="pc bpc" id="L21" title="1 of 2 branches missed.">		if (subscribers.remove(subscriber)) {</span>
-<span class="fc" id="L22">			return subscriber;</span>
+<span class="pc bpc" id="L17" title="1 of 2 branches missed.">		if (subscribers.remove(subscriber)) {</span>
+<span class="fc" id="L18">			return subscriber;</span>
 		}
-<span class="nc" id="L24">		return null;</span>
+<span class="nc" id="L20">		return null;</span>
 	}
 	
 	public void notifySubscribers(Event event, Object data) {
-<span class="fc bfc" id="L28" title="All 2 branches covered.">		for (Subscriber subscriber : subscribers) {</span>
-<span class="fc" id="L29">			subscriber.update(event, data, this);</span>
-<span class="fc" id="L30">		}</span>
-<span class="fc" id="L31">	}</span>
+<span class="fc bfc" id="L24" title="All 2 branches covered.">		for (Subscriber subscriber : subscribers) {</span>
+<span class="fc" id="L25">			subscriber.update(event, data);</span>
+<span class="fc" id="L26">		}</span>
+<span class="fc" id="L27">	}</span>
 } 
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
