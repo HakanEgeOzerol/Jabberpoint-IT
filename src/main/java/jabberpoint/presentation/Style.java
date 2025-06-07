@@ -2,6 +2,8 @@ package jabberpoint.presentation;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.util.HashMap;
+import java.util.Map;
 
 import jabberpoint.constants.Constants;
 
@@ -19,10 +21,8 @@ import jabberpoint.constants.Constants;
  */
 
 public class Style {
-	private static Style[] styles; // de styles
+	private static Map<Integer, Style> styles = new HashMap<>();
 	
-	// Using the constant from Constants.UI
-	// private static final String FONTNAME = "Helvetica";
 	private int indent;
 	private Color color;
 	private Font font;
@@ -30,20 +30,25 @@ public class Style {
 	private int leading;
 
 	public static void createStyles() {
-		styles = new Style[5];    
-		// The styles are fixed.
-		styles[0] = new Style(0, Color.red,   48, 20);	// style for item-level 0
-		styles[1] = new Style(20, Color.blue,  40, 10);	// style for item-level 1
-		styles[2] = new Style(50, Color.black, 36, 10);	// style for item-level 2
-		styles[3] = new Style(70, Color.black, 30, 10);	// style for item-level 3
-		styles[4] = new Style(90, Color.black, 24, 10);	// style for item-level 4
+		styles.clear();
+		registerStyle(0, new Style(0, Color.red, 48, 20));
+		registerStyle(1, new Style(20, Color.blue, 40, 10));
+		registerStyle(2, new Style(50, Color.black, 36, 10));
+		registerStyle(3, new Style(70, Color.black, 30, 10));
+		registerStyle(4, new Style(90, Color.black, 24, 10));
+	}
+	
+	public static void registerStyle(int level, Style style) {
+		styles.put(level, style);
 	}
 
 	public static Style getStyle(int level) {
-		if (level >= styles.length) {
-			level = styles.length - 1;
+		if (styles.containsKey(level)) {
+			return styles.get(level);
 		}
-		return styles[level];
+			return styles.values().stream()
+			.reduce((first, second) -> second)
+			.orElse(styles.get(0));
 	}
 
 	public Style(int indent, Color color, int points, int leading) {
@@ -61,7 +66,6 @@ public class Style {
 		return font.deriveFont(fontSize * scale);
 	}
 
-	// Public getters for testing
 	public int getIndent() {
 		return indent;
 	}
