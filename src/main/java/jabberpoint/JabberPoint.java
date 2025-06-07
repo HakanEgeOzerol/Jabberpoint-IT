@@ -27,33 +27,23 @@ import java.io.IOException;
  */
 
 public class JabberPoint {
-	// Using constants from Constants.ErrorMessages and Constants.Info
-	// protected static final String IOERR = "IO Error: ";
-	// protected static final String JABERR = "Jabberpoint Error ";
-	// protected static final String JABVERSION = "Jabberpoint 1.7 - Updated Architecture";
 
-	/** The Main Program */
 	public static void main(String argv[]) {
 		
-		// Initialize the styles
 		Style.createStyles();
 		
-		// Create the presentation model
 		Presentation presentation = new Presentation();
 		
-		// Create the main window and connect it to the presentation
 		SlideViewerFrame viewerFrame = new SlideViewerFrame(Constants.Info.JABVERSION, presentation);
 		
-		// Load presentation data
 		try {
-			if (argv.length == 0) { // Load default demo presentation
+			if (argv.length == 0) {
 				Command demoCommand = new OpenFileCommand(viewerFrame, presentation, "");
 				demoCommand.execute();
-			} else { // Load from file specified in command-line argument
+			} else {
 				Command openCommand = new OpenFileCommand(viewerFrame, presentation, argv[0]);
 				openCommand.execute();
 			}
-			// Set starting slide
 			presentation.setSlideNumber(0);
 
 		} catch (Exception ex) {
