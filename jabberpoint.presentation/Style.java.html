@@ -2,6 +2,8 @@
 
 import java.awt.Color;
 import java.awt.Font;
+import java.util.HashMap;
+import java.util.Map;
 
 import jabberpoint.constants.Constants;
 
@@ -19,10 +21,8 @@ import jabberpoint.constants.Constants;
  */
 
 public class Style {
-	private static Style[] styles; // de styles
+<span class="fc" id="L24">	private static Map&lt;Integer, Style&gt; styles = new HashMap&lt;&gt;();</span>
 	
-	// Using the constant from Constants.UI
-	// private static final String FONTNAME = &quot;Helvetica&quot;;
 	private int indent;
 	private Color color;
 	private Font font;
@@ -30,56 +30,60 @@ public class Style {
 	private int leading;
 
 	public static void createStyles() {
-<span class="fc" id="L33">		styles = new Style[5];    </span>
-		// The styles are fixed.
-<span class="fc" id="L35">		styles[0] = new Style(0, Color.red,   48, 20);	// style for item-level 0</span>
-<span class="fc" id="L36">		styles[1] = new Style(20, Color.blue,  40, 10);	// style for item-level 1</span>
-<span class="fc" id="L37">		styles[2] = new Style(50, Color.black, 36, 10);	// style for item-level 2</span>
-<span class="fc" id="L38">		styles[3] = new Style(70, Color.black, 30, 10);	// style for item-level 3</span>
-<span class="fc" id="L39">		styles[4] = new Style(90, Color.black, 24, 10);	// style for item-level 4</span>
-<span class="fc" id="L40">	}</span>
+<span class="fc" id="L33">		styles.clear();</span>
+<span class="fc" id="L34">		registerStyle(0, new Style(0, Color.red, 48, 20));</span>
+<span class="fc" id="L35">		registerStyle(1, new Style(20, Color.blue, 40, 10));</span>
+<span class="fc" id="L36">		registerStyle(2, new Style(50, Color.black, 36, 10));</span>
+<span class="fc" id="L37">		registerStyle(3, new Style(70, Color.black, 30, 10));</span>
+<span class="fc" id="L38">		registerStyle(4, new Style(90, Color.black, 24, 10));</span>
+<span class="fc" id="L39">	}</span>
+	
+	public static void registerStyle(int level, Style style) {
+<span class="fc" id="L42">		styles.put(level, style);</span>
+<span class="fc" id="L43">	}</span>
 
 	public static Style getStyle(int level) {
-<span class="fc bfc" id="L43" title="All 2 branches covered.">		if (level &gt;= styles.length) {</span>
-<span class="fc" id="L44">			level = styles.length - 1;</span>
+<span class="fc bfc" id="L46" title="All 2 branches covered.">		if (styles.containsKey(level)) {</span>
+<span class="fc" id="L47">			return styles.get(level);</span>
 		}
-<span class="fc" id="L46">		return styles[level];</span>
+<span class="fc" id="L49">			return styles.values().stream()</span>
+<span class="fc" id="L50">			.reduce((first, second) -&gt; second)</span>
+<span class="fc" id="L51">			.orElse(styles.get(0));</span>
 	}
 
-<span class="fc" id="L49">	public Style(int indent, Color color, int points, int leading) {</span>
-<span class="fc" id="L50">		this.indent = indent;</span>
-<span class="fc" id="L51">		this.color = color;</span>
-<span class="fc" id="L52">		font = new Font(Constants.UI.STYLE_FONTNAME, Font.BOLD, fontSize=points);</span>
-<span class="fc" id="L53">		this.leading = leading;</span>
-<span class="fc" id="L54">	}</span>
+<span class="fc" id="L54">	public Style(int indent, Color color, int points, int leading) {</span>
+<span class="fc" id="L55">		this.indent = indent;</span>
+<span class="fc" id="L56">		this.color = color;</span>
+<span class="fc" id="L57">		font = new Font(Constants.UI.STYLE_FONTNAME, Font.BOLD, fontSize=points);</span>
+<span class="fc" id="L58">		this.leading = leading;</span>
+<span class="fc" id="L59">	}</span>
 
 	public String toString() {
-<span class="fc" id="L57">		return &quot;[&quot;+ indent + &quot;,&quot; + color + &quot;; &quot; + fontSize + &quot; on &quot; + leading +&quot;]&quot;;</span>
+<span class="fc" id="L62">		return &quot;[&quot;+ indent + &quot;,&quot; + color + &quot;; &quot; + fontSize + &quot; on &quot; + leading +&quot;]&quot;;</span>
 	}
 
 	public Font getFont(float scale) {
-<span class="fc" id="L61">		return font.deriveFont(fontSize * scale);</span>
+<span class="fc" id="L66">		return font.deriveFont(fontSize * scale);</span>
 	}
 
-	// Public getters for testing
 	public int getIndent() {
-<span class="fc" id="L66">		return indent;</span>
+<span class="fc" id="L70">		return indent;</span>
 	}
 
 	public Color getColor() {
-<span class="fc" id="L70">		return color;</span>
+<span class="fc" id="L74">		return color;</span>
 	}
 
 	public Font getFont() {
-<span class="fc" id="L74">		return font;</span>
+<span class="fc" id="L78">		return font;</span>
 	}
 
 	public int getFontSize() {
-<span class="fc" id="L78">		return fontSize;</span>
+<span class="fc" id="L82">		return fontSize;</span>
 	}
 
 	public int getLeading() {
-<span class="fc" id="L82">		return leading;</span>
+<span class="fc" id="L86">		return leading;</span>
 	}
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

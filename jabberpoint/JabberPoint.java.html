@@ -27,40 +27,30 @@ import java.io.IOException;
  */
 
 <span class="nc" id="L29">public class JabberPoint {</span>
-	// Using constants from Constants.ErrorMessages and Constants.Info
-	// protected static final String IOERR = &quot;IO Error: &quot;;
-	// protected static final String JABERR = &quot;Jabberpoint Error &quot;;
-	// protected static final String JABVERSION = &quot;Jabberpoint 1.7 - Updated Architecture&quot;;
 
-	/** The Main Program */
 	public static void main(String argv[]) {
 		
-		// Initialize the styles
-<span class="nc" id="L39">		Style.createStyles();</span>
+<span class="nc" id="L33">		Style.createStyles();</span>
 		
-		// Create the presentation model
-<span class="nc" id="L42">		Presentation presentation = new Presentation();</span>
+<span class="nc" id="L35">		Presentation presentation = new Presentation();</span>
 		
-		// Create the main window and connect it to the presentation
-<span class="nc" id="L45">		SlideViewerFrame viewerFrame = new SlideViewerFrame(Constants.Info.JABVERSION, presentation);</span>
+<span class="nc" id="L37">		SlideViewerFrame viewerFrame = new SlideViewerFrame(Constants.Info.JABVERSION, presentation);</span>
 		
-		// Load presentation data
 		try {
-<span class="nc bnc" id="L49" title="All 2 branches missed.">			if (argv.length == 0) { // Load default demo presentation</span>
-<span class="nc" id="L50">				Command demoCommand = new OpenFileCommand(viewerFrame, presentation, &quot;&quot;);</span>
-<span class="nc" id="L51">				demoCommand.execute();</span>
-<span class="nc" id="L52">			} else { // Load from file specified in command-line argument</span>
-<span class="nc" id="L53">				Command openCommand = new OpenFileCommand(viewerFrame, presentation, argv[0]);</span>
-<span class="nc" id="L54">				openCommand.execute();</span>
+<span class="nc bnc" id="L40" title="All 2 branches missed.">			if (argv.length == 0) {</span>
+<span class="nc" id="L41">				Command demoCommand = new OpenFileCommand(viewerFrame, presentation, &quot;&quot;);</span>
+<span class="nc" id="L42">				demoCommand.execute();</span>
+<span class="nc" id="L43">			} else {</span>
+<span class="nc" id="L44">				Command openCommand = new OpenFileCommand(viewerFrame, presentation, argv[0]);</span>
+<span class="nc" id="L45">				openCommand.execute();</span>
 			}
-			// Set starting slide
-<span class="nc" id="L57">			presentation.setSlideNumber(0);</span>
+<span class="nc" id="L47">			presentation.setSlideNumber(0);</span>
 
-<span class="nc" id="L59">		} catch (Exception ex) {</span>
-<span class="nc" id="L60">			JOptionPane.showMessageDialog(null,</span>
+<span class="nc" id="L49">		} catch (Exception ex) {</span>
+<span class="nc" id="L50">			JOptionPane.showMessageDialog(null,</span>
 					Constants.ErrorMessages.IOERR + ex, Constants.ErrorMessages.JABERR,
 					JOptionPane.ERROR_MESSAGE);
-<span class="nc" id="L63">		}</span>
-<span class="nc" id="L64">	}</span>
+<span class="nc" id="L53">		}</span>
+<span class="nc" id="L54">	}</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
