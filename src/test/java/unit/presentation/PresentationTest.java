@@ -66,10 +66,12 @@ public class PresentationTest {
 
     @Test
     public void testGetCurrentSlide() {
+        assertNull(presentation.getCurrentSlide());
+        
         presentation.append(slide1);
         presentation.append(slide2);
         
-        assertNull(presentation.getCurrentSlide()); // No slide selected
+        assertNull(presentation.getCurrentSlide());
         
         presentation.setSlideNumber(0);
         assertSame(slide1, presentation.getCurrentSlide());
@@ -83,28 +85,17 @@ public class PresentationTest {
         presentation.append(slide1);
         presentation.append(slide2);
         
+        presentation.setSlideNumber(0);
+        assertEquals(0, presentation.getSlideNumber());
+        
         presentation.setSlideNumber(1);
         assertEquals(1, presentation.getSlideNumber());
         
-        // Test invalid slide numbers
         presentation.setSlideNumber(-1);
-        assertEquals(1, presentation.getSlideNumber()); // Should not change
+        assertEquals(1, presentation.getSlideNumber());
         
-        presentation.setSlideNumber(2);
-        assertEquals(1, presentation.getSlideNumber()); // Should not change
-    }
-
-    @Test
-    public void testPrevSlide() {
-        presentation.append(slide1);
-        presentation.append(slide2);
-        presentation.setSlideNumber(1);
-        
-        presentation.prevSlide();
-        assertEquals(0, presentation.getSlideNumber());
-        
-        presentation.prevSlide();
-        assertEquals(0, presentation.getSlideNumber()); // Should not go below 0
+        presentation.setSlideNumber(5);
+        assertEquals(1, presentation.getSlideNumber());
     }
 
     @Test
@@ -117,7 +108,20 @@ public class PresentationTest {
         assertEquals(1, presentation.getSlideNumber());
         
         presentation.nextSlide();
-        assertEquals(1, presentation.getSlideNumber()); // Should not exceed last slide
+        assertEquals(1, presentation.getSlideNumber());
+    }
+
+    @Test
+    public void testPrevSlide() {
+        presentation.append(slide1);
+        presentation.append(slide2);
+        presentation.setSlideNumber(1);
+        
+        presentation.prevSlide();
+        assertEquals(0, presentation.getSlideNumber());
+        
+        presentation.prevSlide();
+        assertEquals(0, presentation.getSlideNumber());
     }
 
     @Test
@@ -142,13 +146,10 @@ public class PresentationTest {
         presentation.append(slide1);
         presentation.setSlideNumber(0);
         
-        // Verify that subscriber was notified of slide change
-        verify(mockSubscriber).update(eq(Event.SLIDE_CHANGED), eq(slide1), eq(presentation));
+        verify(mockSubscriber).update(eq(Event.SLIDE_CHANGED), any(Event.PresentationState.class));
         
-        // Test removing subscriber
         assertSame(mockSubscriber, presentation.removeSubscriber(mockSubscriber));
         
-        // Clear presentation and verify subscriber is not notified
         presentation.clear();
         verifyNoMoreInteractions(mockSubscriber);
     }
@@ -164,8 +165,7 @@ public class PresentationTest {
         presentation.append(slide1);
         presentation.setSlideNumber(0);
         
-        // Verify both subscribers were notified
-        verify(mockSubscriber1).update(eq(Event.SLIDE_CHANGED), eq(slide1), eq(presentation));
-        verify(mockSubscriber2).update(eq(Event.SLIDE_CHANGED), eq(slide1), eq(presentation));
+        verify(mockSubscriber1).update(eq(Event.SLIDE_CHANGED), any(Event.PresentationState.class));
+        verify(mockSubscriber2).update(eq(Event.SLIDE_CHANGED), any(Event.PresentationState.class));
     }
 } 
