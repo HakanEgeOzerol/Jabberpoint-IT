@@ -16,9 +16,8 @@ import org.xml.sax.SAXException;
 import jabberpoint.constants.Constants;
 import jabberpoint.presentation.Presentation;
 import jabberpoint.presentation.Slide;
-import jabberpoint.slideitem.BitmapItemFactory;
 import jabberpoint.slideitem.SlideItem;
-import jabberpoint.slideitem.TextItemFactory;
+import jabberpoint.slideitem.SlideItemFactory;
 
 /**
  * XMLReader: A class for reading a Presentation from an XML file.
@@ -30,27 +29,17 @@ import jabberpoint.slideitem.TextItemFactory;
  */
 public class XMLReader {
 
-    // Using constants from Constants.XML
-    // protected static final String SHOWTITLE   = "showtitle";
-    // protected static final String SLIDETITLE  = "title";
-    // protected static final String SLIDE       = "slide";
-    // protected static final String ITEM        = "item";
-    // protected static final String LEVEL       = "level";
-    // protected static final String KIND        = "kind";
-    // protected static final String TEXT        = "text";
-    // protected static final String IMAGE       = "image";
-
-    // Using constants from Constants.ErrorMessages
-    // protected static final String PCE         = "Parser Configuration Exception";
-    // protected static final String UNKNOWNTYPE = "Unknown Element type";
-    // protected static final String NFE         = "Number Format Exception";
-
-    private final TextItemFactory textItemFactory;
-    private final BitmapItemFactory bitmapItemFactory;
+    private final SlideItemFactory slideItemFactory;
 
     public XMLReader() {
-        this.textItemFactory = new TextItemFactory();
-        this.bitmapItemFactory = new BitmapItemFactory();
+        this.slideItemFactory = new SlideItemFactory();
+    }
+    
+    /**
+     * Constructor for dependency injection
+     */
+    public XMLReader(SlideItemFactory slideItemFactory) {
+        this.slideItemFactory = slideItemFactory;
     }
 
     /**
@@ -66,10 +55,8 @@ public class XMLReader {
             Document document = builder.parse(new File(filename));
 
             Element doc = document.getDocumentElement();
-            // Set the presentation title
             presentation.setTitle(getTitle(doc, Constants.XML.SHOWTITLE));
 
-            // Process each <slide> element
             NodeList slides = doc.getElementsByTagName(Constants.XML.SLIDE);
             for (int i = 0; i < slides.getLength(); i++) {
                 Element xmlSlide = (Element) slides.item(i);
@@ -77,7 +64,6 @@ public class XMLReader {
                 slide.setTitle(getTitle(xmlSlide, Constants.XML.SLIDETITLE));
                 presentation.append(slide);
 
-                // Process <item> elements within each slide
                 NodeList slideItems = xmlSlide.getElementsByTagName(Constants.XML.ITEM);
                 for (int j = 0; j < slideItems.getLength(); j++) {
                     Element item = (Element) slideItems.item(j);
@@ -117,18 +103,12 @@ public class XMLReader {
 
         try {
             int level = Integer.parseInt(levelText);
-            SlideItem slideItem;
-            if (Constants.XML.TEXT.equals(type)) {
-                slideItem = textItemFactory.createSlideItem(type, level, content);
-            } else if (Constants.XML.IMAGE.equals(type)) {
-                slideItem = bitmapItemFactory.createSlideItem(type, level, content);
-            } else {
-                System.err.println(Constants.ErrorMessages.UNKNOWNTYPE + ": " + type);
-                return;
-            }
+            SlideItem slideItem = slideItemFactory.createSlideItem(type, level, content);
             slide.append(slideItem);
         } catch (NumberFormatException x) {
             System.err.println(Constants.ErrorMessages.NFE);
+        } catch (IllegalArgumentException e) {
+            System.err.println(Constants.ErrorMessages.UNKNOWNTYPE + ": " + type);
         }
     }
 }
