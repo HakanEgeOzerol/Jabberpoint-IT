@@ -1,28 +1,14 @@
 package jabberpoint.command;
 
-import jabberpoint.presentation.Presentation;
-import jabberpoint.ui.AboutBox;
-import jabberpoint.ui.SlideViewerFrame;
+import jabberpoint.command.context.CommandContext;
+import jabberpoint.command.context.DefaultCommandContext;
 
 /**
  * Command to show the about box
  */
-public class AboutBoxCommand extends UICommand {
-    
-    /**
-     * Constructor
-     * @param frame The SlideViewerFrame
-     * @param presentation The presentation to operate on
-     */
-    public AboutBoxCommand(SlideViewerFrame frame, Presentation presentation) {
-        super(frame, presentation);
-    }
-    
-    /**
-     * Execute the command to show the about box
-     */
+public class AboutBoxCommand implements Command {
     @Override
-    public void execute() {
-        AboutBox.show(frame);
+    public void execute(CommandContext context) {
+        ((DefaultCommandContext) context).getDialogs().showAboutBox();
     }
 } 

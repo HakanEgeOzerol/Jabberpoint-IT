@@ -3,16 +3,18 @@ package jabberpoint.command;
 import jabberpoint.command.context.CommandContext;
 import jabberpoint.presentation.Presentation;
 
-/**
- * Command to move to the previous slide in the presentation.
- */
-public class PreviousSlideCommand implements Command {
+import java.awt.*;
+
+public class NewFileCommand implements Command {
 
     @Override
     public void execute(CommandContext context) {
-        if (context.hasReceiver(Presentation.class)) {
+        if (context.hasReceiver(Presentation.class) && context.hasReceiver(Frame.class)) {
             Presentation presentation = context.getReceiver(Presentation.class);
-            presentation.prevSlide();
+            Frame frame = context.getReceiver(Frame.class);
+
+            presentation.clear();
+            frame.repaint();
         }
     }
 }

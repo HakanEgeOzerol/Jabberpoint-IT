@@ -18,7 +18,7 @@ The link below opens the automatically generated **JaCoCo coverage report**, whi
 - Missed lines, branches, and methods
 - Visual indicators of what parts are covered
 
-[🔍 View Interactive JaCoCo Report](https://hakanegeozerol.github.io/Jabberpoint-IT/coverage/index.html)
+[🔍 View Interactive JaCoCo Report](https://hakanegeozerol.github.io/Jabberpoint-IT/index.html)
 
 
 ## 🏗️ Architecture

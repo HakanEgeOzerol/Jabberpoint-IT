@@ -8,9 +8,7 @@ import java.util.Vector;
 import jabberpoint.constants.Constants;
 import jabberpoint.presentation.Presentation;
 import jabberpoint.presentation.Slide;
-import jabberpoint.slideitem.BitmapItem;
 import jabberpoint.slideitem.SlideItem;
-import jabberpoint.slideitem.TextItem;
 
 /**
  * XMLWriter: A class for writing a Presentation to an XML file.
@@ -56,18 +54,7 @@ public class XMLWriter {
 
     private void convertSlideItem(SlideItem slideItem, PrintWriter out) {
         out.print("    <" + Constants.XML.ITEM + " " + Constants.XML.KIND + "=\"");
-        
-        if (slideItem instanceof TextItem) {
-            TextItem textItem = (TextItem) slideItem;
-            out.print(Constants.XML.TEXT + "\" " + Constants.XML.LEVEL + "=\"" + textItem.getLevel() + "\">");
-            out.print(((TextItem) slideItem).getText());
-        } 
-        else if (slideItem instanceof BitmapItem) {
-            BitmapItem bitmapItem = (BitmapItem) slideItem;
-            out.print(Constants.XML.IMAGE + "\" " + Constants.XML.LEVEL + "=\"" + bitmapItem.getLevel() + "\">");
-            out.print(((BitmapItem) slideItem).getName());
-        }
-        
+        out.print(slideItem.toXMLString());
         out.println("</" + Constants.XML.ITEM + ">");
     }
 

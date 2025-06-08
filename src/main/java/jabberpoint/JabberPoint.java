@@ -4,12 +4,12 @@ import javax.swing.JOptionPane;
 
 import jabberpoint.command.Command;
 import jabberpoint.command.OpenFileCommand;
+import jabberpoint.command.context.DefaultCommandContext;
 import jabberpoint.constants.Constants;
 import jabberpoint.presentation.Presentation;
 import jabberpoint.presentation.Style;
+import jabberpoint.ui.DefaultDialogService;
 import jabberpoint.ui.SlideViewerFrame;
-
-import java.io.IOException;
 
 /** JabberPoint Main Program
  * <p>This program is distributed under the terms of the accompanying
@@ -27,33 +27,26 @@ import java.io.IOException;
  */
 
 public class JabberPoint {
-	// Using constants from Constants.ErrorMessages and Constants.Info
-	// protected static final String IOERR = "IO Error: ";
-	// protected static final String JABERR = "Jabberpoint Error ";
-	// protected static final String JABVERSION = "Jabberpoint 1.7 - Updated Architecture";
 
-	/** The Main Program */
 	public static void main(String argv[]) {
 		
-		// Initialize the styles
 		Style.createStyles();
 		
-		// Create the presentation model
 		Presentation presentation = new Presentation();
 		
-		// Create the main window and connect it to the presentation
 		SlideViewerFrame viewerFrame = new SlideViewerFrame(Constants.Info.JABVERSION, presentation);
-		
+
+		DefaultCommandContext context = new DefaultCommandContext(presentation, viewerFrame, new DefaultDialogService(viewerFrame));
+
 		// Load presentation data
 		try {
 			if (argv.length == 0) { // Load default demo presentation
-				Command demoCommand = new OpenFileCommand(viewerFrame, presentation, "");
-				demoCommand.execute();
+				Command demoCommand = new OpenFileCommand("");
+				demoCommand.execute(context);
 			} else { // Load from file specified in command-line argument
-				Command openCommand = new OpenFileCommand(viewerFrame, presentation, argv[0]);
-				openCommand.execute();
+				Command openCommand = new OpenFileCommand(argv[0]);
+				openCommand.execute(context);
 			}
-			// Set starting slide
 			presentation.setSlideNumber(0);
 
 		} catch (Exception ex) {
