@@ -52,7 +52,7 @@ public class SlideViewerComponent extends JComponent implements Subscriber {
 		if (data instanceof Event.PresentationState) {
 			Event.PresentationState state = (Event.PresentationState) data;
 			
-			if (event == Event.SLIDE_CHANGED && state.getSlide() instanceof Slide) {
+			if (event == Event.SLIDE_CHANGED) {
 				this.slide = (Slide) state.getSlide();
 				this.slideNumber = state.getSlideNumber();
 				this.maxSlides = state.getTotalSlides();
