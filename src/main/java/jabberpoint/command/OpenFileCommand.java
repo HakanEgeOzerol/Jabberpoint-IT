@@ -1,74 +1,53 @@
 package jabberpoint.command;
 
-import java.io.IOException;
-import javax.swing.JOptionPane;
-
 import jabberpoint.accessor.Accessor;
 import jabberpoint.accessor.XMLAccessor;
+import jabberpoint.command.context.CommandContext;
 import jabberpoint.presentation.Presentation;
-import jabberpoint.ui.SlideViewerFrame;
+import jabberpoint.ui.DialogService;
+import jabberpoint.constants.Constants;
 
-/**
- * Command to open an XML file and load its contents into the presentation
- */
-public class OpenFileCommand extends UICommand {
+import java.io.IOException;
+
+public class OpenFileCommand implements Command {
     private String filename;
-    
-    /**
-     * Constructor
-     * @param frame The SlideViewerFrame
-     * @param presentation The presentation to operate on
-     * @param filename The name of the file to open
-     */
-    public OpenFileCommand(SlideViewerFrame frame, Presentation presentation, String filename) {
-        super(frame, presentation);
+
+    public OpenFileCommand() {
+        // no external file name in this implementation
+        filename = Constants.Commands.TESTFILE;
+    }
+
+    public OpenFileCommand(String filename) {
         this.filename = filename;
     }
-    
-    /**
-     * Execute the command to open and load a file
-     */
+
     @Override
-    public void execute() {
+    public void execute(CommandContext context) {
+        if (!context.hasReceiver(Presentation.class)) {
+            return;
+        }
+
+        Presentation presentation = context.getReceiver(Presentation.class);
+
         presentation.clear();
-        
+
         try {
-            loadFile();
-            
-            // Set initial slide if presentation is not empty
+            if (filename.isEmpty()) {
+                Accessor.getDemoAccessor().loadFile(presentation, "");
+            } else {
+                new XMLAccessor().loadFile(presentation, filename);
+            }
+
             if (presentation.getSize() > 0) {
                 presentation.setSlideNumber(0);
             }
-        } catch (IOException exc) {
-            showErrorMessage(exc);
-        }
-        
-        frame.repaint();
-    }
-    
-    /**
-     * Load a file into the presentation
-     * @throws IOException if there's an error loading the file
-     */
-    public void loadFile() throws IOException {
-        if (filename == null || filename.isEmpty()) {
-            // Load demo presentation if no filename provided
-            Accessor.getDemoAccessor().loadFile(presentation, "");
-        } else {
-            // Load specified XML file
-            Accessor xmlAccessor = new XMLAccessor();
-            xmlAccessor.loadFile(presentation, filename);
+        } catch (IOException e) {
+            if (context.hasReceiver(DialogService.class)) {
+                context.getReceiver(DialogService.class)
+                        .showErrorMessage(Constants.ErrorMessages.IOERR + e.getMessage());
+            } else {
+                e.printStackTrace();
+            }
         }
     }
-    
-    /**
-     * Show an error message if loading fails
-     * @param exc The exception that occurred
-     */
-    public void showErrorMessage(IOException exc) {
-        JOptionPane.showMessageDialog(frame, 
-                "IO Exception: " + exc, 
-                "Load Error", 
-                JOptionPane.ERROR_MESSAGE);
-    }
-} 
+}
