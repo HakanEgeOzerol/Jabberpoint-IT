@@ -1,25 +1,15 @@
 package jabberpoint.command;
 
+import jabberpoint.command.context.CommandContext;
 import jabberpoint.presentation.Presentation;
 
-/**
- * Command to move to the next slide in the presentation
- */
-public class NextSlideCommand extends PresentationCommand {
-    
-    /**
-     * Constructor
-     * @param presentation The presentation to operate on
-     */
-    public NextSlideCommand(Presentation presentation) {
-        super(presentation);
-    }
-    
-    /**
-     * Execute the command to move to the next slide
-     */
+public class NextSlideCommand implements Command {
+
     @Override
-    public void execute() {
-        presentation.nextSlide();
+    public void execute(CommandContext context) {
+        if (context.hasReceiver(Presentation.class)) {
+            Presentation presentation = context.getReceiver(Presentation.class);
+            presentation.nextSlide();
+        }
     }
-} 
+}

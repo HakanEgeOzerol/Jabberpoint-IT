@@ -1,6 +1,6 @@
 package jabberpoint.slideitem;
 
-public class BitmapItemFactory implements SlideItemFactory {
+public class BitmapItemFactory implements ISlideItemFactory {
     @Override
     public SlideItem createSlideItem(String type, int level, String content) {
         if (type == null || !type.equals("image")) {

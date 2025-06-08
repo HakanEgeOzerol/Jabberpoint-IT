@@ -1,6 +1,6 @@
 package jabberpoint.slideitem;
 
-public class TextItemFactory implements SlideItemFactory {
+public class TextItemFactory implements ISlideItemFactory {
     @Override
     public SlideItem createSlideItem(String type, int level, String content) {
         if (type == null || !type.equals("text")) {

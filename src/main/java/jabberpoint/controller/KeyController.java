@@ -6,68 +6,44 @@ import java.util.HashMap;
 import java.util.Map;
 
 import jabberpoint.command.Command;
-
-/** <p>This is the KeyController (KeyListener)</p>
- * @author Ian F. Darwin, ian@darwinsys.com, Gert Florijn, Sylvia Stuurman
- * @version 1.1 2002/12/17 Gert Florijn
- * @version 1.2 2003/11/19 Sylvia Stuurman
- * @version 1.3 2004/08/17 Sylvia Stuurman
- * @version 1.4 2007/07/16 Sylvia Stuurman
- * @version 1.5 2010/03/03 Sylvia Stuurman
- * @version 1.6 2014/05/16 Sylvia Stuurman
- * @version 1.7 2023/03/28 Updated to use Command pattern
-*/
+import jabberpoint.command.context.CommandContext;
 
 public class KeyController extends KeyAdapter {
-	private Map<Integer, Command> commands; // Map of key codes to commands
+	private final Map<Integer, Class<? extends Command>> commandClasses;
+	private final CommandContext commandContext;
 
-	public KeyController() {
-		commands = new HashMap<>();
+	public KeyController(CommandContext commandContext) {
+		this.commandContext = commandContext;
+		this.commandClasses = new HashMap<>();
 	}
-	
-	/**
-	 * Add a key binding for a command
-	 * @param keyCode The key code
-	 * @param command The command to execute
-	 * @throws IllegalArgumentException if command is null
-	 */
-	public void addBind(int keyCode, Command command) {
-		if (command == null) {
-			throw new IllegalArgumentException("Command cannot be null");
+
+	public void addBind(int keyCode, Class<? extends Command> commandClass) {
+		if (commandClass == null) {
+			throw new IllegalArgumentException("Command class cannot be null");
 		}
-		commands.put(keyCode, command);
+		commandClasses.put(keyCode, commandClass);
 	}
-	
-	/**
-	 * Remove a key binding
-	 * @param keyCode The key code to remove
-	 * @return true if a binding was removed, false otherwise
-	 */
+
 	public boolean removeBind(Integer keyCode) {
-		return commands.remove(keyCode) != null;
+		return commandClasses.remove(keyCode) != null;
 	}
-	
-	/**
-	 * Execute a command
-	 * @param command The command to execute
-	 */
-	public void executeCommand(Command command) {
-		if (command != null) {
-			command.execute();
+
+	private void executeCommandForKey(int keyCode) {
+		Class<? extends Command> commandClass = commandClasses.get(keyCode);
+		if (commandClass != null) {
+			try {
+				// Instantiate a new command instance via reflection
+				Command command = commandClass.getDeclaredConstructor().newInstance();
+				command.execute(commandContext);
+			} catch (Exception e) {
+				e.printStackTrace(); // handle instantiation errors here
+			}
 		}
 	}
 
 	@Override
 	public void keyPressed(KeyEvent keyEvent) {
-		if (keyEvent == null) {
-			return;
-		}
-		
-		int keyCode = keyEvent.getKeyCode();
-		Command command = commands.get(keyCode);
-		
-		if (command != null) {
-			executeCommand(command);
-		}
+		if (keyEvent == null) return;
+		executeCommandForKey(keyEvent.getKeyCode());
 	}
 }

@@ -2,10 +2,6 @@ package jabberpoint.observer;
 
 import java.util.HashSet;
 
-/**
- * Publisher abstract class for the Observer pattern.
- * Classes that want to notify subscribers of events should implement this interface.
- */
 public abstract class Publisher {
     protected HashSet<Subscriber> subscribers;
 
@@ -26,7 +22,7 @@ public abstract class Publisher {
 	
 	public void notifySubscribers(Event event, Object data) {
 		for (Subscriber subscriber : subscribers) {
-			subscriber.update(event, data, this);
+			subscriber.update(event, data);
 		}
 	}
 } 
