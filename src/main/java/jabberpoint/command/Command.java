@@ -1,12 +1,10 @@
 package jabberpoint.command;
 
-/**
- * Command interface - Part of the Command pattern implementation
- * This interface defines the contract for all command objects.
- */
+import jabberpoint.command.context.CommandContext;
+
+/*
+* General Command interface
+*/
 public interface Command {
-    /**
-     * Execute the command
-     */
-    void execute();
-} 
+    void execute(CommandContext context);
+}

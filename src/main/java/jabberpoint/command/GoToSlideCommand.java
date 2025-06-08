@@ -1,51 +1,29 @@
 package jabberpoint.command;
 
+import jabberpoint.command.context.CommandContext;
 import jabberpoint.constants.Constants;
 import jabberpoint.presentation.Presentation;
-import jabberpoint.ui.SlideViewerFrame;
+import jabberpoint.ui.DialogService;
 
-/**
- * Command to navigate to a specific slide in the presentation
- */
-public class GoToSlideCommand extends UICommand {
-    
-    /**
-     * Constructor
-     * @param presentation The presentation to operate on
-     * @param slideNumber The slide number to navigate to (0-based)
-     */
-    public GoToSlideCommand(SlideViewerFrame frame, Presentation presentation) {
-        super(frame, presentation);
-    }
-    
-    /**
-     * Execute the command to go to a specific slide
-     */
+public class GoToSlideCommand implements Command {
+
     @Override
-    public void execute() {
-        String pageNumberStr = getPageNumberInput();
-        goToSlide(pageNumberStr);
-    }
-    
-    /**
-     * Shows the input dialog to get the page number from user
-     * @return The page number as a string, or null if canceled
-     */
-    public String getPageNumberInput() {
-        return javax.swing.JOptionPane.showInputDialog(Constants.Commands.PAGENR);
-    }
-    
-    /**
-     * Process the page number input and navigate to the slide if valid
-     * @param pageNumberStr The page number as a string
-     */
-    public void goToSlide(String pageNumberStr) {
-        try {
-            int pageNumber = Integer.parseInt(pageNumberStr);
-            // Presentation methods expect 0-based slide numbers
-            presentation.setSlideNumber(pageNumber - 1);
-        } catch (NumberFormatException ex) {
-            // Ignore if not a valid number
+    public void execute(CommandContext context) {
+        if (context.hasReceiver(DialogService.class) && context.hasReceiver(Presentation.class)) {
+            DialogService dialogService = context.getReceiver(DialogService.class);
+            Presentation presentation = context.getReceiver(Presentation.class);
+
+            String pageNumberStr = dialogService.getUserInput(Constants.Commands.PAGENR);
+            goToSlide(presentation, pageNumberStr, dialogService);
         }
     }
-} 
+
+    private void goToSlide(Presentation presentation, String pageNumberStr, DialogService dialogService) {
+        try {
+            int pageNumber = Integer.parseInt(pageNumberStr);
+            presentation.setSlideNumber(pageNumber - 1); // zero-based index
+        } catch (NumberFormatException ignored) {
+            dialogService.showErrorMessage("Please enter a valid slide number.");
+        }
+    }
+}
