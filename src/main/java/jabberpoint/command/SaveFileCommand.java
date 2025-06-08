@@ -38,7 +38,7 @@ public class SaveFileCommand implements Command {
         } catch (IOException e) {
             if (context.hasReceiver(DialogService.class)) {
                 context.getReceiver(DialogService.class)
-                        .showErrorMessage("IO Exception: " + e.getMessage());
+                        .showErrorMessage(Constants.ErrorMessages.IOERR + e.getMessage());
             } else {
                 e.printStackTrace();
             }
