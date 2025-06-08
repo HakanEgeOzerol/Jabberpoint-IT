@@ -1,86 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SaveFileCommand.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JabberPoint</a> &gt; <a href="index.source.html" class="el_package">jabberpoint.command</a> &gt; <span class="el_source">SaveFileCommand.java</span></div><h1>SaveFileCommand.java</h1><pre class="source lang-java linenums">package jabberpoint.command;
 
-import java.io.IOException;
-import javax.swing.JOptionPane;
-
 import jabberpoint.accessor.Accessor;
 import jabberpoint.accessor.XMLAccessor;
+import jabberpoint.command.context.CommandContext;
 import jabberpoint.presentation.Presentation;
-import jabberpoint.ui.SlideViewerFrame;
+import jabberpoint.ui.DialogService;
+import jabberpoint.constants.Constants;
 
-/**
- * Command to save a presentation to an XML file
- */
-public class SaveFileCommand extends UICommand {
-    private String filename;
-    
-    /**
-     * Constructor
-     * @param frame The SlideViewerFrame
-     * @param presentation The presentation to operate on
-     * @param filename The name of the file to save to
-     */
-    public SaveFileCommand(SlideViewerFrame frame, Presentation presentation, String filename) {
-<span class="fc" id="L24">        super(frame, presentation);</span>
-<span class="fc" id="L25">        this.filename = filename;</span>
-<span class="fc" id="L26">    }</span>
-    
-    /**
-     * Execute the command to save a file
-     */
+import java.io.IOException;
+
+public class SaveFileCommand implements Command {
+
+<span class="fc" id="L14">    public SaveFileCommand() {}</span>
+
     @Override
-    public void execute() {
-<span class="pc bpc" id="L33" title="1 of 4 branches missed.">        if (presentation == null || presentation.getSize() == 0) {</span>
-<span class="fc" id="L34">            showNoContentWarning();</span>
-<span class="fc" id="L35">            return;</span>
+    public void execute(CommandContext context) {
+<span class="fc bfc" id="L18" title="All 2 branches covered.">        if (!context.hasReceiver(Presentation.class)) {</span>
+<span class="fc" id="L19">            return;</span>
         }
-        
+
+<span class="fc" id="L22">        Presentation presentation = context.getReceiver(Presentation.class);</span>
+<span class="fc" id="L23">        String filename = Constants.Commands.SAVEFILE;</span>
+
+<span class="pc bpc" id="L25" title="1 of 4 branches missed.">        if (presentation == null || presentation.getSize() == 0) {</span>
+<span class="pc bpc" id="L26" title="1 of 2 branches missed.">            if (context.hasReceiver(DialogService.class)) {</span>
+<span class="fc" id="L27">                context.getReceiver(DialogService.class)</span>
+<span class="fc" id="L28">                        .showErrorMessage(&quot;No presentation to save&quot;);</span>
+            }
+<span class="fc" id="L30">            return;</span>
+        }
+
         try {
-<span class="fc" id="L39">            savePresentation();</span>
-<span class="fc" id="L40">            showSaveSuccessMessage();</span>
-<span class="fc" id="L41">        } catch (IOException exc) {</span>
-<span class="fc" id="L42">            showErrorMessage(exc);</span>
-<span class="fc" id="L43">        }</span>
-<span class="fc" id="L44">    }</span>
-    
-    /**
-     * Save the presentation to a file
-     * @throws IOException if there's an error saving the file
-     */
-    public void savePresentation() throws IOException {
-<span class="fc" id="L51">        Accessor xmlAccessor = new XMLAccessor();</span>
-<span class="fc" id="L52">        xmlAccessor.saveFile(presentation, filename);</span>
-<span class="fc" id="L53">    }</span>
-    
-    /**
-     * Show a warning when there's no content to save
-     */
-    public void showNoContentWarning() {
-<span class="nc" id="L59">        JOptionPane.showMessageDialog(frame, </span>
-                &quot;No presentation to save&quot;, 
-                &quot;Save Error&quot;, 
-                JOptionPane.WARNING_MESSAGE);
-<span class="nc" id="L63">    }</span>
-    
-    /**
-     * Show a success message after saving
-     */
-    public void showSaveSuccessMessage() {
-<span class="nc" id="L69">        JOptionPane.showMessageDialog(frame, </span>
-                &quot;Presentation saved to &quot; + filename, 
-                &quot;Save Successful&quot;, 
-                JOptionPane.INFORMATION_MESSAGE);
-<span class="nc" id="L73">    }</span>
-    
-    /**
-     * Show an error message if saving fails
-     * @param exc The exception that occurred
-     */
-    public void showErrorMessage(IOException exc) {
-<span class="nc" id="L80">        JOptionPane.showMessageDialog(frame, </span>
-                &quot;IO Exception: &quot; + exc, 
-                &quot;Save Error&quot;, 
-                JOptionPane.ERROR_MESSAGE);
-<span class="nc" id="L84">    }</span>
-} 
+<span class="nc" id="L34">            Accessor xmlAccessor = new XMLAccessor();</span>
+<span class="nc" id="L35">            xmlAccessor.saveFile(presentation, filename);</span>
+
+<span class="nc" id="L37">        } catch (IOException e) {</span>
+<span class="nc bnc" id="L38" title="All 2 branches missed.">            if (context.hasReceiver(DialogService.class)) {</span>
+<span class="nc" id="L39">                context.getReceiver(DialogService.class)</span>
+<span class="nc" id="L40">                        .showErrorMessage(Constants.ErrorMessages.IOERR + e.getMessage());</span>
+            } else {
+<span class="nc" id="L42">                e.printStackTrace();</span>
+            }
+<span class="nc" id="L44">        }</span>
+<span class="nc" id="L45">    }</span>
+}
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

@@ -14,10 +14,10 @@ public abstract class Publisher {
 <span class="fc" id="L14">	}</span>
 	
 	public Subscriber removeSubscriber(Subscriber subscriber) {
-<span class="pc bpc" id="L17" title="1 of 2 branches missed.">		if (subscribers.remove(subscriber)) {</span>
+<span class="fc bfc" id="L17" title="All 2 branches covered.">		if (subscribers.remove(subscriber)) {</span>
 <span class="fc" id="L18">			return subscriber;</span>
 		}
-<span class="nc" id="L20">		return null;</span>
+<span class="fc" id="L20">		return null;</span>
 	}
 	
 	public void notifySubscribers(Event event, Object data) {

@@ -4,12 +4,12 @@ import javax.swing.JOptionPane;
 
 import jabberpoint.command.Command;
 import jabberpoint.command.OpenFileCommand;
+import jabberpoint.command.context.DefaultCommandContext;
 import jabberpoint.constants.Constants;
 import jabberpoint.presentation.Presentation;
 import jabberpoint.presentation.Style;
+import jabberpoint.ui.DefaultDialogService;
 import jabberpoint.ui.SlideViewerFrame;
-
-import java.io.IOException;
 
 /** JabberPoint Main Program
  * &lt;p&gt;This program is distributed under the terms of the accompanying
@@ -35,22 +35,25 @@ import java.io.IOException;
 <span class="nc" id="L35">		Presentation presentation = new Presentation();</span>
 		
 <span class="nc" id="L37">		SlideViewerFrame viewerFrame = new SlideViewerFrame(Constants.Info.JABVERSION, presentation);</span>
-		
-		try {
-<span class="nc bnc" id="L40" title="All 2 branches missed.">			if (argv.length == 0) {</span>
-<span class="nc" id="L41">				Command demoCommand = new OpenFileCommand(viewerFrame, presentation, &quot;&quot;);</span>
-<span class="nc" id="L42">				demoCommand.execute();</span>
-<span class="nc" id="L43">			} else {</span>
-<span class="nc" id="L44">				Command openCommand = new OpenFileCommand(viewerFrame, presentation, argv[0]);</span>
-<span class="nc" id="L45">				openCommand.execute();</span>
-			}
-<span class="nc" id="L47">			presentation.setSlideNumber(0);</span>
 
-<span class="nc" id="L49">		} catch (Exception ex) {</span>
-<span class="nc" id="L50">			JOptionPane.showMessageDialog(null,</span>
+<span class="nc" id="L39">		DefaultCommandContext context = new DefaultCommandContext(presentation, viewerFrame, new DefaultDialogService(viewerFrame));</span>
+
+		// Load presentation data
+		try {
+<span class="nc bnc" id="L43" title="All 2 branches missed.">			if (argv.length == 0) { // Load default demo presentation</span>
+<span class="nc" id="L44">				Command demoCommand = new OpenFileCommand(&quot;&quot;);</span>
+<span class="nc" id="L45">				demoCommand.execute(context);</span>
+<span class="nc" id="L46">			} else { // Load from file specified in command-line argument</span>
+<span class="nc" id="L47">				Command openCommand = new OpenFileCommand(argv[0]);</span>
+<span class="nc" id="L48">				openCommand.execute(context);</span>
+			}
+<span class="nc" id="L50">			presentation.setSlideNumber(0);</span>
+
+<span class="nc" id="L52">		} catch (Exception ex) {</span>
+<span class="nc" id="L53">			JOptionPane.showMessageDialog(null,</span>
 					Constants.ErrorMessages.IOERR + ex, Constants.ErrorMessages.JABERR,
 					JOptionPane.ERROR_MESSAGE);
-<span class="nc" id="L53">		}</span>
-<span class="nc" id="L54">	}</span>
+<span class="nc" id="L56">		}</span>
+<span class="nc" id="L57">	}</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

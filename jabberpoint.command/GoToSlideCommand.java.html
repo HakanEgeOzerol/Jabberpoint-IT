@@ -1,52 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GoToSlideCommand.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JabberPoint</a> &gt; <a href="index.source.html" class="el_package">jabberpoint.command</a> &gt; <span class="el_source">GoToSlideCommand.java</span></div><h1>GoToSlideCommand.java</h1><pre class="source lang-java linenums">package jabberpoint.command;
 
+import jabberpoint.command.context.CommandContext;
 import jabberpoint.constants.Constants;
 import jabberpoint.presentation.Presentation;
-import jabberpoint.ui.SlideViewerFrame;
+import jabberpoint.ui.DialogService;
 
-/**
- * Command to navigate to a specific slide in the presentation
- */
-public class GoToSlideCommand extends UICommand {
-    
-    /**
-     * Constructor
-     * @param presentation The presentation to operate on
-     * @param slideNumber The slide number to navigate to (0-based)
-     */
-    public GoToSlideCommand(SlideViewerFrame frame, Presentation presentation) {
-<span class="fc" id="L18">        super(frame, presentation);</span>
-<span class="fc" id="L19">    }</span>
-    
-    /**
-     * Execute the command to go to a specific slide
-     */
+<span class="fc" id="L8">public class GoToSlideCommand implements Command {</span>
+
     @Override
-    public void execute() {
-<span class="fc" id="L26">        String pageNumberStr = getPageNumberInput();</span>
-<span class="fc" id="L27">        goToSlide(pageNumberStr);</span>
-<span class="fc" id="L28">    }</span>
-    
-    /**
-     * Shows the input dialog to get the page number from user
-     * @return The page number as a string, or null if canceled
-     */
-    public String getPageNumberInput() {
-<span class="nc" id="L35">        return javax.swing.JOptionPane.showInputDialog(Constants.Commands.PAGENR);</span>
-    }
-    
-    /**
-     * Process the page number input and navigate to the slide if valid
-     * @param pageNumberStr The page number as a string
-     */
-    public void goToSlide(String pageNumberStr) {
+    public void execute(CommandContext context) {
+<span class="pc bpc" id="L12" title="1 of 4 branches missed.">        if (context.hasReceiver(DialogService.class) &amp;&amp; context.hasReceiver(Presentation.class)) {</span>
+<span class="fc" id="L13">            DialogService dialogService = context.getReceiver(DialogService.class);</span>
+<span class="fc" id="L14">            Presentation presentation = context.getReceiver(Presentation.class);</span>
+
+<span class="fc" id="L16">            String pageNumberStr = dialogService.getUserInput(Constants.Commands.PAGENR);</span>
+<span class="fc" id="L17">            goToSlide(presentation, pageNumberStr, dialogService);</span>
+        }
+<span class="fc" id="L19">    }</span>
+
+    private void goToSlide(Presentation presentation, String pageNumberStr, DialogService dialogService) {
         try {
-<span class="fc" id="L44">            int pageNumber = Integer.parseInt(pageNumberStr);</span>
-            // Presentation methods expect 0-based slide numbers
-<span class="fc" id="L46">            presentation.setSlideNumber(pageNumber - 1);</span>
-<span class="fc" id="L47">        } catch (NumberFormatException ex) {</span>
-            // Ignore if not a valid number
-<span class="fc" id="L49">        }</span>
-<span class="fc" id="L50">    }</span>
-} 
+<span class="fc" id="L23">            int pageNumber = Integer.parseInt(pageNumberStr);</span>
+<span class="fc" id="L24">            presentation.setSlideNumber(pageNumber - 1); // zero-based index</span>
+<span class="fc" id="L25">        } catch (NumberFormatException ignored) {</span>
+<span class="fc" id="L26">            dialogService.showErrorMessage(&quot;Please enter a valid slide number.&quot;);</span>
+<span class="fc" id="L27">        }</span>
+<span class="fc" id="L28">    }</span>
+}
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

@@ -6,69 +6,45 @@ import java.util.HashMap;
 import java.util.Map;
 
 import jabberpoint.command.Command;
-
-/** &lt;p&gt;This is the KeyController (KeyListener)&lt;/p&gt;
- * @author Ian F. Darwin, ian@darwinsys.com, Gert Florijn, Sylvia Stuurman
- * @version 1.1 2002/12/17 Gert Florijn
- * @version 1.2 2003/11/19 Sylvia Stuurman
- * @version 1.3 2004/08/17 Sylvia Stuurman
- * @version 1.4 2007/07/16 Sylvia Stuurman
- * @version 1.5 2010/03/03 Sylvia Stuurman
- * @version 1.6 2014/05/16 Sylvia Stuurman
- * @version 1.7 2023/03/28 Updated to use Command pattern
-*/
+import jabberpoint.command.context.CommandContext;
 
 public class KeyController extends KeyAdapter {
-	private Map&lt;Integer, Command&gt; commands; // Map of key codes to commands
+	private final Map&lt;Integer, Class&lt;? extends Command&gt;&gt; commandClasses;
+	private final CommandContext commandContext;
 
-<span class="fc" id="L24">	public KeyController() {</span>
-<span class="fc" id="L25">		commands = new HashMap&lt;&gt;();</span>
-<span class="fc" id="L26">	}</span>
-	
-	/**
-	 * Add a key binding for a command
-	 * @param keyCode The key code
-	 * @param command The command to execute
-	 * @throws IllegalArgumentException if command is null
-	 */
-	public void addBind(int keyCode, Command command) {
-<span class="fc bfc" id="L35" title="All 2 branches covered.">		if (command == null) {</span>
-<span class="fc" id="L36">			throw new IllegalArgumentException(&quot;Command cannot be null&quot;);</span>
+<span class="fc" id="L15">	public KeyController(CommandContext commandContext) {</span>
+<span class="fc" id="L16">		this.commandContext = commandContext;</span>
+<span class="fc" id="L17">		this.commandClasses = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L18">	}</span>
+
+	public void addBind(int keyCode, Class&lt;? extends Command&gt; commandClass) {
+<span class="fc bfc" id="L21" title="All 2 branches covered.">		if (commandClass == null) {</span>
+<span class="fc" id="L22">			throw new IllegalArgumentException(&quot;Command class cannot be null&quot;);</span>
 		}
-<span class="fc" id="L38">		commands.put(keyCode, command);</span>
-<span class="fc" id="L39">	}</span>
-	
-	/**
-	 * Remove a key binding
-	 * @param keyCode The key code to remove
-	 * @return true if a binding was removed, false otherwise
-	 */
+<span class="fc" id="L24">		commandClasses.put(keyCode, commandClass);</span>
+<span class="fc" id="L25">	}</span>
+
 	public boolean removeBind(Integer keyCode) {
-<span class="fc bfc" id="L47" title="All 2 branches covered.">		return commands.remove(keyCode) != null;</span>
+<span class="fc bfc" id="L28" title="All 2 branches covered.">		return commandClasses.remove(keyCode) != null;</span>
 	}
-	
-	/**
-	 * Execute a command
-	 * @param command The command to execute
-	 */
-	public void executeCommand(Command command) {
-<span class="fc bfc" id="L55" title="All 2 branches covered.">		if (command != null) {</span>
-<span class="fc" id="L56">			command.execute();</span>
+
+	private void executeCommandForKey(int keyCode) {
+<span class="fc" id="L32">		Class&lt;? extends Command&gt; commandClass = commandClasses.get(keyCode);</span>
+<span class="fc bfc" id="L33" title="All 2 branches covered.">		if (commandClass != null) {</span>
+			try {
+				// Instantiate a new command instance via reflection
+<span class="fc" id="L36">				Command command = commandClass.getDeclaredConstructor().newInstance();</span>
+<span class="fc" id="L37">				command.execute(commandContext);</span>
+<span class="nc" id="L38">			} catch (Exception e) {</span>
+<span class="nc" id="L39">				e.printStackTrace(); // handle instantiation errors here</span>
+<span class="fc" id="L40">			}</span>
 		}
-<span class="fc" id="L58">	}</span>
+<span class="fc" id="L42">	}</span>
 
 	@Override
 	public void keyPressed(KeyEvent keyEvent) {
-<span class="fc bfc" id="L62" title="All 2 branches covered.">		if (keyEvent == null) {</span>
-<span class="fc" id="L63">			return;</span>
-		}
-		
-<span class="fc" id="L66">		int keyCode = keyEvent.getKeyCode();</span>
-<span class="fc" id="L67">		Command command = commands.get(keyCode);</span>
-		
-<span class="fc bfc" id="L69" title="All 2 branches covered.">		if (command != null) {</span>
-<span class="fc" id="L70">			executeCommand(command);</span>
-		}
-<span class="fc" id="L72">	}</span>
+<span class="fc bfc" id="L46" title="All 2 branches covered.">		if (keyEvent == null) return;</span>
+<span class="fc" id="L47">		executeCommandForKey(keyEvent.getKeyCode());</span>
+<span class="fc" id="L48">	}</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
