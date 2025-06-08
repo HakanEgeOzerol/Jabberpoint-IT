@@ -12,7 +12,7 @@ public class NewFileCommand implements Command {
     public void execute(CommandContext context) {
         if (context.hasReceiver(Presentation.class) && context.hasReceiver(Frame.class)) {
             Presentation presentation = context.getReceiver(Presentation.class);
-            SlideViewerFrame frame = context.getReceiver(SlideViewerFrame.class);
+            Frame frame = context.getReceiver(Frame.class);
 
             presentation.clear();
             frame.repaint();
