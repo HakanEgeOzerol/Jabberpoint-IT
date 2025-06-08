@@ -1,38 +1,54 @@
 package unit.command;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
 import jabberpoint.command.NextSlideCommand;
+import jabberpoint.command.context.CommandContext;
 import jabberpoint.presentation.Presentation;
 
-public class NextSlideCommandTest {
+class NextSlideCommandTest {
+
+    @Mock
+    private CommandContext mockContext;
+    
+    @Mock
     private Presentation mockPresentation;
+
     private NextSlideCommand nextSlideCommand;
 
     @BeforeEach
-    public void setUp() {
-        // Create a mock Presentation
-        mockPresentation = mock(Presentation.class);
-        
-        // Create the command with the mock presentation
-        nextSlideCommand = new NextSlideCommand(mockPresentation);
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+        nextSlideCommand = new NextSlideCommand();
     }
 
     @Test
-    public void testConstructor() {
-        // Test that the constructor properly sets the presentation
-        assertNotNull(nextSlideCommand);
-    }
+    void testExecute() {
+        // Arrange
+        when(mockContext.hasReceiver(Presentation.class)).thenReturn(true);
+        when(mockContext.getReceiver(Presentation.class)).thenReturn(mockPresentation);
 
+        // Act
+        nextSlideCommand.execute(mockContext);
+
+        // Assert
+        verify(mockPresentation).nextSlide();
+    }
+    
     @Test
-    public void testExecute() {
-        // Execute the command
-        nextSlideCommand.execute();
-        
-        // Verify that nextSlide was called exactly once on the presentation
-        verify(mockPresentation, times(1)).nextSlide();
+    void testExecuteWithoutPresentationInContext() {
+        // Arrange
+        when(mockContext.hasReceiver(Presentation.class)).thenReturn(false);
+
+        // Act
+        nextSlideCommand.execute(mockContext);
+
+        // Assert
+        verify(mockPresentation, never()).nextSlide();
     }
 } 

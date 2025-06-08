@@ -4,12 +4,12 @@ import javax.swing.JOptionPane;
 
 import jabberpoint.command.Command;
 import jabberpoint.command.OpenFileCommand;
+import jabberpoint.command.context.DefaultCommandContext;
 import jabberpoint.constants.Constants;
 import jabberpoint.presentation.Presentation;
 import jabberpoint.presentation.Style;
+import jabberpoint.ui.DefaultDialogService;
 import jabberpoint.ui.SlideViewerFrame;
-
-import java.io.IOException;
 
 /** JabberPoint Main Program
  * <p>This program is distributed under the terms of the accompanying
@@ -35,14 +35,17 @@ public class JabberPoint {
 		Presentation presentation = new Presentation();
 		
 		SlideViewerFrame viewerFrame = new SlideViewerFrame(Constants.Info.JABVERSION, presentation);
-		
+
+		DefaultCommandContext context = new DefaultCommandContext(presentation, viewerFrame, new DefaultDialogService(viewerFrame));
+
+		// Load presentation data
 		try {
-			if (argv.length == 0) {
-				Command demoCommand = new OpenFileCommand(viewerFrame, presentation, "");
-				demoCommand.execute();
-			} else {
-				Command openCommand = new OpenFileCommand(viewerFrame, presentation, argv[0]);
-				openCommand.execute();
+			if (argv.length == 0) { // Load default demo presentation
+				Command demoCommand = new OpenFileCommand("");
+				demoCommand.execute(context);
+			} else { // Load from file specified in command-line argument
+				Command openCommand = new OpenFileCommand(argv[0]);
+				openCommand.execute(context);
 			}
 			presentation.setSlideNumber(0);
 

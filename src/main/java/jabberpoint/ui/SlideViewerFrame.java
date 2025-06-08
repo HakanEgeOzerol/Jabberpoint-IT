@@ -7,14 +7,14 @@ import java.awt.event.WindowAdapter;
 import javax.swing.JFrame;
 
 import jabberpoint.command.AboutBoxCommand;
-import jabberpoint.command.Command;
 import jabberpoint.command.ExitCommand;
 import jabberpoint.command.GoToSlideCommand;
-import jabberpoint.command.NewPresentationCommand;
+import jabberpoint.command.NewFileCommand;
 import jabberpoint.command.NextSlideCommand;
 import jabberpoint.command.OpenFileCommand;
 import jabberpoint.command.PreviousSlideCommand;
 import jabberpoint.command.SaveFileCommand;
+import jabberpoint.command.context.DefaultCommandContext;
 import jabberpoint.constants.Constants;
 import jabberpoint.controller.KeyController;
 import jabberpoint.controller.MenuController;
@@ -80,45 +80,36 @@ public class SlideViewerFrame extends JFrame {
      * @param presentation The presentation to control
      */
     private void setupControllers(Presentation presentation) {
-        // create commands to set
-        final Command nextSlideCommand = new NextSlideCommand(presentation);
-        final Command prevSlideCommand = new PreviousSlideCommand(presentation);
-        final Command exitCommand = new ExitCommand(presentation);
-
-        final Command openCommand = new OpenFileCommand(this, presentation, Constants.Commands.TESTFILE);
-        final Command saveCommand = new SaveFileCommand(this, presentation, Constants.Commands.SAVEFILE);
-        final Command goToCommand = new GoToSlideCommand(this, presentation);
-        final Command newCommand = new NewPresentationCommand(this, presentation);
-        final Command aboutCommand = new AboutBoxCommand(this, presentation);
-
+        // this application contexts should not have a need to be updated
+        DefaultCommandContext context = new DefaultCommandContext(presentation, this, new DefaultDialogService(this));
         // Create and set the key controller
-        keyController = new KeyController();
+        keyController = new KeyController(context);
 
-        keyController.addBind(KeyEvent.VK_PAGE_DOWN, nextSlideCommand);
-        keyController.addBind(KeyEvent.VK_DOWN, nextSlideCommand);
-        keyController.addBind(KeyEvent.VK_ENTER, nextSlideCommand);
-        keyController.addBind((int) '+', nextSlideCommand);
+        keyController.addBind(KeyEvent.VK_PAGE_DOWN, NextSlideCommand.class);
+        keyController.addBind(KeyEvent.VK_DOWN, NextSlideCommand.class);
+        keyController.addBind(KeyEvent.VK_ENTER, NextSlideCommand.class);
+        keyController.addBind((int) '+', NextSlideCommand.class);
 
-        keyController.addBind(KeyEvent.VK_PAGE_UP, prevSlideCommand);
-        keyController.addBind(KeyEvent.VK_UP, prevSlideCommand);
-        keyController.addBind((int) '-', prevSlideCommand);
+        keyController.addBind(KeyEvent.VK_PAGE_UP, PreviousSlideCommand.class);
+        keyController.addBind(KeyEvent.VK_UP, PreviousSlideCommand.class);
+        keyController.addBind((int) '-', PreviousSlideCommand.class);
 
-        keyController.addBind((int) 'q', exitCommand);
-        keyController.addBind((int) 'Q', exitCommand);
+        keyController.addBind((int) 'q', ExitCommand.class);
+        keyController.addBind((int) 'Q', ExitCommand.class);
 
         addKeyListener(keyController);
         
         // Create and set the menu controller
-        menuController = new MenuController();
+        menuController = new MenuController(context);
 
-        menuController.addMenuItem(Constants.Commands.NEXT, nextSlideCommand);
-        menuController.addMenuItem(Constants.Commands.PREV, prevSlideCommand);
-        menuController.addMenuItem(Constants.Commands.GOTO, goToCommand);
-        menuController.addMenuItem(Constants.Commands.EXIT, exitCommand);
-        menuController.addMenuItem(Constants.Commands.OPEN, openCommand);
-        menuController.addMenuItem(Constants.Commands.SAVE, saveCommand);
-        menuController.addMenuItem(Constants.Commands.NEW, newCommand);
-        menuController.addMenuItem(Constants.Commands.ABOUT, aboutCommand);
+        menuController.addMenuItem(Constants.Commands.NEXT, NextSlideCommand.class);
+        menuController.addMenuItem(Constants.Commands.PREV, PreviousSlideCommand.class);
+        menuController.addMenuItem(Constants.Commands.GOTO, GoToSlideCommand.class);
+        menuController.addMenuItem(Constants.Commands.EXIT, ExitCommand.class);
+        menuController.addMenuItem(Constants.Commands.OPEN, OpenFileCommand.class);
+        menuController.addMenuItem(Constants.Commands.SAVE, SaveFileCommand.class);
+        menuController.addMenuItem(Constants.Commands.NEW, NewFileCommand.class);
+        menuController.addMenuItem(Constants.Commands.ABOUT, AboutBoxCommand.class);
 
         menuController.createMenus();
         setMenuBar(menuController);

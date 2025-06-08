@@ -4,7 +4,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-import static org.mockito.ArgumentMatchers.*;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -13,20 +12,18 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.io.File;
 import java.net.URL;
-import java.lang.reflect.Field;
 
 import jabberpoint.slideitem.BitmapItem;
 import jabberpoint.presentation.Style;
-import jabberpoint.constants.Constants;
 
 public class BitmapItemTest {
     private BitmapItem bitmapItem;
     private Style style;
-    private Graphics graphics;
-    private ImageObserver observer;
+    private Graphics2D mockGraphics;
+    private ImageObserver mockObserver;
     private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
-    private final PrintStream originalErr = System.err;
     private String testImagePath;
+    private Rectangle area;
 
     @BeforeEach
     public void setUp() {
@@ -42,8 +39,9 @@ public class BitmapItemTest {
         
         bitmapItem = new BitmapItem(1, testImagePath);
         style = mock(Style.class);
-        graphics = mock(Graphics.class);
-        observer = mock(ImageObserver.class);
+        mockGraphics = mock(Graphics2D.class);
+        mockObserver = mock(ImageObserver.class);
+        area = new Rectangle(10, 10, 100, 100);
         
         // Set up common mock behavior
         when(style.getIndent()).thenReturn(10);
@@ -85,7 +83,7 @@ public class BitmapItemTest {
     @Test
     public void testGetBoundingBox() {
         float scale = 1.0f;
-        Rectangle bounds = bitmapItem.getBoundingBox(graphics, observer, scale, style);
+        Rectangle bounds = bitmapItem.getBoundingBox(mockGraphics, mockObserver, scale, style);
         
         assertNotNull(bounds);
         assertEquals((int)(style.getIndent() * scale), bounds.x);
@@ -98,7 +96,7 @@ public class BitmapItemTest {
     public void testDraw() {
         // This mainly tests that no exception is thrown
         assertDoesNotThrow(() -> {
-            bitmapItem.draw(10, 10, 1.0f, graphics, style, observer);
+            bitmapItem.draw(10, 10, 1.0f, mockGraphics, style, mockObserver);
         });
     }
 
@@ -123,7 +121,7 @@ public class BitmapItemTest {
     @Test
     public void testGetBoundingBoxWithNullImage() {
         BitmapItem item = new BitmapItem(1, "nonexistent.jpg"); // This will have null bufferedImage
-        Rectangle bounds = item.getBoundingBox(graphics, observer, 1.0f, style);
+        Rectangle bounds = item.getBoundingBox(mockGraphics, mockObserver, 1.0f, style);
         
         assertNotNull(bounds);
         assertEquals((int)(style.getIndent()), bounds.x);
@@ -135,7 +133,7 @@ public class BitmapItemTest {
     @Test
     public void testGetBoundingBoxWithValidImage() {
         // Create a mock Graphics and ImageObserver
-        Graphics mockGraphics = mock(Graphics.class);
+        Graphics2D mockGraphics = mock(Graphics2D.class);
         ImageObserver mockObserver = mock(ImageObserver.class);
         Style mockStyle = mock(Style.class);
         
@@ -164,7 +162,7 @@ public class BitmapItemTest {
     @Test
     public void testGetBoundingBoxWithDifferentScales() {
         // Create a mock Graphics and ImageObserver
-        Graphics mockGraphics = mock(Graphics.class);
+        Graphics2D mockGraphics = mock(Graphics2D.class);
         ImageObserver mockObserver = mock(ImageObserver.class);
         Style mockStyle = mock(Style.class);
         
@@ -206,7 +204,7 @@ public class BitmapItemTest {
         
         // Should not throw exception when drawing null image
         assertDoesNotThrow(() -> {
-            item.draw(10, 10, 1.0f, graphics, style, observer);
+            item.draw(10, 10, 1.0f, mockGraphics, style, mockObserver);
         });
     }
 
@@ -214,9 +212,9 @@ public class BitmapItemTest {
     public void testDrawWithDifferentScales() {
         // Should not throw exception with different scales
         assertDoesNotThrow(() -> {
-            bitmapItem.draw(10, 10, 2.0f, graphics, style, observer);
-            bitmapItem.draw(10, 10, 0.5f, graphics, style, observer);
-            bitmapItem.draw(10, 10, 0.0f, graphics, style, observer);
+            bitmapItem.draw(10, 10, 2.0f, mockGraphics, style, mockObserver);
+            bitmapItem.draw(10, 10, 0.5f, mockGraphics, style, mockObserver);
+            bitmapItem.draw(10, 10, 0.0f, mockGraphics, style, mockObserver);
         });
     }
 
@@ -224,16 +222,16 @@ public class BitmapItemTest {
     public void testDrawWithDifferentPositions() {
         // Should not throw exception with different positions
         assertDoesNotThrow(() -> {
-            bitmapItem.draw(0, 0, 1.0f, graphics, style, observer);
-            bitmapItem.draw(-10, -10, 1.0f, graphics, style, observer);
-            bitmapItem.draw(1000, 1000, 1.0f, graphics, style, observer);
+            bitmapItem.draw(0, 0, 1.0f, mockGraphics, style, mockObserver);
+            bitmapItem.draw(-10, -10, 1.0f, mockGraphics, style, mockObserver);
+            bitmapItem.draw(1000, 1000, 1.0f, mockGraphics, style, mockObserver);
         });
     }
 
     @Test
     public void testDrawWithValidImage() {
         // Create a mock Graphics and ImageObserver
-        Graphics mockGraphics = mock(Graphics.class);
+        Graphics2D mockGraphics = mock(Graphics2D.class);
         ImageObserver mockObserver = mock(ImageObserver.class);
         Style mockStyle = mock(Style.class);
         
