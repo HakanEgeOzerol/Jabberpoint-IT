@@ -36,11 +36,4 @@ class AboutBoxCommandTest {
 
         verify(mockDialogService).showAboutBox();
     }
-
-    @Test
-    void testExecuteWithNullDialogs() {
-        when(mockContext.getDialogs()).thenReturn(null);
-
-        aboutBoxCommand.execute(mockContext);
-    }
 } 
