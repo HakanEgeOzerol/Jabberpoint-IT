@@ -117,5 +117,12 @@ public class BitmapItem extends SlideItem {
 	public String toString() {
 <span class="fc" id="L118">		return &quot;BitmapItem[&quot; + getLevel() + &quot;,&quot; + imageName + &quot;]&quot;;</span>
 	}
+
+	@Override
+	public String toXMLString() {
+<span class="fc" id="L123">		return jabberpoint.constants.Constants.XML.IMAGE + &quot;\&quot; &quot; + </span>
+<span class="fc" id="L124">			   jabberpoint.constants.Constants.XML.LEVEL + &quot;=\&quot;&quot; + getLevel() + &quot;\&quot;&gt;&quot; + </span>
+<span class="fc" id="L125">			   getName();</span>
+	}
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

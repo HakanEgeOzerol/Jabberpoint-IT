@@ -113,5 +113,12 @@ public class TextItem extends SlideItem {
 	public String toString() {
 <span class="fc" id="L114">		return &quot;TextItem[&quot; + getLevel()+&quot;,&quot;+getText()+&quot;]&quot;;</span>
 	}
+
+	@Override
+	public String toXMLString() {
+<span class="fc" id="L119">		return jabberpoint.constants.Constants.XML.TEXT + &quot;\&quot; &quot; + </span>
+<span class="fc" id="L120">			   jabberpoint.constants.Constants.XML.LEVEL + &quot;=\&quot;&quot; + getLevel() + &quot;\&quot;&gt;&quot; + </span>
+<span class="fc" id="L121">			   getText();</span>
+	}
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

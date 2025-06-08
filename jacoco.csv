@@ -30,11 +30,11 @@ JabberPoint,jabberpoint.constants,Constants,3,0,0,0,1,0,1,0,1,0
 JabberPoint,jabberpoint.constants,Constants.TextItems,3,0,0,0,1,0,1,0,1,0
 JabberPoint,jabberpoint.slideitem,SlideItemFactory,9,71,0,8,3,16,1,8,1,4
 JabberPoint,jabberpoint.slideitem,SlideItem,0,16,0,0,0,7,0,3,0,3
-JabberPoint,jabberpoint.slideitem,TextItem,0,238,2,12,0,44,2,13,0,8
+JabberPoint,jabberpoint.slideitem,TextItem,0,244,2,12,0,47,2,14,0,9
 JabberPoint,jabberpoint.slideitem,BitmapItemFactory,0,50,2,10,0,10,2,7,0,3
-JabberPoint,jabberpoint.slideitem,BitmapItem,0,149,0,8,0,30,0,11,0,7
+JabberPoint,jabberpoint.slideitem,BitmapItem,0,155,0,8,0,33,0,12,0,8
 JabberPoint,jabberpoint.slideitem,TextItemFactory,1,42,2,8,0,10,2,6,0,3
-JabberPoint,jabberpoint.accessor,XMLWriter,0,112,1,7,0,30,1,7,0,4
+JabberPoint,jabberpoint.accessor,XMLWriter,0,83,0,4,0,22,0,6,0,4
 JabberPoint,jabberpoint.accessor,Accessor,4,3,0,0,1,2,1,1,1,1
 JabberPoint,jabberpoint.accessor,XMLReader,32,134,2,6,12,34,3,6,1,4
 JabberPoint,jabberpoint.accessor,DemoPresentation,5,128,0,0,1,34,1,2,1,2

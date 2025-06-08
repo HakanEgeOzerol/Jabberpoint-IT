@@ -1,28 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Event.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JabberPoint</a> &gt; <a href="index.source.html" class="el_package">jabberpoint.observer</a> &gt; <span class="el_source">Event.java</span></div><h1>Event.java</h1><pre class="source lang-java linenums">package jabberpoint.observer;
 
-<span class="fc" id="L3">public enum Event {</span>
-<span class="fc" id="L4">    SLIDE_CHANGED,</span>
-<span class="fc" id="L5">    PRESENTATION_LOADED,</span>
-<span class="fc" id="L6">    PRESENTATION_CLEARED,</span>
-<span class="fc" id="L7">    UNKNOWN;</span>
+import jabberpoint.presentation.Slide;
+
+<span class="fc" id="L5">public enum Event {</span>
+<span class="fc" id="L6">    SLIDE_CHANGED,</span>
+<span class="fc" id="L7">    PRESENTATION_LOADED,</span>
+<span class="fc" id="L8">    PRESENTATION_CLEARED,</span>
+<span class="fc" id="L9">    UNKNOWN;</span>
     
     public static class PresentationState {
-        private final Object slide;
+        private final Slide slide;
         private final int slideNumber;
         private final int totalSlides;
         private final String title;
         
-<span class="fc" id="L15">        public PresentationState(Object slide, int slideNumber, int totalSlides, String title) {</span>
-<span class="fc" id="L16">            this.slide = slide;</span>
-<span class="fc" id="L17">            this.slideNumber = slideNumber;</span>
-<span class="fc" id="L18">            this.totalSlides = totalSlides;</span>
-<span class="fc" id="L19">            this.title = title;</span>
-<span class="fc" id="L20">        }</span>
+<span class="fc" id="L17">        public PresentationState(Slide slide, int slideNumber, int totalSlides, String title) {</span>
+<span class="fc" id="L18">            this.slide = slide;</span>
+<span class="fc" id="L19">            this.slideNumber = slideNumber;</span>
+<span class="fc" id="L20">            this.totalSlides = totalSlides;</span>
+<span class="fc" id="L21">            this.title = title;</span>
+<span class="fc" id="L22">        }</span>
         
-<span class="nc" id="L22">        public Object getSlide() { return slide; }</span>
-<span class="nc" id="L23">        public int getSlideNumber() { return slideNumber; }</span>
-<span class="nc" id="L24">        public int getTotalSlides() { return totalSlides; }</span>
-<span class="nc" id="L25">        public String getTitle() { return title; }</span>
+<span class="nc" id="L24">        public Slide getSlide() { return slide; }</span>
+<span class="nc" id="L25">        public int getSlideNumber() { return slideNumber; }</span>
+<span class="nc" id="L26">        public int getTotalSlides() { return totalSlides; }</span>
+<span class="nc" id="L27">        public String getTitle() { return title; }</span>
     }
 } 
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>

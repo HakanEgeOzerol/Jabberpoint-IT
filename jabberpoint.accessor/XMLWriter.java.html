@@ -56,34 +56,23 @@ public class XMLWriter {
 
     private void convertSlideItem(SlideItem slideItem, PrintWriter out) {
 <span class="fc" id="L58">        out.print(&quot;    &lt;&quot; + Constants.XML.ITEM + &quot; &quot; + Constants.XML.KIND + &quot;=\&quot;&quot;);</span>
-        
-<span class="fc bfc" id="L60" title="All 2 branches covered.">        if (slideItem instanceof TextItem) {</span>
-<span class="fc" id="L61">            TextItem textItem = (TextItem) slideItem;</span>
-<span class="fc" id="L62">            out.print(Constants.XML.TEXT + &quot;\&quot; &quot; + Constants.XML.LEVEL + &quot;=\&quot;&quot; + textItem.getLevel() + &quot;\&quot;&gt;&quot;);</span>
-<span class="fc" id="L63">            out.print(((TextItem) slideItem).getText());</span>
-<span class="fc" id="L64">        } </span>
-<span class="pc bpc" id="L65" title="1 of 2 branches missed.">        else if (slideItem instanceof BitmapItem) {</span>
-<span class="fc" id="L66">            BitmapItem bitmapItem = (BitmapItem) slideItem;</span>
-<span class="fc" id="L67">            out.print(Constants.XML.IMAGE + &quot;\&quot; &quot; + Constants.XML.LEVEL + &quot;=\&quot;&quot; + bitmapItem.getLevel() + &quot;\&quot;&gt;&quot;);</span>
-<span class="fc" id="L68">            out.print(((BitmapItem) slideItem).getName());</span>
-        }
-        
-<span class="fc" id="L71">        out.println(&quot;&lt;/&quot; + Constants.XML.ITEM + &quot;&gt;&quot;);</span>
-<span class="fc" id="L72">    }</span>
+<span class="fc" id="L59">        out.print(slideItem.toXMLString());</span>
+<span class="fc" id="L60">        out.println(&quot;&lt;/&quot; + Constants.XML.ITEM + &quot;&gt;&quot;);</span>
+<span class="fc" id="L61">    }</span>
 
     public void saveFile(Presentation p, String fn) throws IOException {
-<span class="fc" id="L75">        try (PrintWriter out = new PrintWriter(new FileWriter(fn))) {</span>
-<span class="fc" id="L76">            out.println(&quot;&lt;?xml version=\&quot;1.0\&quot;?&gt;&quot;);</span>
-<span class="fc" id="L77">            out.println(&quot;&lt;presentation&gt;&quot;);</span>
-<span class="fc" id="L78">            out.println(&quot;  &lt;&quot; + Constants.XML.SHOWTITLE + &quot;&gt;&quot; + p.getTitle() + &quot;&lt;/&quot; + Constants.XML.SHOWTITLE + &quot;&gt;&quot;);</span>
+<span class="fc" id="L64">        try (PrintWriter out = new PrintWriter(new FileWriter(fn))) {</span>
+<span class="fc" id="L65">            out.println(&quot;&lt;?xml version=\&quot;1.0\&quot;?&gt;&quot;);</span>
+<span class="fc" id="L66">            out.println(&quot;&lt;presentation&gt;&quot;);</span>
+<span class="fc" id="L67">            out.println(&quot;  &lt;&quot; + Constants.XML.SHOWTITLE + &quot;&gt;&quot; + p.getTitle() + &quot;&lt;/&quot; + Constants.XML.SHOWTITLE + &quot;&gt;&quot;);</span>
             
-<span class="fc bfc" id="L80" title="All 2 branches covered.">            for (int slideNumber = 0; slideNumber &lt; p.getSize(); slideNumber++) {</span>
-<span class="fc" id="L81">                Slide slide = p.getSlide(slideNumber);</span>
-<span class="fc" id="L82">                convertSlide(slide, out);</span>
+<span class="fc bfc" id="L69" title="All 2 branches covered.">            for (int slideNumber = 0; slideNumber &lt; p.getSize(); slideNumber++) {</span>
+<span class="fc" id="L70">                Slide slide = p.getSlide(slideNumber);</span>
+<span class="fc" id="L71">                convertSlide(slide, out);</span>
             }
             
-<span class="fc" id="L85">            out.println(&quot;&lt;/presentation&gt;&quot;);</span>
+<span class="fc" id="L74">            out.println(&quot;&lt;/presentation&gt;&quot;);</span>
         }
-<span class="fc" id="L87">    }</span>
+<span class="fc" id="L76">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
