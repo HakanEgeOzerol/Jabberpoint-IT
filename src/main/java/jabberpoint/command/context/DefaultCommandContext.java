@@ -49,6 +49,7 @@ public class DefaultCommandContext implements CommandContext {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> T getReceiver(Class<T> clazz) {
         return (T) receivers.get(clazz); // unsafe if types are inserted incorrectly
     }

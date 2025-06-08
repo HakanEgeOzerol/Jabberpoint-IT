@@ -1,38 +1,54 @@
 package unit.command;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
 import jabberpoint.command.PreviousSlideCommand;
+import jabberpoint.command.context.CommandContext;
 import jabberpoint.presentation.Presentation;
 
-public class PreviousSlideCommandTest {
+class PreviousSlideCommandTest {
+
+    @Mock
+    private CommandContext mockContext;
+    
+    @Mock
     private Presentation mockPresentation;
+
     private PreviousSlideCommand previousSlideCommand;
 
     @BeforeEach
-    public void setUp() {
-        // Create a mock Presentation
-        mockPresentation = mock(Presentation.class);
-        
-        // Create the command with the mock presentation
-        previousSlideCommand = new PreviousSlideCommand(mockPresentation);
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+        previousSlideCommand = new PreviousSlideCommand();
     }
 
     @Test
-    public void testConstructor() {
-        // Test that the constructor properly sets the presentation
-        assertNotNull(previousSlideCommand);
-    }
+    void testExecute() {
+        // Arrange
+        when(mockContext.hasReceiver(Presentation.class)).thenReturn(true);
+        when(mockContext.getReceiver(Presentation.class)).thenReturn(mockPresentation);
 
+        // Act
+        previousSlideCommand.execute(mockContext);
+
+        // Assert
+        verify(mockPresentation).prevSlide();
+    }
+    
     @Test
-    public void testExecute() {
-        // Execute the command
-        previousSlideCommand.execute();
-        
-        // Verify that prevSlide was called exactly once on the presentation
-        verify(mockPresentation, times(1)).prevSlide();
+    void testExecuteWithoutPresentationInContext() {
+        // Arrange
+        when(mockContext.hasReceiver(Presentation.class)).thenReturn(false);
+
+        // Act
+        previousSlideCommand.execute(mockContext);
+
+        // Assert
+        verify(mockPresentation, never()).prevSlide();
     }
 } 

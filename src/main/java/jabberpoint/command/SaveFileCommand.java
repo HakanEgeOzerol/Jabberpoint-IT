@@ -2,7 +2,6 @@ package jabberpoint.command;
 
 import jabberpoint.accessor.Accessor;
 import jabberpoint.accessor.XMLAccessor;
-import jabberpoint.command.Command;
 import jabberpoint.command.context.CommandContext;
 import jabberpoint.presentation.Presentation;
 import jabberpoint.ui.DialogService;

@@ -2,7 +2,6 @@ package jabberpoint.command;
 
 import jabberpoint.command.context.CommandContext;
 import jabberpoint.presentation.Presentation;
-import jabberpoint.ui.SlideViewerFrame;
 
 import java.awt.*;
 

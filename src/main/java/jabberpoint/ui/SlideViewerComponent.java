@@ -1,6 +1,5 @@
 package jabberpoint.ui;
 
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -10,9 +9,7 @@ import javax.swing.JFrame;
 
 import jabberpoint.constants.Constants;
 import jabberpoint.observer.Event;
-import jabberpoint.observer.Publisher;
 import jabberpoint.observer.Subscriber;
-import jabberpoint.presentation.Presentation;
 import jabberpoint.presentation.Slide;
 
 

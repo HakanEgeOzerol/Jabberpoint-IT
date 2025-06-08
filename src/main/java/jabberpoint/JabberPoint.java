@@ -11,8 +11,6 @@ import jabberpoint.presentation.Style;
 import jabberpoint.ui.DefaultDialogService;
 import jabberpoint.ui.SlideViewerFrame;
 
-import java.io.IOException;
-
 /** JabberPoint Main Program
  * <p>This program is distributed under the terms of the accompanying
  * COPYRIGHT.txt file (which is NOT the GNU General Public License).

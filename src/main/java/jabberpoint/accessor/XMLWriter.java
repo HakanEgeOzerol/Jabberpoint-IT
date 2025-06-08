@@ -8,9 +8,7 @@ import java.util.Vector;
 import jabberpoint.constants.Constants;
 import jabberpoint.presentation.Presentation;
 import jabberpoint.presentation.Slide;
-import jabberpoint.slideitem.BitmapItem;
 import jabberpoint.slideitem.SlideItem;
-import jabberpoint.slideitem.TextItem;
 
 /**
  * XMLWriter: A class for writing a Presentation to an XML file.

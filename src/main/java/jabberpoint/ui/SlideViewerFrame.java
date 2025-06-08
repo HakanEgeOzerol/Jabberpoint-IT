@@ -7,7 +7,6 @@ import java.awt.event.WindowAdapter;
 import javax.swing.JFrame;
 
 import jabberpoint.command.AboutBoxCommand;
-import jabberpoint.command.Command;
 import jabberpoint.command.ExitCommand;
 import jabberpoint.command.GoToSlideCommand;
 import jabberpoint.command.NewFileCommand;
