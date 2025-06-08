@@ -139,7 +139,7 @@ class DemoPresentationTest {
     }
 
     @Test
-    void testLoadFileReplacesExistingContent() {
+    void testLoadFileAppendsToExistingContent() {
         Slide existingSlide = new Slide();
         existingSlide.setTitle("Existing Slide");
         presentation.append(existingSlide);
@@ -148,7 +148,8 @@ class DemoPresentationTest {
         demoPresentation.loadFile(presentation, "unused");
 
         assertEquals("Demo Presentation", presentation.getTitle());
-        assertEquals(3, presentation.getSize());
-        assertNotEquals("Existing Slide", presentation.getSlide(0).getTitle());
+        assertEquals(4, presentation.getSize());
+        assertEquals("Existing Slide", presentation.getSlide(0).getTitle());
+        assertEquals("JabberPoint", presentation.getSlide(1).getTitle());
     }
 } 
